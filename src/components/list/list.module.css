@@ -1,0 +1,29 @@
+.container {
+  display: grid;
+  grid-auto-flow: row;
+  inline-size: 100%;
+}
+
+.heading {
+  font-size: 2em;
+}
+
+.list {
+  display: grid;
+  grid-auto-flow: column;
+
+  gap: 2em;
+  padding: 10em 4em 5em;
+  scroll-padding: 4em;
+  margin: -10em -4em 0em;
+  margin-block-start: -10em;
+
+  overflow: auto visible;
+  scroll-snap-type: inline proximity;
+
+  @media (hover: none) {
+    & > * {
+      scroll-snap-align: start;
+    }
+  }
+}

@@ -1,0 +1,45 @@
+.container {
+  display: grid;
+  grid: repeat(3, auto) / 10em 1fr;
+  grid-template-areas:
+    "thumbnail ."
+    "thumbnail title"
+    "thumbnail detail"
+    "thumbnail summary";
+  align-content: end;
+  gap: 1em;
+  block-size: 80vh;
+}
+
+.title {
+  grid-area: title;
+  font-size: 2.5em;
+}
+
+.thumbnail {
+  grid-area: thumbnail;
+  inline-size: 15em;
+  aspect-ratio: 3 / 5;
+  border-radius: 1em;
+  object-fit: cover;
+  object-position: center;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  block-size: 90vh;
+  inline-size: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.detail {
+  grid-area: detail;
+}
+
+.summary {
+  grid-area: summary;
+  text-wrap: balance;
+}

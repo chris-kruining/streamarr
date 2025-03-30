@@ -1,18 +1,29 @@
-import { Title } from "@solidjs/meta";
+import { Title } from '@solidjs/meta';
+import { createAsync } from '@solidjs/router';
+import { Overview } from '~/features/overview';
+import { listCategories, getEntry } from '~/features/content';
+import { Show } from 'solid-js';
+
+export const route = {
+  load: () => ({
+    highlight: getEntry(14),
+    categories: listCategories(),
+  }),
+};
 
 export default function Home() {
-  return (
-    <main>
-      <Title>Hello World</Title>
+  const highlight = createAsync(() => getEntry(14));
+  const categories = createAsync(() => listCategories());
 
-        <h1>Hello world!</h1>
-        <p>
-        Visit{" "}
-        <a href="https://start.solidjs.com" target="_blank">
-        start.solidjs.com
-        </a>{" "}
-        to learn how to build SolidStart apps.
-        </p>
-    </main>
+  console.log('page', highlight()?.id, categories?.length);
+
+  return (
+    <>
+      <Title>Home</Title>
+
+      <Show when={highlight() && categories()}>
+        <Overview highlight={highlight()} categories={categories()} />
+      </Show>
+    </>
   );
 }

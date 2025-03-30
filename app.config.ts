@@ -1,12 +1,31 @@
 import { defineConfig } from '@solidjs/start/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import solidSvg from 'vite-plugin-solid-svg';
+import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
-  ssr: true,
+  vite: {
+    plugins: [
+      devtools({
+        autoname: true,
+      }),
+      solidSvg(),
+      {
+        name: 'temp',
+        configResolved(config) {
+          console.log(config.resolve.alias);
+        },
+      },
+    ],
+  },
+  solid: {
+    babel: {
+      compact: true,
+    },
+  },
   server: {
     preset: 'bun',
-  },
-  vite: {
-    plugins: [tsconfigPaths({ root: './' })],
+    prerender: {
+      routes: ['/sitemaps.xml'],
+    },
   },
 });

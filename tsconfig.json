@@ -10,12 +10,19 @@
     "allowJs": true,
     "strict": true,
     "noEmit": true,
-    "types": ["vinxi/types/client"],
+    "types": [
+      "@solidjs/start/env",
+      "@testing-library/jest-dom",
+      "@types/wicg-file-system-access",
+      "vinxi/types/client",
+      "vite-plugin-solid-svg/types-component-solid",
+      "bun-types"
+    ],
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["./src/*"]
     }
   },
-  "include": [ "src", "styled-system" ]
+  "include": ["src"]
 }

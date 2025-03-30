@@ -1,0 +1,37 @@
+.container {
+  display: grid;
+  grid: 100% / 100%;
+  zindex: 0;
+  overflowinline: clip;
+  overflowblock: auto;
+  containertype: inline-size;
+}
+
+
+.body {
+  gridArea: 1 / 1;
+  inlineSize: 100%;
+  blockSize: fit-content;
+  paddingInline: 2em;
+  paddingBlockEnd: 5em;
+  background: linear-gradient(180deg, transparent, transparent 90vh, #333 90vh, #333);
+
+  @container (inline-size >= 600px) {
+    paddingInlineStart: 7.5em;
+  },
+}
+
+.nav {
+  gridArea: 1 / 1;
+  display: none;
+  gridAutoFlow: row;
+  alignContent: start;
+  inlineSize: 7.5em;
+  padding: 1em;
+  position: sticky;
+  insetBlockStart: 0;
+
+  @container (inline-size >= 600px) {
+    display: grid;
+  },
+}
