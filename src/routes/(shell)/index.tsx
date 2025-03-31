@@ -15,14 +15,12 @@ export default function Home() {
   const highlight = createAsync(() => getEntry(14));
   const categories = createAsync(() => listCategories());
 
-  console.log('page', highlight()?.id, categories?.length);
-
   return (
     <>
       <Title>Home</Title>
 
       <Show when={highlight() && categories()}>
-        <Overview highlight={highlight()} categories={categories()} />
+        <Overview highlight={highlight()!} categories={categories()!} />
       </Show>
     </>
   );

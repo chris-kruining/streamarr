@@ -1,13 +1,13 @@
-import { RouteSectionProps, A } from "@solidjs/router";
+import { A } from "@solidjs/router";
 import {
   FaSolidHouseChimney,
   FaSolidMagnifyingGlass,
   FaSolidStar,
 } from "solid-icons/fa";
-import { Component } from "solid-js";
+import { ParentComponent, Component } from "solid-js";
 import css from "./shell.module.css";
 
-export const Shell: Component<RouteSectionProps> = (props) => {
+export const Shell: ParentComponent = (props) => {
   return (
     <main class={css.container}>
       <Nav />

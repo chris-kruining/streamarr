@@ -3,6 +3,9 @@ import solidSvg from 'vite-plugin-solid-svg';
 import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
+  build: {
+    sourceMap: true,
+  },
   vite: {
     plugins: [
       devtools({

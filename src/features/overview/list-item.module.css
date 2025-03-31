@@ -8,7 +8,7 @@
   inline-size: clamp(15em 20vw 30em);
   aspect-ratio: 3 / 5;
   transform: translateY(calc(-2 * var(--padding)));
-  zindex: 1;
+  z-index: 1;
   contain: layout size style;
 
   & > img {
@@ -22,22 +22,18 @@
 
     box-shadow: 0 0 1em #000;
     background:
-        /* Dot */ radial-gradient(
-        circle at 25% 30% #7772 #7774 1em transparent 1em
-      )
+      /* Dot */
+      radial-gradient(circle at 25% 30% #7772 #7774 1em transparent 1em)
       /* Dot */
       radial-gradient(circle at 85% 15% #7772 #7774 1em transparent 1em)
-      /* Bottom fade */ linear-gradient(165deg transparent 60% #555 60% #333)
+      /* Bottom fade */
+      linear-gradient(165deg transparent 60% #555 60% #333)
       /* wave dark part */
-      radial-gradient(
-        ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%
-      )
+      radial-gradient(ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%)
       /* wave light part */
-      radial-gradient(
-        ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100%
-          transparent 100%
-      )
-      /* Base */ linear-gradient(to bottom #333 50% #555 50%);
+      radial-gradient(ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100% transparent 100%)
+      /* Base */
+      linear-gradient(to bottom #333 50% #555 50%);
 
     transform-origin: 50% 0;
     transform: scale(0.8) translateY(calc(-4 * var(--padding)));
@@ -74,12 +70,12 @@
     z-index: 0;
     will-change: transform;
 
-    & > img: {
+    & > img {
       transform: scale(1) translateY(0);
       will-change: transform;
     }
 
-    & > main: {
+    & > main {
       clip-path: inset(40%);
     }
   }
@@ -97,7 +93,7 @@
 
     &:is(:hover :focus-within) {
       transition-delay: 0s 0.3s;
-      zindex: 1;
+      z-index: 1;
 
       & > img {
         transition: transform 0.2s ease-in-out;

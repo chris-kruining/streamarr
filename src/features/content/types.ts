@@ -17,7 +17,7 @@ export interface Entry {
 export namespace Entry {
   export interface Source {
     label: string;
-    url: URL;
+    url: string;
     rating: Source.Rating;
   }
 

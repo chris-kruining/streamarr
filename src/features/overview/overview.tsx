@@ -10,7 +10,7 @@ type OverviewProps = {
   categories: Category[];
 };
 
-export function Overview(props: OverviewProps) {
+export const Overview: Component<OverviewProps> = (props) => {
   return (
     <div class={css.container}>
       <Hero entry={props.highlight}></Hero>

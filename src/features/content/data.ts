@@ -21,10 +21,10 @@ export const entries = new Map<number, Entry>([
     summary: 'Wednesday Addams is sent to Nevermore Academy, a bizarre boarding school where she attempts to master her psychic powers, stop a monstrous killing spree of the town citizens, and solve the supernatural mystery that affected her family',
     releaseDate: '2022',
     sources: [
-      { label: 'TMDB', url: new URL('https://themoviedb.org/tv/119051'), rating: { score: 8.5, max: 10 } }
+      { label: 'TMDB', url: 'https://themoviedb.org/tv/119051', rating: { score: 8.5, max: 10 } }
     ]
   },
-].map((entry) => [ entry.id, entry ]));
+].map((entry) => [entry.id, entry]));
 
 
 export const emptyEntry = Object.freeze<Entry>({ id: 0, title: '' });

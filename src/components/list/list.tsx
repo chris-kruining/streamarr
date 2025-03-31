@@ -1,5 +1,5 @@
 import { Accessor, Index, JSX } from "solid-js";
-import { css } from "./list.module.css";
+import css from "./list.module.css";
 
 interface ListProps<T> {
   label: string;

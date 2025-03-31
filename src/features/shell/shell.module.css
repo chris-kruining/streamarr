@@ -1,37 +1,37 @@
 .container {
   display: grid;
   grid: 100% / 100%;
-  zindex: 0;
-  overflowinline: clip;
-  overflowblock: auto;
-  containertype: inline-size;
+  z-index: 0;
+  overflow-inline: clip;
+  overflow-block: auto;
+  container-type: inline-size;
 }
 
 
 .body {
-  gridArea: 1 / 1;
-  inlineSize: 100%;
-  blockSize: fit-content;
-  paddingInline: 2em;
-  paddingBlockEnd: 5em;
+  grid-area: 1 / 1;
+  inline-size: 100%;
+  block-size: fit-content;
+  padding-inline: 2em;
+  padding-block-end: 5em;
   background: linear-gradient(180deg, transparent, transparent 90vh, #333 90vh, #333);
 
-  @container (inline-size >= 600px) {
-    paddingInlineStart: 7.5em;
-  },
+  @container (inline-size >=600px) {
+    padding-inline-start: 7.5em;
+  }
 }
 
 .nav {
-  gridArea: 1 / 1;
+  grid-area: 1 / 1;
   display: none;
-  gridAutoFlow: row;
-  alignContent: start;
-  inlineSize: 7.5em;
+  grid-auto-flow: row;
+  align-content: start;
+  inline-size: 7.5em;
   padding: 1em;
   position: sticky;
-  insetBlockStart: 0;
+  inset-block-start: 0;
 
-  @container (inline-size >= 600px) {
+  @container (inline-size >=600px) {
     display: grid;
-  },
+  }
 }

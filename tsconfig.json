@@ -21,8 +21,13 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./src/*"]
-    }
+      "~/*": [
+        "./src/*"
+      ]
+    },
+    "sourceMap": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }
