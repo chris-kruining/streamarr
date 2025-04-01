@@ -1,12 +1,12 @@
 import { A } from "@solidjs/router";
 import {
-  FaSolidHouseChimney,
-  FaSolidMagnifyingGlass,
-  FaSolidStar,
-} from "solid-icons/fa";
+  AiOutlineHome,
+  AiOutlineStar,
+  AiOutlineSearch,
+} from "solid-icons/ai";
 import { ParentComponent, Component } from "solid-js";
-import css from "./shell.module.css";
 import { ColorSchemePicker } from "../theme";
+import css from "./shell.module.css";
 
 export const Shell: ParentComponent = (props) => {
   return (
@@ -33,17 +33,17 @@ const Nav: Component = (props) => {
   return (
     <nav class={css.nav}>
       <ul>
-        <A href="/">
-          <FaSolidHouseChimney />
-          Home
+        <A href="/" activeClass={css.active} end={true}>
+          <AiOutlineHome />
+          <span>Home</span>
         </A>
-        <A href="/library">
-          <FaSolidStar />
-          Library
+        <A href="/library" activeClass={css.active}>
+          <AiOutlineStar />
+          <span>Library</span>
         </A>
-        <A href="/search">
-          <FaSolidMagnifyingGlass />
-          Search
+        <A href="/search" activeClass={css.active}>
+          <AiOutlineSearch />
+          <span>Search</span>
         </A>
       </ul>
     </nav>
