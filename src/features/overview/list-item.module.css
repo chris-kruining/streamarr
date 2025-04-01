@@ -6,7 +6,7 @@
   place-items: start center;
   position: relative;
   inline-size: clamp(15em 20vw 30em);
-  aspect-ratio: 3 / 5;
+  aspect-ratio: var(--ratio-portrait);
   transform: translateY(calc(-2 * var(--padding)));
   z-index: 1;
   contain: layout size style;
@@ -15,23 +15,23 @@
     grid-area: 1/ 1;
     inline-size: 100%;
     block-size: 100%;
-    border-radius: 1em;
+    border-radius: var(--radius-3);
     object-fit: cover;
-    object-position: center;
+    object-position: top center;
     z-index: 1;
 
-    box-shadow: 0 0 1em #000;
+    box-shadow: var(--shadow-2);
     background:
       /* Dot */
-      radial-gradient(circle at 25% 30% #7772 #7774 1em transparent 1em)
+      radial-gradient(circle at 25% 30% #7772 #7774 1em transparent 1em),
       /* Dot */
-      radial-gradient(circle at 85% 15% #7772 #7774 1em transparent 1em)
+      radial-gradient(circle at 85% 15% #7772 #7774 1em transparent 1em),
       /* Bottom fade */
-      linear-gradient(165deg transparent 60% #555 60% #333)
+      linear-gradient(165deg transparent 60% #555 60% #333),
       /* wave dark part */
-      radial-gradient(ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%)
+      radial-gradient(ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%),
       /* wave light part */
-      radial-gradient(ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100% transparent 100%)
+      radial-gradient(ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100% transparent 100%),
       /* Base */
       linear-gradient(to bottom #333 50% #555 50%);
 
@@ -42,7 +42,7 @@
   }
 
   & > main {
-    --ofset: calc(1.5 * var(--padding));
+    --offset: calc(1.5 * var(--padding));
     grid-area: 1/ 1;
     display: grid;
     align-content: end;
@@ -50,53 +50,55 @@
     inline-size: calc(100% + (3 * var(--padding)));
     block-size: calc(100% + (4 * var(--padding)));
     padding: calc(0.5 * var(--padding));
-    background-color: #444;
-    border-radius: 0.5em;
+    background-color: var(--surface-3);
+    border-radius: var(--radius-2);
     transform: translate3d(0 0 0);
     clip-path: inset(-1em);
-    box-shadow: 0 0 1em #000;
+    box-shadow: var(--shadow-2);
     z-index: 0;
 
     &:focus-within {
-      outline: 1px solid #fff;
+      outline: 1px solid var(--text-2);
       outline-offset: 10px;
     }
   }
-}
 
-@media (hover) {
-  &:not(:hover):not(:focus-within) {
-    transform: translateY(0);
-    z-index: 0;
-    will-change: transform;
-
-    & > img {
-      transform: scale(1) translateY(0);
+  @media (hover) {
+    &:not(:hover):not(:focus-within) {
+      transform: translateY(0);
+      z-index: 0;
       will-change: transform;
-    }
-
-    & > main {
-      clip-path: inset(40%);
-    }
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    transition: transform 0.2s linear;
-
-    & > img {
-      transition: transform 0.2s ease-in-out;
-    }
-
-    & > main {
-      transition: clip-path 0.2s ease-in-out;
-    }
-
-    &:is(:hover :focus-within) {
-      transition-delay: 0s 0.3s;
-      z-index: 1;
 
       & > img {
-        transition: transform 0.2s ease-in-out;
+        transform: scale(1) translateY(0);
+        will-change: transform;
+      }
+
+      & > main {
+        clip-path: inset(40%);
+      }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      & {
+        transition: transform var(--duration-moderate-1) linear;
+      }
+
+      & > img {
+        transition: transform var(--duration-moderate-1) ease-in-out;
+      }
+
+      & > main {
+        transition: clip-path var(--duration-moderate-1) ease-in-out;
+      }
+
+      &:is(:hover :focus-within) {
+        transition-delay: var(--duration-instant) var(--duration-moderate-2);
+        z-index: 1;
+
+        & > img {
+          transition: transform var(--duration-moderate-1) ease-in-out;
+        }
       }
     }
   }

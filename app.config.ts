@@ -1,23 +1,32 @@
 import { defineConfig } from '@solidjs/start/config';
+import { browserslistToTargets, Features } from 'lightningcss';
+import browserslist from 'browserslist';
 import solidSvg from 'vite-plugin-solid-svg';
 import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
-  build: {
-    sourceMap: true,
-  },
   vite: {
+    css: {
+      transformer: 'lightningcss',
+      lightningcss: {
+        targets: browserslistToTargets(browserslist('>= .25%')),
+        include: Features.Nesting | Features.LightDark | Features.Colors | Features.LogicalProperties,
+        customAtRules: {
+          property: {
+            prelude: '<custom-ident>',
+            body: 'style-block',
+          },
+        },
+      },
+    },
+    build: {
+      cssMinify: 'lightningcss',
+    },
     plugins: [
       devtools({
         autoname: true,
       }),
       solidSvg(),
-      {
-        name: 'temp',
-        configResolved(config) {
-          console.log(config.resolve.alias);
-        },
-      },
     ],
   },
   solid: {

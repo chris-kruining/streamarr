@@ -3,6 +3,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import './index.css';
+import { ThemeContextProvider } from "./features/theme";
 
 export default function App() {
   return (
@@ -10,7 +11,9 @@ export default function App() {
       root={props => (
         <MetaProvider>
           <Title>Streamarr - Home</Title>
-          <Suspense>{props.children}</Suspense>
+          <Suspense>
+            <ThemeContextProvider>{props.children}</ThemeContextProvider>
+          </Suspense>
         </MetaProvider>
       )}
     >

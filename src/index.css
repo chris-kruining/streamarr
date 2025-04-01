@@ -1,17 +1,177 @@
 @layer reset, base, tokens, recipes, utilities;
 
-html {
-  display: grid;
-  grid: 100% / 100%;
-  inline-size: 100%;
-  block-size: 100%;
-  overflow: clip;
+@import "open-props/style" layer(tokens);
+@import "open-props/normalize" layer(reset);
+@import "open-props/durations" layer(base);
 
-  & > body {
+@import 'open-props/theme.light.switch.min.css' layer(tokens);
+@import 'open-props/theme.dark.switch.min.css' layer(tokens);
+
+@layer base {
+  html {
     display: grid;
     grid: 100% / 100%;
     inline-size: 100%;
     block-size: 100%;
-    overflow-y: auto;
+    overflow: clip;
+
+    /* font-size: clamp(1rem, -0.875rem + 8.333vw, 3.5rem); */
+
+    & > body {
+      display: grid;
+      grid: 100% / 100%;
+      inline-size: 100%;
+      block-size: 100%;
+
+      margin: 0;
+      font-family: sans-serif;
+
+      overflow: clip;
+      background-color: var(--surface-3);
+      color: var(--text-2);
+      accent-color: var(--primary-500);
+
+      * {
+        box-sizing: border-box;
+
+        &:focus-visible {
+          outline: 1px solid var(--info);
+        }
+      }
+    }
+  }
+}
+
+@layer reset {
+  @property --sibling-index {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 1;
+  }
+
+  @property --sibling-count {
+    syntax: '<integer>';
+    inherits: false;
+    initial-value: 0;
+  }
+
+  :nth-child(1) {
+    --sibling-index: 1;
+  }
+
+  :nth-child(2) {
+    --sibling-index: 2;
+  }
+
+  :nth-child(3) {
+    --sibling-index: 3;
+  }
+
+  :nth-child(4) {
+    --sibling-index: 4;
+  }
+
+  :nth-child(5) {
+    --sibling-index: 5;
+  }
+
+  :nth-child(6) {
+    --sibling-index: 6;
+  }
+
+  :nth-child(7) {
+    --sibling-index: 7;
+  }
+
+  :nth-child(8) {
+    --sibling-index: 8;
+  }
+
+  :nth-child(9) {
+    --sibling-index: 9;
+  }
+
+  :nth-child(10) {
+    --sibling-index: 10;
+  }
+
+  :nth-child(11) {
+    --sibling-index: 11;
+  }
+
+  :nth-child(12) {
+    --sibling-index: 12;
+  }
+
+  :nth-child(13) {
+    --sibling-index: 13;
+  }
+
+  :nth-child(14) {
+    --sibling-index: 14;
+  }
+
+  :nth-child(15) {
+    --sibling-index: 15;
+  }
+
+  :has(> :last-child:nth-child(1)) {
+    --sibbling-count: 1;
+  }
+
+  :has(> :last-child:nth-child(2)) {
+    --sibbling-count: 2;
+  }
+
+  :has(> :last-child:nth-child(3)) {
+    --sibbling-count: 3;
+  }
+
+  :has(> :last-child:nth-child(4)) {
+    --sibbling-count: 4;
+  }
+
+  :has(> :last-child:nth-child(5)) {
+    --sibbling-count: 5;
+  }
+
+  :has(> :last-child:nth-child(6)) {
+    --sibbling-count: 6;
+  }
+
+  :has(> :last-child:nth-child(7)) {
+    --sibbling-count: 7;
+  }
+
+  :has(> :last-child:nth-child(8)) {
+    --sibbling-count: 8;
+  }
+
+  :has(> :last-child:nth-child(9)) {
+    --sibbling-count: 9;
+  }
+
+  :has(> :last-child:nth-child(10)) {
+    --sibbling-count: 10;
+  }
+
+  :has(> :last-child:nth-child(11)) {
+    --sibbling-count: 11;
+  }
+
+  :has(> :last-child:nth-child(12)) {
+    --sibbling-count: 12;
+  }
+
+  :has(> :last-child:nth-child(13)) {
+    --sibbling-count: 13;
+  }
+
+  :has(> :last-child:nth-child(14)) {
+    --sibbling-count: 14;
+  }
+
+  :has(> :last-child:nth-child(15)) {
+    --sibbling-count: 15;
   }
 }

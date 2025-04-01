@@ -4,12 +4,13 @@ import css from "./list.module.css";
 interface ListProps<T> {
   label: string;
   items: T[];
+  class?: string;
   children: (item: Accessor<T>) => JSX.Element;
 }
 
 export function List<T>(props: ListProps<T>) {
   return (
-    <section class={css.container}>
+    <section class={`${css.container} ${props.class ?? ''}`}>
       <b role="heading" class={css.heading}>
         {props.label}
       </b>

@@ -1,6 +1,7 @@
 .container {
+  position: relative;
   display: grid;
-  grid: repeat(3, auto) / 10em 1fr;
+  grid: repeat(3, auto) / 15em 1fr;
   grid-template-areas:
     "thumbnail ."
     "thumbnail title"
@@ -8,12 +9,26 @@
     "thumbnail summary";
   align-content: end;
   gap: 1em;
+  padding: 2em;
   block-size: 80vh;
+  overflow: clip;
+
+  color: var(--gray-0);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    display: block;
+    background: linear-gradient(transparent 50%, #0007 75%);
+  }
 }
 
 .title {
   grid-area: title;
   font-size: 2.5em;
+  z-index: 1;
+  filter: contrast(9);
 }
 
 .thumbnail {
@@ -23,23 +38,26 @@
   border-radius: 1em;
   object-fit: cover;
   object-position: center;
+  z-index: 1;
 }
 
 .background {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: -1;
-  block-size: 90vh;
+  block-size: 100%;
   inline-size: 100%;
   object-fit: cover;
   object-position: center;
+  z-index: 0;
 }
 
 .detail {
   grid-area: detail;
+  z-index: 1;
 }
 
 .summary {
   grid-area: summary;
   text-wrap: balance;
+  z-index: 1;
 }

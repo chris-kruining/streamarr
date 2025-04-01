@@ -13,7 +13,6 @@
     "types": [
       "@solidjs/start/env",
       "@testing-library/jest-dom",
-      "@types/wicg-file-system-access",
       "vinxi/types/client",
       "vite-plugin-solid-svg/types-component-solid",
       "bun-types"
@@ -26,8 +25,5 @@
       ]
     },
     "sourceMap": true
-  },
-  "include": [
-    "src"
-  ]
+  }
 }

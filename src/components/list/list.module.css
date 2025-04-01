@@ -13,15 +13,17 @@
   grid-auto-flow: column;
 
   gap: 2em;
-  padding: 10em 4em 5em;
+  padding: 12em 4em 5em;
   scroll-padding: 4em;
-  margin: -10em -4em 0em;
-  margin-block-start: -10em;
+  margin: -12em -4em 0em;
 
-  overflow: auto visible;
+  overflow: visible auto;
   scroll-snap-type: inline proximity;
 
   @media (hover: none) {
+    padding: 5em;
+    margin: 0;
+
     & > * {
       scroll-snap-align: start;
     }

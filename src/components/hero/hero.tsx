@@ -4,11 +4,13 @@ import css from "./hero.module.css";
 
 type HeroProps = {
   entry: Entry;
+  class?: string;
 };
 
 export function Hero(props: HeroProps) {
   return (
-    <div class={css.container}>
+    <div class={`${css.container} ${props.class ?? ''}`}>
+
       <h2 class={css.title}>{props.entry.title}</h2>
 
       <img src={props.entry.thumbnail} class={css.thumbnail} />

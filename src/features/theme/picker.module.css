@@ -1,0 +1,9 @@
+.picker {
+    grid-template-columns: auto 1fr;
+}
+
+.hue {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+}

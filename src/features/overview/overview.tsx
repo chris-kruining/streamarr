@@ -1,4 +1,4 @@
-import { Component, Index } from "solid-js";
+import { Component, createEffect, createSignal, Index, onMount } from "solid-js";
 import type { Entry, Category } from "../content";
 import { ListItem } from "./list-item";
 import { List } from "~/components/list";
@@ -11,13 +11,21 @@ type OverviewProps = {
 };
 
 export const Overview: Component<OverviewProps> = (props) => {
+  const [container, setContainer] = createSignal<HTMLElement>();
+
+  onMount(() => {
+    new MutationObserver(() => {
+      container()?.querySelector(`.${css.list} > ul > div:nth-child(4) > main > a`)?.focus({ preventScroll: true });
+    }).observe(document.body, { subtree: true, childList: true });
+  });
+
   return (
-    <div class={css.container}>
-      <Hero entry={props.highlight}></Hero>
+    <div ref={setContainer} class={css.container}>
+      <Hero class={css.hero} entry={props.highlight}></Hero>
 
       <Index each={props.categories}>
         {(category) => (
-          <List label={category().label} items={category().entries}>
+          <List class={css.list} label={category().label} items={category().entries}>
             {(entry) => <ListItem entry={entry()} />}
           </List>
         )}

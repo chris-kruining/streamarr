@@ -1,0 +1,96 @@
+.box {
+    display: contents;
+
+    &:has(> :popover-open) > .button {
+        background-color: var(--surface-500);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
+
+.button {
+    position: relative;
+    display: grid;
+    grid-template-columns: inherit;
+    place-items: center start;
+
+    /* Make sure the height of the button does not collapse when it is empty */
+    block-size: 1em;
+    box-sizing: content-box;
+
+    padding: var(--size-2);
+    background-color: transparent;
+    border: none;
+    border-radius: var(--radius-2);
+    font-size: 1rem;
+    line-height: 1;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--surface-4);
+    }
+
+    &:has(> .caret) {
+        padding-inline-end: calc(1em + (2 * var(--size-2)));
+    }
+
+    & > .caret {
+        position: absolute;
+        inset-inline-end: var(--size-2);
+        inset-block-start: 50%;
+        translate: 0 -50%;
+        inline-size: 1em;
+    }
+}
+
+.dialog {
+    display: none;
+    position: relative;
+    grid-template-columns: inherit;
+
+    inset-inline-start: anchor(start);
+    inset-block-start: anchor(end);
+    position-try-fallbacks: flip-block, flip-inline;
+
+    /* inline-size: anchor-size(self-inline); */
+    background-color: var(--surface-4);
+    padding: var(--size-2);
+    border: none;
+    box-shadow: var(--shadow-2);
+
+    &:popover-open {
+        display: grid;
+    }
+
+    & > header {
+        display: grid;
+        grid-column: 1 / -1;
+
+        gap: var(--size-1);
+    }
+
+    & > main {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        row-gap: var(--size-1);
+    }
+}
+
+.option {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-column: 1 / -1;
+    place-items: center start;
+
+    border-radius: var(--radius-2);
+    padding: var(--size-1);
+    margin-inline: calc(-1 * var(--size-1));
+
+    cursor: pointer;
+
+    &.selected {
+        background-color: color(from var(--cyan-4) srgb r g b / .1);
+    }
+}

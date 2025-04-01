@@ -2,4 +2,13 @@
   display: grid;
   grid-auto-flow: row;
   gap: 2em;
+  border-radius: inherit;
+
+  & > .hero {
+    border-radius: inherit;
+  }
+
+  & > .list {
+    padding-inline: 2em;
+  }
 }
