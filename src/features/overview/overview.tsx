@@ -1,4 +1,10 @@
-import { Component, createEffect, createSignal, Index, onMount } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  Index,
+  onMount,
+} from "solid-js";
 import type { Entry, Category } from "../content";
 import { ListItem } from "./list-item";
 import { List } from "~/components/list";
@@ -15,7 +21,11 @@ export const Overview: Component<OverviewProps> = (props) => {
 
   onMount(() => {
     new MutationObserver(() => {
-      container()?.querySelector(`.${css.list} > ul > div:nth-child(4) > main > a`)?.focus({ preventScroll: true });
+      container()
+        ?.querySelector<HTMLElement>(
+          `.${css.list} > ul > div:nth-child(4) > main > a`,
+        )
+        ?.focus({ preventScroll: true });
     }).observe(document.body, { subtree: true, childList: true });
   });
 
@@ -25,11 +35,15 @@ export const Overview: Component<OverviewProps> = (props) => {
 
       <Index each={props.categories}>
         {(category) => (
-          <List class={css.list} label={category().label} items={category().entries}>
+          <List
+            class={css.list}
+            label={category().label}
+            items={category().entries}
+          >
             {(entry) => <ListItem entry={entry()} />}
           </List>
         )}
       </Index>
     </div>
   );
-}
+};

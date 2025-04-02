@@ -3,27 +3,27 @@
   display: grid;
   grid: auto 1fr / 5em 1fr;
   grid-template-areas:
-    'top top'
-    'nav content'
-  ;
+    "top top"
+    "nav content";
   inline-size: 100%;
   block-size: 100%;
   z-index: 0;
   overflow: clip;
   container-type: inline-size;
   background-color: var(--surface-1);
-
-  /* &:has(.nav a:hover) > .body {
-    filter: blur(3px);
-  } */
 }
-
 
 .body {
   grid-area: 2 / 1 / 3 / 3;
   inline-size: 100%;
   block-size: 100%;
-  background: linear-gradient(180deg, transparent, transparent 90vh, var(--surface-500) 90vh, var(--surface-500));
+  background: linear-gradient(
+    180deg,
+    transparent,
+    transparent 90vh,
+    var(--surface-500) 90vh,
+    var(--surface-500)
+  );
   overflow: clip auto;
   padding-inline-start: 5em;
   transition: filter var(--duration-moderate-1) var(--ease-3);
@@ -35,179 +35,5 @@
     inline-size: 100%;
     block-size: fit-content;
     min-block-size: 100%;
-  }
-}
-
-.top {
-  grid-area: top;
-  display: block grid;
-  grid-auto-flow: column;
-  justify-content: end;
-  z-index: 1;
-  background-color: inherit;
-  padding: .5em;
-}
-
-.nav {
-  grid-area: nav;
-  display: block grid;
-  grid-auto-flow: row;
-  justify-content: space-between;
-  inline-size: 5em;
-  block-size: 100%;
-  padding: 1em;
-  background: inherit;
-  z-index: 0;
-  transition: z-index .3s step-end;
-
-  & > ul {
-    position: relative;
-    display: block grid;
-    grid-template-columns: 2.5rem auto;
-    align-content: center;
-    inline-size: 4rem;
-    gap: 1rem;
-    transform-origin: left center;
-    padding: 0;
-    padding-inline-start: .5rem;
-    margin: 0;
-
-    &::before {
-      content: '';
-      position: absolute;
-      inset-inline-start: 100%;
-      inset-block: 0;
-      inline-size: 20vw;
-      /* background:
-        radial-gradient(ellipse at left center 100% 100%, #f00, transparent),
-        linear-gradient(to right, #0003, transparent); */
-      background-image: linear-gradient(to right, #0003, transparent);
-      mask: radial-gradient(ellipse 20vw 100% at left center, black, transparent);
-      backdrop-filter: blur(5px);
-      opacity: 0;
-      transition: opacity .3s var(--ease-3);
-    }
-
-    & > a {
-      position: relative;
-      grid-column: span 2;
-      display: block grid;
-      grid-template-columns: subgrid;
-      align-items: center;
-      text-decoration: none;
-      transform-origin: center left;
-      transition: transform 2s var(--ease-spring-5), opacity 0.3s var(--ease-3);
-      color: var(--stone-4);
-      font-size: 2rem;
-      line-height: 1.5;
-
-      & > span {
-        opacity: 0;
-        transition: opacity .3s var(--ease-3);
-        text-shadow: 0 0 1em #000;
-      }
-
-      & > svg {
-        fill: var(--stone-4);
-        inline-size: 2.5rem;
-        block-size: 2.5rem;
-      }
-
-      &.active {
-        color: var(--yellow-4);
-        list-style: disc;
-
-        &::before {
-          content: '•';
-          position: absolute;
-          inset-inline-start: -1rem;
-        }
-
-        & > svg {
-          fill: var(--yellow-4);
-        }
-      }
-    }
-
-    &:has(a:is(:hover, :focus))::before {
-      opacity: 1;
-    }
-
-    &:has(a:is(:hover, :focus)) > a:not(:is(:hover, :focus)) {
-      opacity: .25;
-    }
-
-    &:has(a:is(:hover, :focus)) > a {
-      transform: scale(max(1, calc(1.5 - (.2 * abs(var(--target) - var(--sibling-index))))));
-
-      & > span {
-        opacity: 1;
-      }
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(1)) {
-      --target: 1;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(2)) {
-      --target: 2;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(3)) {
-      --target: 3;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(4)) {
-      --target: 4;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(5)) {
-      --target: 5;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(6)) {
-      --target: 6;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(7)) {
-      --target: 7;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(8)) {
-      --target: 8;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(9)) {
-      --target: 9;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(10)) {
-      --target: 10;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(11)) {
-      --target: 11;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(12)) {
-      --target: 12;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(13)) {
-      --target: 13;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(14)) {
-      --target: 14;
-    }
-
-    &:has(a:is(:hover, :focus):nth-child(15)) {
-      --target: 15;
-    }
-  }
-
-  &:has(a:hover, :focus-within) {
-    z-index: 1;
-    transition: z-index .3s step-start;
   }
 }

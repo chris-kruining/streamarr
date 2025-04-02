@@ -10,7 +10,7 @@ export const ListItem: Component<{ entry: Entry }> = (props) => {
       <main>
         <strong>{props.entry.title}</strong>
 
-        <a href={`/content/${props.entry.id}`}>Watch now</a>
+        <a href={`/watch/${props.entry.id}`}>Watch now</a>
       </main>
     </div>
   );

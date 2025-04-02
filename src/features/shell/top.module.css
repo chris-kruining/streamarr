@@ -1,0 +1,9 @@
+.top {
+  grid-area: 1 / 1 / 2 / 3;
+  display: block grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  z-index: 1;
+  background-color: inherit;
+  padding: 0.5em;
+}
