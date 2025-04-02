@@ -10,7 +10,7 @@ export default defineConfig({
       transformer: 'lightningcss',
       lightningcss: {
         targets: browserslistToTargets(browserslist('>= .25%')),
-        include: Features.Nesting | Features.LightDark | Features.Colors | Features.LogicalProperties,
+        include: Features.Nesting | Features.LightDark | Features.Colors,
         customAtRules: {
           property: {
             prelude: '<custom-ident>',
