@@ -1,86 +1,44 @@
 import {
   createEventListenerMap,
-  makeEventListener,
-  makeEventListenerStack,
+  createEventSignal,
 } from "@solid-primitives/event-listener";
-import { createAsync, json, query } from "@solidjs/router";
+import { query } from "@solidjs/router";
 import {
   Component,
   createEffect,
   createMemo,
-  createResource,
   createSignal,
+  For,
   onMount,
+  untrack,
 } from "solid-js";
-import { isServer } from "solid-js/web";
-
-const streamKaas = query(async () => {
-  "use server";
-
-  const stream = new WritableStream();
-
-  async function* packetGenerator() {
-    for (let i = 0; i < 10; i++) {
-      yield `packet ${i}`;
-      await new Promise((res) => setTimeout(res, 1000));
-    }
-  }
-
-  (async () => {
-    const writer = stream.getWriter();
-
-    try {
-      await writer.ready;
-
-      for await (const packet of packetGenerator()) {
-        writer.write(packet);
-      }
-    } finally {
-      writer.releaseLock();
-    }
-    // response.body.wr
-  })();
-
-  return new Response(packetGenerator());
-}, "kaas");
 
 interface PlayerProps {
   id: string;
 }
 
 export const Player: Component<PlayerProps> = (props) => {
-  const [video, setVideo] = createSignal<HTMLVideoElement>();
-  const stream = createAsync(async () => {
-    const res = await streamKaas();
+  const [video, setVideo] = createSignal<HTMLVideoElement>(undefined as unknown as HTMLVideoElement);
 
-    console.log(res);
+  const onDurationChange = createEventSignal(video, 'durationchange');
+  const onTimeUpdate = createEventSignal(video, 'timeupdate');
 
-    return "";
+  const duration = createMemo(() => {
+    onDurationChange();
+    onTimeUpdate();
+
+    return video()?.duration ?? 100;
   });
-  // const [kaas, { refetch }] = createResource(async () => {
-  //   if (isServer) {
-  //     return "";
-  //   }
-  //   const response = await fetch("http://localhost:3000/api/stream/video", {
-  //     method: "GET",
-  //   });
 
-  //   console.log(response.body);
+  const currentTime = createMemo(() => {
+    onTimeUpdate();
 
-  //   for await (const packet of response.body) {
-  //     console.log(new TextDecoder().decode(packet));
-  //   }
+    return video()?.currentTime ?? 0;
+  });
 
-  //   return "";
-  // });
-
-  // onMount(() => refetch());
-
-  // createEffect(() => console.log(stream()));
-
-  // const progress = createMemo(() => {
-  //   const
-  // });
+  createEffect(() => {
+    console.log(duration(), currentTime());
+  });
 
   createEventListenerMap(() => video()!, {
     durationchange(e) {
@@ -102,11 +60,14 @@ export const Player: Component<PlayerProps> = (props) => {
       console.log("seeking", e);
     },
     stalled(e) {
-      console.log("stalled", e);
+      console.log("stalled (meaning downloading data failed)", e, video()!.error);
     },
 
     play(e) {
       console.log("play", e);
+    },
+    canplay(e) {
+      console.log("canplay", e);
     },
     playing(e) {
       console.log("playing", e);
@@ -130,9 +91,9 @@ export const Player: Component<PlayerProps> = (props) => {
       console.log(e);
     },
 
-    timeupdate(e) {
-      console.log("timeupdate", e);
-    },
+    // timeupdate(e) {
+    //   console.log("timeupdate", e);
+    // },
   });
 
   const toggle = () => {
@@ -149,13 +110,14 @@ export const Player: Component<PlayerProps> = (props) => {
     <>
       <h1>{props.id}</h1>
 
-      <video ref={setVideo} muted preload="metadata">
-        <source src="/videos/bbb_sunflower_2160p_60fps_normal.mp4" />
-      </video>
+      <video ref={setVideo} width="1280px" height="720px" muted src="/api/stream/video" />
 
       <button onclick={toggle}>play/pause</button>
 
-      <progress />
+      <span style={{ '--duration': duration(), '--current-time': currentTime() }} />
+      <span data-duration={duration()} data-current-time={currentTime()} />
+
+      <progress max={duration()} value={currentTime()} />
     </>
   );
 };

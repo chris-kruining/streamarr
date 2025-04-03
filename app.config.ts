@@ -6,22 +6,22 @@ import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
   vite: {
-    css: {
-      transformer: 'lightningcss',
-      lightningcss: {
-        targets: browserslistToTargets(browserslist('>= .25%')),
-        include: Features.Nesting | Features.LightDark | Features.Colors,
-        customAtRules: {
-          property: {
-            prelude: '<custom-ident>',
-            body: 'style-block',
-          },
-        },
-      },
-    },
-    build: {
-      cssMinify: 'lightningcss',
-    },
+    // css: {
+    //   transformer: 'lightningcss',
+    //   lightningcss: {
+    //     targets: browserslistToTargets(browserslist('>= .25%')),
+    //     include: Features.Nesting | Features.LightDark | Features.Colors,
+    //     customAtRules: {
+    //       property: {
+    //         prelude: '<custom-ident>',
+    //         body: 'style-block',
+    //       },
+    //     },
+    //   },
+    // },
+    // build: {
+    //   cssMinify: 'lightningcss',
+    // },
     plugins: [
       devtools({
         autoname: true,

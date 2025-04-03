@@ -1,4 +1,4 @@
 export type * from './types';
 
-export { emptyEntry } from './data';
+export { emptyEntry, createSlug } from './data';
 export * from './service';

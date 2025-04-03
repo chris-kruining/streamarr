@@ -1,8 +1,8 @@
 import type { Category, Entry } from './types';
-import { cache } from "@solidjs/router";
+import { query } from "@solidjs/router";
 import { entries } from './data';
 
-export const listCategories = cache(async (): Promise<Category[]> => {
+export const listCategories = query(async (): Promise<Category[]> => {
   "use server";
 
   return [
@@ -25,7 +25,7 @@ export const listCategories = cache(async (): Promise<Category[]> => {
   ];
 }, 'series.categories.list');
 
-export const getEntry = cache(async (id: Entry['id']): Promise<Entry | undefined> => {
+export const getEntry = query(async (id: Entry['id']): Promise<Entry | undefined> => {
   "use server";
 
   return entries.get(id);

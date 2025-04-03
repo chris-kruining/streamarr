@@ -19,16 +19,6 @@ type OverviewProps = {
 export const Overview: Component<OverviewProps> = (props) => {
   const [container, setContainer] = createSignal<HTMLElement>();
 
-  onMount(() => {
-    new MutationObserver(() => {
-      container()
-        ?.querySelector<HTMLElement>(
-          `.${css.list} > ul > div:nth-child(4) > main > a`,
-        )
-        ?.focus({ preventScroll: true });
-    }).observe(document.body, { subtree: true, childList: true });
-  });
-
   return (
     <div ref={setContainer} class={css.container}>
       <Hero class={css.hero} entry={props.highlight}></Hero>

@@ -5,7 +5,7 @@ export interface Category {
 }
 
 export interface Entry {
-  id: number;
+  id: string;
   title: string;
   summary?: string;
   releaseDate?: string;
