@@ -1,10 +1,17 @@
-import { json, Params, query, redirect, RouteDefinition, useParams } from "@solidjs/router";
+import {
+  json,
+  Params,
+  query,
+  redirect,
+  RouteDefinition,
+  useParams,
+} from "@solidjs/router";
 import { createSlug, getEntry } from "~/features/content";
 import { Player } from "~/features/player";
 import { toSlug } from "~/utilities";
 
 const healUrl = query(async (slug: string) => {
-  const entry = await getEntry(slug.slice(slug.lastIndexOf('-') + 1));
+  const entry = await getEntry(slug.slice(slug.lastIndexOf("-") + 1));
 
   if (entry === undefined) {
     return json(null, { status: 404 });
@@ -17,11 +24,10 @@ const healUrl = query(async (slug: string) => {
   }
 
   throw redirect(`/watch/${actualSlug}`);
-}, 'watch.heal');
+}, "watch.heal");
 
 interface ItemParams extends Params {
-  title: string;
-  id: string;
+  slug: string;
 }
 
 export const route = {
@@ -31,11 +37,12 @@ export const route = {
 } satisfies RouteDefinition;
 
 export default function Item() {
-  const params = useParams<ItemParams>();
+  const { slug } = useParams<ItemParams>();
+  const id = slug.slice(slug.lastIndexOf("-") + 1);
 
   return (
     <>
-      <Player id={params.id} />
+      <Player id={id} />
     </>
   );
 }
