@@ -3,6 +3,7 @@ import { ColorSchemePicker } from "../theme";
 import { signIn, signOut, useSession } from "~/auth";
 import { hash } from "~/utilities";
 import css from "./top.module.css";
+import { Avatar } from "../user";
 
 export const Top: Component = (props) => {
   const session = useSession();
@@ -43,6 +44,7 @@ export const Top: Component = (props) => {
           {(user) => (
             <>
               <div>
+                <Avatar />
                 <img
                   src={
                     user().image ??
