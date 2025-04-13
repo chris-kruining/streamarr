@@ -2,16 +2,8 @@ import {
   createEventListenerMap,
   createEventSignal,
 } from "@solid-primitives/event-listener";
-import { query } from "@solidjs/router";
-import {
-  Component,
-  createEffect,
-  createMemo,
-  createSignal,
-  For,
-  onMount,
-  untrack,
-} from "solid-js";
+import { createAsync, json, query } from "@solidjs/router";
+import { Component, createEffect, createMemo, createSignal } from "solid-js";
 import css from "./player.module.css";
 import { Volume } from "./controls/volume";
 
