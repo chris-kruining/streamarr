@@ -28,6 +28,10 @@ export const Top: Component = (props) => {
     console.log(hashedEmail());
   });
 
+  createEffect(() => {
+    console.log(session().data?.user);
+  });
+
   return (
     <aside class={css.top}>
       <Show
