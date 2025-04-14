@@ -1,11 +1,27 @@
 import { Component, createMemo, Show } from "solid-js";
+import { User } from "./user";
+import { hash } from "~/utilities";
+import css from "./avatar.module.css";
 
-export const Avatar: Component = (props) => {
-  const src = createMemo(() => "");
+interface AvatarProps {
+  user: User | undefined;
+}
 
-  return (
-    <Show when={src()}>
-      <img src={src()} />
-    </Show>
-  );
+export const Avatar: Component<AvatarProps> = (props) => {
+  const hashedEmail = hash("SHA-256", () => props.user?.email);
+  const src = createMemo(() => {
+    const user = props.user;
+
+    if (user === undefined) {
+      return "";
+    }
+
+    if (user.image === null) {
+      return `https://www.gravatar.com/avatar/${hashedEmail()}`;
+    }
+
+    return user.image;
+  });
+
+  return <img src={src()} class={css.avatar} />;
 };

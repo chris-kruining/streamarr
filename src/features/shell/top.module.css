@@ -7,3 +7,31 @@
   background-color: inherit;
   padding: 0.5em;
 }
+
+.accountTrigger {
+  anchor-name: --account-trigger;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border-radius: var(--radius-round);
+}
+
+.accountMenu {
+  position-anchor: --account-trigger;
+  position: absolute;
+  inset: auto;
+  inset-inline-end: anchor(end);
+  inset-block-start: anchor(start);
+
+  display: block grid;
+  grid-auto-flow: row;
+  gap: var(--size-3);
+  padding: var(--size-3);
+  background-color: light-dark(var(--gray-1), var(--gray-9));
+  border-radius: var(--radius-2);
+  box-shadow: var(--shadow-2);
+
+  &:not(:popover-open) {
+    display: none;
+  }
+}

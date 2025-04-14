@@ -1,71 +1,58 @@
-import { Component, createEffect, createMemo, Show } from "solid-js";
-import { ColorSchemePicker } from "../theme";
-import { signIn, signOut, useSession } from "~/auth";
+import { Component, createEffect, Show } from "solid-js";
+import { signIn, signOut } from "~/auth";
 import { hash } from "~/utilities";
+import { Avatar, Profile, User } from "../user";
 import css from "./top.module.css";
-import { Avatar } from "../user";
 
-export const Top: Component = (props) => {
-  const session = useSession();
-  const hashedEmail = hash("SHA-256", () => session().data?.user.email);
+interface TopProps {
+  user: User | undefined;
+}
 
-  const login = async () => {
-    const response = await signIn.oauth2({
+export const Top: Component<TopProps> = (props) => {
+  const login = async (e: SubmitEvent) => {
+    e.preventDefault();
+
+    await signIn.oauth2({
       providerId: "authelia",
       callbackURL: "/",
     });
-
-    console.log("signin response", response);
   };
 
-  const logout = async () => {
-    const response = await signOut();
+  const logout = async (e: SubmitEvent) => {
+    e.preventDefault();
 
-    console.log("signout response", response);
+    await signOut();
   };
-
-  createEffect(() => {
-    console.log(hashedEmail());
-  });
-
-  createEffect(() => {
-    console.log(session().data?.user);
-  });
 
   return (
     <aside class={css.top}>
       <Show
-        when={session().isPending === false && session().isRefetching === false}
+        when={props.user}
+        fallback={
+          <form method="post" onSubmit={login}>
+            <button type="submit">Sign in</button>
+          </form>
+        }
       >
-        <Show
-          when={session().data?.user}
-          fallback={
-            <form method="post" onSubmit={login}>
-              <button type="submit">Sign in</button>
-            </form>
-          }
-        >
-          {(user) => (
-            <>
-              <div>
-                <Avatar />
-                <img
-                  src={
-                    user().image ??
-                    `https://www.gravatar.com/avatar/${hashedEmail()}`
-                  }
-                />
-                <span>{user().name}</span>
-                <span>{user().email}</span>
-              </div>
+        {(user) => (
+          <>
+            <button
+              class={css.accountTrigger}
+              id="account-menu-trigger"
+              popovertarget="account-menu-popover"
+            >
+              <Avatar user={user()} />
+            </button>
+            <div class={css.accountMenu} id="account-menu-popover" popover>
+              <Profile user={user()} />
               <form method="post" onSubmit={logout}>
                 <button type="submit">Log out</button>
               </form>
-            </>
-          )}
-        </Show>
+            </div>
+          </>
+        )}
       </Show>
-      <ColorSchemePicker />
+      {/* <ColorSchemePicker /> */}
     </aside>
   );
 };
