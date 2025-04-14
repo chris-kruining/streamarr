@@ -45,6 +45,7 @@ export const Top: Component<TopProps> = (props) => {
             </button>
             <div class={css.accountMenu} id="account-menu-popover" popover>
               <Profile user={user()} />
+              <a href="/settings">Settings</a>
               <form method="post" onSubmit={logout}>
                 <button type="submit">Log out</button>
               </form>

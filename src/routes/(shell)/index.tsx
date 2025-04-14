@@ -1,19 +1,29 @@
-import { Title } from '@solidjs/meta';
-import { createAsync } from '@solidjs/router';
-import { Overview } from '~/features/overview';
-import { listCategories, getEntry } from '~/features/content';
-import { Show } from 'solid-js';
+import { Title } from "@solidjs/meta";
+import { createAsync, query } from "@solidjs/router";
+import { Overview } from "~/features/overview";
+import { listCategories, getEntry } from "~/features/content";
+import { createEffect, Show } from "solid-js";
+
+const load = query(async () => {
+  "use server";
+
+  // const response =
+}, "home.data");
 
 export const route = {
-  load: () => ({
-    highlight: getEntry(14),
-    categories: listCategories(),
+  preload: async () => ({
+    highlight: await getEntry("14"),
+    categories: await listCategories(),
   }),
 };
 
 export default function Home() {
-  const highlight = createAsync(() => getEntry(14));
+  const highlight = createAsync(() => getEntry("14"));
   const categories = createAsync(() => listCategories());
+
+  createEffect(() => {
+    console.log(highlight(), categories());
+  });
 
   return (
     <>
