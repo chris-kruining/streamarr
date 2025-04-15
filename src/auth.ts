@@ -4,19 +4,33 @@ import { createAuthClient } from "better-auth/solid";
 import { genericOAuthClient } from "better-auth/client/plugins";
 
 export const auth = betterAuth({
-  appName: 'Streamarr',
-  basePath: '/api/auth',
+  appName: "Streamarr",
+  basePath: "/api/auth",
   advanced: {
     useSecureCookies: true,
-    crossSubDomainCookies: {
-      enabled: true,
-    },
   },
   logger: {
-    level: 'debug',
+    level: "info",
   },
-  onAPIError: {
-    throw: true,
+  user: {
+    additionalFields: {
+      name: {
+        type: "string",
+        nullable: true,
+      },
+      preferred_username: {
+        type: "string",
+        nullable: true,
+      },
+      username: {
+        type: "string",
+        nullable: true,
+      },
+      profile: {
+        type: "string",
+        nullable: true,
+      },
+    },
   },
   plugins: [
     genericOAuth({
@@ -28,7 +42,14 @@ export const auth = betterAuth({
             "ZPuiW2gpVV6MGXIJFk5P3EeSW8V_ICgqduF.hJVCKkrnVmRqIQXRk0o~HSA8ZdCf8joA4m_F",
           discoveryUrl:
             "https://auth.kruining.eu/.well-known/openid-configuration",
-          scopes: ["openid", "email", "picture", "profile", "groups"],
+          scopes: [
+            "offline_access",
+            "openid",
+            "email",
+            "picture",
+            "profile",
+            "groups",
+          ],
           accessType: "offline",
           pkce: true,
         },

@@ -3,6 +3,7 @@ import { signIn, signOut } from "~/auth";
 import { hash } from "~/utilities";
 import { Avatar, Profile, User } from "../user";
 import css from "./top.module.css";
+import { ColorSchemePicker } from "../theme";
 
 interface TopProps {
   user: User | undefined;
@@ -53,7 +54,7 @@ export const Top: Component<TopProps> = (props) => {
           </>
         )}
       </Show>
-      {/* <ColorSchemePicker /> */}
+      <ColorSchemePicker />
     </aside>
   );
 };

@@ -18,9 +18,15 @@ const load = query(async (): Promise<User | undefined> => {
     return undefined;
   }
 
-  const { name, email, image = null } = session.user;
+  const {
+    preferred_username,
+    name,
+    email,
+    image = null,
+    ...user
+  } = session.user;
 
-  return { name, email, image };
+  return { username: preferred_username, name, email, image };
 }, "session");
 
 export const route = {
