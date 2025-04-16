@@ -6,9 +6,6 @@ import { genericOAuthClient } from "better-auth/client/plugins";
 export const auth = betterAuth({
   appName: "Streamarr",
   basePath: "/api/auth",
-  advanced: {
-    useSecureCookies: true,
-  },
   logger: {
     level: "info",
   },
