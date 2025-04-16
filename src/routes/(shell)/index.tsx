@@ -9,6 +9,7 @@ import {
 import { Show } from "solid-js";
 import { List } from "~/components/list";
 import { ListItem } from "~/features/overview/list-item";
+import css from './index.module.css';
 
 export const route = {
   preload: async () => ({
@@ -29,11 +30,24 @@ export default function Home() {
     <>
       <Title>Home</Title>
 
-      <Show when={continueWatching()}>{
+      <ul class={css.list}>
+        <li>Item 0</li>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+        <li>Item 4</li>
+        <li>Item 5</li>
+        <li>Item 6</li>
+        <li>Item 7</li>
+        <li>Item 8</li>
+        <li>Item 9</li>
+      </ul>
+
+      {/* <Show when={continueWatching()}>{
         entries => <List label="Continue watching" items={entries()}>
           {(item) => <ListItem entry={item()} />}
         </List>
-      }</Show>
+      }</Show> */}
 
       <Show when={highlight() && categories()}>
         <Overview highlight={highlight()!} categories={categories()!} />

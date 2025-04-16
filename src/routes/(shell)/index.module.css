@@ -1,0 +1,39 @@
+.list {
+    anchor-name: --carousel;
+    overflow: auto;
+    scroll-snap-type: inline mandatory;
+
+    display: grid;
+    grid-auto-flow: column;
+
+    inline-size: 80%;
+    justify-self: center;
+
+    & > li {
+        inline-size: 30vw;
+        list-style: none;
+        scroll-snap-align: start;
+    }
+
+    &::scroll-button(inline-start),
+    &::scroll-button(inline-end) {
+        position: fixed;
+        position-anchor: --carousel;
+    }
+
+    &::scroll-button(inline-start) {
+        --_inner: center span-inline-end;
+        --_outer: inline-start center;
+
+        position-area: var(--_outer);
+        content: 'arrow_back' / 'Previous';
+    }
+
+    &::scroll-button(inline-end) {
+        --_inner: center span-inline-start;
+        --_outer: inline-end center;
+
+        position-area: var(--_outer);
+        content: 'arrow_forward' / 'Next';
+    }
+}
