@@ -56,6 +56,5 @@ export const auth = betterAuth({
 });
 
 export const { signIn, signOut, useSession, ...client } = createAuthClient({
-  baseURL: "http://localhost:3000",
   plugins: [genericOAuthClient()],
 });

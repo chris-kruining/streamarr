@@ -29,11 +29,11 @@ export default function Home() {
     <>
       <Title>Home</Title>
 
-      <Show when={continueWatching()}>
-        <List label="Continue watching" items={continueWatching()}>
+      <Show when={continueWatching()}>{
+        entries => <List label="Continue watching" items={entries()}>
           {(item) => <ListItem entry={item()} />}
         </List>
-      </Show>
+      }</Show>
 
       <Show when={highlight() && categories()}>
         <Overview highlight={highlight()!} categories={categories()!} />

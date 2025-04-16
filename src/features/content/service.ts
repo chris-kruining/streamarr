@@ -70,4 +70,4 @@ export const getEntry = query(
   "series.get",
 );
 
-export { getContinueWatching } from "./apis/jellyfin";
+export { listUsers, getItem, getContinueWatching } from "./apis/jellyfin";
