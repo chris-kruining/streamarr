@@ -7,14 +7,14 @@ export const ListItem: Component<{ entry: Entry }> = (props) => {
   const slug = createMemo(() => createSlug(props.entry));
 
   return (
-    <div class={css.listItem}>
-      <img src={props.entry.thumbnail} />
+    <figure class={css.listItem}>
+      <img src={props.entry.thumbnail} alt={props.entry.title} />
 
-      <main>
+      <figcaption>
         <strong>{props.entry.title}</strong>
 
         <a href={`/watch/${slug()}`}>Watch now</a>
-      </main>
-    </div>
+      </figcaption>
+    </figure>
   );
 };

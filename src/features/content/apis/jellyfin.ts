@@ -13,8 +13,7 @@ const client = createClient<paths>({
 
 export const listUsers = query(async () => {
   const { data, error } = await client.GET("/Users", {
-    params: {
-    },
+    params: {},
   });
 
   return data ?? [];
@@ -62,7 +61,7 @@ export const getContinueWatching = query(
     const items = (data?.Items ?? []).map(({ Id, Name }) => ({
       id: Id,
       title: Name,
-      thumbnail: `${baseUrl}Items/${Id}/Images/Primary`,
+      thumbnail: `${baseUrl}/Items/${Id}/Images/Primary`,
     }));
 
     return items;

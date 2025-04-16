@@ -10,13 +10,15 @@ interface ListProps<T> {
 
 export function List<T>(props: ListProps<T>) {
   return (
-    <section class={`${css.container} ${props.class ?? ''}`}>
+    <section class={`${css.container} ${props.class ?? ""}`}>
       <b role="heading" class={css.heading}>
         {props.label}
       </b>
 
       <ul class={css.list}>
-        <Index each={props.items}>{(item) => props.children(item)}</Index>
+        <Index each={props.items}>
+          {(item) => <li>{props.children(item)}</li>}
+        </Index>
       </ul>
     </section>
   );

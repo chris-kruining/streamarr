@@ -7,47 +7,74 @@ import {
   getContinueWatching,
 } from "~/features/content";
 import { Show } from "solid-js";
-import { List } from "~/components/list";
-import { ListItem } from "~/features/overview/list-item";
-import css from './index.module.css';
+import css from "./index.module.css";
 
 export const route = {
   preload: async () => ({
     highlight: await getEntry("14"),
     categories: await listCategories(),
-    continue: await getContinueWatching("a9c51af84bf54578a99ab4dd0ebf0763"),
   }),
 };
 
 export default function Home() {
   const highlight = createAsync(() => getEntry("14"));
   const categories = createAsync(() => listCategories());
-  const continueWatching = createAsync(() =>
-    getContinueWatching("a9c51af84bf54578a99ab4dd0ebf0763"),
-  );
 
   return (
     <>
       <Title>Home</Title>
 
-      <ul class={css.list}>
-        <li>Item 0</li>
-        <li>Item 1</li>
-        <li>Item 2</li>
-        <li>Item 3</li>
-        <li>Item 4</li>
-        <li>Item 5</li>
-        <li>Item 6</li>
-        <li>Item 7</li>
-        <li>Item 8</li>
-        <li>Item 9</li>
-      </ul>
+      {/* <div class={css.carousel}>
+        <header>some category</header>
 
-      {/* <Show when={continueWatching()}>{
-        entries => <List label="Continue watching" items={entries()}>
-          {(item) => <ListItem entry={item()} />}
-        </List>
-      }</Show> */}
+        <ul>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/1.jpg" alt="Item 1" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/2.avif" alt="Item 2" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/3.avif" alt="Item 3" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/4.avif" alt="Item 4" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/5.avif" alt="Item 5" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/6.avif" alt="Item 6" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/7.avif" alt="Item 7" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/8.avif" alt="Item 8" />
+            </figure>
+          </li>
+          <li>
+            <figure>
+              <img src="https://assets.codepen.io/2585/9.avif" alt="Item 9" />
+            </figure>
+          </li>
+        </ul>
+      </div> */}
 
       <Show when={highlight() && categories()}>
         <Overview highlight={highlight()!} categories={categories()!} />

@@ -25,15 +25,18 @@
       /* Dot */
       radial-gradient(circle at 25% 30% #7772 #7774 1em transparent 1em),
       /* Dot */
-      radial-gradient(circle at 85% 15% #7772 #7774 1em transparent 1em),
-      /* Bottom fade */
-      linear-gradient(165deg transparent 60% #555 60% #333),
+        radial-gradient(circle at 85% 15% #7772 #7774 1em transparent 1em),
+      /* Bottom fade */ linear-gradient(165deg transparent 60% #555 60% #333),
       /* wave dark part */
-      radial-gradient(ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%),
+        radial-gradient(
+          ellipse 5em 2.25em at 0.5em calc(50% - 1em) #333 100% transparent 100%
+        ),
       /* wave light part */
-      radial-gradient(ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100% transparent 100%),
-      /* Base */
-      linear-gradient(to bottom #333 50% #555 50%);
+        radial-gradient(
+          ellipse 5em 2.25em at calc(100% - 0.5em) calc(50% + 1em) #555 100%
+            transparent 100%
+        ),
+      /* Base */ linear-gradient(to bottom #333 50% #555 50%);
 
     transform-origin: 50% 0;
     transform: scale(1.1) translateY(calc(-4 * var(--padding)));
@@ -41,7 +44,7 @@
     user-select: none;
   }
 
-  & > main {
+  & > figcaption {
     --offset: calc(1.5 * var(--padding));
     grid-area: 1/ 1;
     display: grid;
@@ -98,11 +101,10 @@
         will-change: transform;
       }
 
-      & > main {
+      & > figcaption {
         clip-path: inset(40%);
       }
     }
-
     @media (prefers-reduced-motion: no-preference) {
       & {
         transition: transform var(--duration-moderate-1) linear;
@@ -112,7 +114,7 @@
         transition: transform var(--duration-moderate-1) ease-in-out;
       }
 
-      & > main {
+      & > figcaption {
         transition: clip-path var(--duration-moderate-1) ease-in-out;
       }
 
