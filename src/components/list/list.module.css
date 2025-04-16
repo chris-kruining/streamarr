@@ -51,8 +51,7 @@
     padding: 0;
     position: relative;
 
-    order: calc(var(--sibling-count) - var(--sibling-index));
-    z-index: var(--sibling-index);
+    z-index: calc(var(--sibling-count) - var(--sibling-index));
 
     & > * {
       @supports (animation-timeline: view()) {
