@@ -53,6 +53,10 @@
 
     z-index: calc(var(--sibling-count) - var(--sibling-index));
 
+    &:has(> :hover, > :focus-within) {
+      z-index: calc(var(--sibling-count) + 1);
+    }
+
     & > * {
       @supports (animation-timeline: view()) {
         @media (prefers-reduced-motion: no-preference) {

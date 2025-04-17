@@ -1,12 +1,15 @@
 import type { Category, Entry } from "./types";
 import { query } from "@solidjs/router";
 import { entries } from "./data";
-import { getContinueWatching } from "./apis/jellyfin";
+import { getContinueWatching, getItem, TEST } from "./apis/jellyfin";
+
+const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
 
 export const listCategories = query(async (): Promise<Category[]> => {
   "use server";
 
-  const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
+  // await TEST()
+  // console.log(await getItemPlaybackInfo(jellyfinUserId, 'a69c0c0ab66177a7adb671f126335d16'));
 
   return [
     { label: "Continue", entries: await getContinueWatching(jellyfinUserId) },
@@ -69,9 +72,9 @@ export const getEntry = query(
   async (id: Entry["id"]): Promise<Entry | undefined> => {
     "use server";
 
-    return entries.get(id);
+    return getItem(jellyfinUserId, id);
   },
   "series.get",
 );
 
-export { listUsers, getItem, getContinueWatching } from "./apis/jellyfin";
+export { listUsers, getContinueWatching } from "./apis/jellyfin";

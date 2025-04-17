@@ -10,7 +10,7 @@ export interface Entry {
   summary?: string;
   releaseDate?: string;
   sources?: Entry.Source[];
-  thumbnail?: string;
+  thumbnail?: URL | string;
   image?: string;
 }
 

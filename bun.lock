@@ -5,6 +5,7 @@
       "name": "streamarr",
       "dependencies": {
         "@solid-primitives/context": "^0.3.0",
+        "@solid-primitives/deep": "^0.3.1",
         "@solid-primitives/event-listener": "^2.4.0",
         "@solidjs/meta": "^0.29.4",
         "@solidjs/router": "^0.15.3",
@@ -313,11 +314,15 @@
 
     "@solid-primitives/cursor": ["@solid-primitives/cursor@0.0.115", "", { "dependencies": { "@solid-primitives/utils": "^6.2.3" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-8nEmUN/sacXPChwuJOAi6Yi6VnxthW/Jk8VGvvcF38AenjUvOA6FHI6AkJILuFXjQw1PGxia1YbH/Mn77dPiOA=="],
 
+    "@solid-primitives/deep": ["@solid-primitives/deep@0.3.1", "", { "dependencies": { "@solid-primitives/memo": "^1.4.1" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-DaJ2iuHmYmHyGhA5EACfqVKXNivGlLA+zYborz1pLzKOpyMZq0LvmNoBgwFwN/ncOq5FhGP0Hvr6U7QP+hmLXw=="],
+
     "@solid-primitives/event-listener": ["@solid-primitives/event-listener@2.4.0", "", { "dependencies": { "@solid-primitives/utils": "^6.3.0" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-TSfR1PNTfojFEYGSxSMCnUhXsaYWBo4p+cm73QmWODa9YnaQAk6PB7VjzG2bOT2D817VlvuOqTj0Qdq+MZrdGg=="],
 
     "@solid-primitives/keyboard": ["@solid-primitives/keyboard@1.3.0", "", { "dependencies": { "@solid-primitives/event-listener": "^2.4.0", "@solid-primitives/rootless": "^1.5.0", "@solid-primitives/utils": "^6.3.0" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-0QX9O3eUaQorNNmXZn8a4efSByayIScVq+iGSwheD7m3SL/ACLM5oZlCNpTPLcemnVVfUPAHFiViEj86XpN5qw=="],
 
     "@solid-primitives/media": ["@solid-primitives/media@2.3.0", "", { "dependencies": { "@solid-primitives/event-listener": "^2.4.0", "@solid-primitives/rootless": "^1.5.0", "@solid-primitives/static-store": "^0.1.0", "@solid-primitives/utils": "^6.3.0" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-7+C3wfbWnGE/WPoNsqcp/EeOP2aNNB92RCpsWhBth8E5lZo/J+rK6jMb7umVsK0zguT8HBpeXp1pFyFbcsHStA=="],
+
+    "@solid-primitives/memo": ["@solid-primitives/memo@1.4.1", "", { "dependencies": { "@solid-primitives/scheduled": "^1.5.0", "@solid-primitives/utils": "^6.3.0" }, "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-MzNCJNpXidQdLOZUsEkwpuq52uwT8zrFrBxEVMEr9N35yIIvGhjqwrI1M6xzPmJGzuVUe8anCk57q+N5gyRk0Q=="],
 
     "@solid-primitives/platform": ["@solid-primitives/platform@0.1.2", "", { "peerDependencies": { "solid-js": "^1.6.12" } }, "sha512-sSxcZfuUrtxcwV0vdjmGnZQcflACzMfLriVeIIWXKp8hzaS3Or3tO6EFQkTd3L8T5dTq+kTtLvPscXIpL0Wzdg=="],
 

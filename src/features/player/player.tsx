@@ -6,6 +6,7 @@ import { createAsync, json, query } from "@solidjs/router";
 import { Component, createEffect, createMemo, createSignal } from "solid-js";
 import css from "./player.module.css";
 import { Volume } from "./controls/volume";
+import { getEntry } from "../content";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -42,9 +43,12 @@ export const Player: Component<PlayerProps> = (props) => {
   const [video, setVideo] = createSignal<HTMLVideoElement>(
     undefined as unknown as HTMLVideoElement,
   );
+
+  const entry = createAsync(() => getEntry(props.id));
+
   const data = createAsync(() => metadata(props.id), {
     deferStream: true,
-    initialValue: {},
+    initialValue: {} as any,
   });
   const captionUrl = createMemo(() => {
     const { captions } = data();
@@ -168,7 +172,7 @@ export const Player: Component<PlayerProps> = (props) => {
 
   return (
     <figure class={css.player}>
-      <h1>{props.id}</h1>
+      <h1>{entry()?.title}</h1>
 
       <video
         ref={setVideo}
@@ -194,7 +198,10 @@ export const Player: Component<PlayerProps> = (props) => {
       </video>
 
       <figcaption>
-        <Volume value={0.5} />
+        <Volume value={video()?.volume ?? 0} muted={video()?.muted ?? false} onInput={({ volume, muted }) => {
+          video().volume = volume;
+          video().muted = muted;
+        }} />
       </figcaption>
 
       <button onclick={toggle}>play/pause</button>

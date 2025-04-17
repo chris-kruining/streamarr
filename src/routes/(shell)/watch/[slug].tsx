@@ -1,4 +1,5 @@
 import {
+  createAsync,
   json,
   Params,
   query,
@@ -6,6 +7,7 @@ import {
   RouteDefinition,
   useParams,
 } from "@solidjs/router";
+import { createEffect } from "solid-js";
 import { createSlug, getEntry } from "~/features/content";
 import { Player } from "~/features/player";
 import { toSlug } from "~/utilities";
@@ -33,6 +35,8 @@ interface ItemParams extends Params {
 export const route = {
   async preload({ params }) {
     await healUrl(params.slug);
+
+    return getEntry(params.slug.slice(params.slug.lastIndexOf("-") + 1));
   },
 } satisfies RouteDefinition;
 
