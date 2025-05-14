@@ -3,7 +3,7 @@ import { query } from "@solidjs/router";
 import { entries } from "./data";
 import { getContinueWatching, getItem, TEST } from "./apis/jellyfin";
 
-const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
+const jellyfinUserId = "a9c51af8-4bf5-4578-a99a-b4dd0ebf0763";
 
 export const listCategories = query(async (): Promise<Category[]> => {
   "use server";

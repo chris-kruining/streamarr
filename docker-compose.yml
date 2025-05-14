@@ -1,0 +1,8 @@
+services:
+  jellyfin:
+    image: stoplight/prism
+    ports:
+      - '9003:4010'
+    volumes:
+      - './src/features/content/apis:/var/apis'
+    command: 'mock -h 0.0.0.0 /var/apis/jellyfin.json'

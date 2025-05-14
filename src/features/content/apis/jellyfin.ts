@@ -19,9 +19,9 @@ const client = createClient<paths>({
 });
 
 export const TEST = query(async () => {
-  const userId = "a9c51af84bf54578a99ab4dd0ebf0763";
-  const itemId = "919dfa97e4dad2758a925d056e590a28";
-  const seriesId = "5230ddbcd9400733dc07e5b8cb7a4f49";
+  const userId = "a9c51af8-4bf5-4578-a99a-b4dd0ebf0763";
+  const itemId = "919dfa97-e4da-d275-8a92-5d056e590a28";
+  const seriesId = "5230ddbcd-9400-733d-c07e-5b8cb7a4f49";
 
   const { data: seriesData } = await client.GET("/UserItems/{itemId}/UserData", {
     params: {
@@ -159,7 +159,7 @@ export const getContinueWatching = query(
       return [];
     }
 
-    const uniqueIds = new Set<string>(data.Items.map(item => item.Type === 'Episode' ? item.SeriesId! : 'MOVIE_ID'));
+    const uniqueIds = new Set<string>(data.Items.map(item => item.Type === 'Episode' ? item.SeriesId! : item.Id));
     const results = await Promise.allSettled(uniqueIds.values().map(id => getItem(userId, id)).toArray());
 
     assertNoErrors(results);

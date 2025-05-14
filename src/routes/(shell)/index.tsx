@@ -9,15 +9,17 @@ import {
 import { Show } from "solid-js";
 import css from "./index.module.css";
 
+const highlightId = 'c97185ed-e0cf-4945-9120-9d15bb8e5998';
+
 export const route = {
   preload: async () => ({
-    highlight: await getEntry("14"),
+    highlight: await getEntry(highlightId),
     categories: await listCategories(),
   }),
 };
 
 export default function Home() {
-  const highlight = createAsync(() => getEntry("14"));
+  const highlight = createAsync(() => getEntry(highlightId));
   const categories = createAsync(() => listCategories());
 
   return (
