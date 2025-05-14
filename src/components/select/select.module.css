@@ -1,4 +1,87 @@
 .box {
+    appearance: none;
+
+    display: block grid;
+    place-items: center start;
+
+    padding: var(--size-2);
+    background-color: transparent;
+    border: none;
+    border-radius: var(--radius-2);
+    font-size: 1rem;
+
+    &:hover {
+        background-color: var(--surface-700);
+    }
+
+    @supports (appearance: base-select) {
+
+        &,
+        &::picker(select) {
+            appearance: base-select;
+        }
+
+        &::picker(select) {
+            /* display: block grid;
+            row-gap: var(--size-2); */
+
+            background-color: var(--surface-3);
+            padding: var(--size-2) 0;
+            border: none;
+            box-shadow: var(--shadow-2);
+
+            opacity: 0;
+            block-size: 0;
+            overflow: clip;
+            transition:
+                height 0.5s ease-out,
+                opacity 0.5s ease-out,
+                overlay 0.5s,
+                display 0.5s,
+                overflow 0.5s;
+
+            transition-behavior: allow-discrete;
+        }
+
+        &:open {
+            background-color: var(--surface-3);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+
+            &::picker(select) {
+                opacity: 1;
+                block-size: calc-size(auto, size);
+                overflow: auto;
+
+                @starting-style {
+                    opacity: 0;
+                    block-size: 0;
+                }
+            }
+        }
+
+        & > option {
+            display: block grid;
+            grid-auto-flow: column;
+            place-items: center start;
+
+            border-radius: var(--radius-2);
+            padding: var(--size-2);
+
+            cursor: pointer;
+
+            &:checked {
+                background-color: var(--surface-4);
+            }
+
+            &::checkmark {
+                display: none;
+            }
+        }
+    }
+}
+
+/* .box {
     display: contents;
 
     &:has(> :popover-open) > .button {
@@ -14,7 +97,6 @@
     grid-template-columns: inherit;
     place-items: center start;
 
-    /* Make sure the height of the button does not collapse when it is empty */
     block-size: 1em;
     box-sizing: content-box;
 
@@ -52,7 +134,6 @@
     inset-block-start: anchor(end);
     position-try-fallbacks: flip-block, flip-inline;
 
-    /* inline-size: anchor-size(self-inline); */
     background-color: var(--surface-3);
     padding: var(--size-2);
     border: none;
@@ -92,4 +173,4 @@
     &.selected {
         background-color: oklch(from var(--info) l c h / .1);
     }
-}
+} */

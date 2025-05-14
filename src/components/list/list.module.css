@@ -42,7 +42,7 @@
 
   &::after {
     order: 11;
-    inline-size: 50cqi;
+    inline-size: 100cqi;
   }
 
   & > li {
