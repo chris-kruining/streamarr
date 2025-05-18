@@ -1,14 +1,25 @@
 .container {
   display: grid;
-  grid-auto-flow: row;
+  grid: auto auto / auto auto;
+  grid-template-areas:
+    "heading metadata"
+    "list list";
+  justify-content: space-between;
   inline-size: 100%;
 }
 
 .heading {
+  grid-area: heading;
   font-size: 2em;
 }
 
+.metadata {
+  grid-area: metadata;
+  opacity: 0.6;
+}
+
 .list {
+  grid-area: list;
   list-style-type: none;
 
   container-type: inline-size;
@@ -36,12 +47,10 @@
   }
 
   &::before {
-    order: 0;
     inline-size: 15cqi;
   }
 
   &::after {
-    order: 11;
     inline-size: 100cqi;
   }
 
@@ -52,8 +61,7 @@
     position: relative;
     isolation: isolate;
 
-    order: calc(var(--sibling-count) - var(--sibling-index));
-    z-index: var(--sibling-index);
+    z-index: calc(var(--sibling-count) - var(--sibling-index));
 
     &:has(> :hover, > :focus-within) {
       z-index: calc(var(--sibling-count) + 1);

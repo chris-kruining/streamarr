@@ -15,6 +15,8 @@ export function List<T>(props: ListProps<T>) {
         {props.label}
       </b>
 
+      <sub class={css.metadata}>{props.items.length} result(s)</sub>
+
       <ul class={css.list}>
         <Index each={props.items}>
           {(item) => <li>{props.children(item)}</li>}

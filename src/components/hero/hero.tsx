@@ -10,12 +10,10 @@ type HeroProps = {
 export function Hero(props: HeroProps) {
   const entry = createMemo(() => props.entries.at(0)!);
   const slug = createMemo(() => createSlug(entry()));
-  
+
   return (
-    <div class={`${css.container} ${props.class ?? ''}`}>
-      <For each={props.entries}>{
-        entry => <Page entry={entry} />
-      }</For>
+    <div class={`${css.container} ${props.class ?? ""}`}>
+      <For each={props.entries}>{(entry) => <Page entry={entry} />}</For>
     </div>
   );
 }
@@ -24,15 +22,19 @@ const Page: Component<{ entry: Entry }> = (props) => {
   const slug = createMemo(() => createSlug(props.entry));
 
   createEffect(() => {
-    console.log(props.entry);
+    // console.log(props.entry);
   });
 
   return (
-    <div class={`${css.page}`} style={{ '--thumb-image': `url(${props.entry.thumbnail})` }}>
-
+    <div
+      class={`${css.page}`}
+      style={{ "--thumb-image": `url(${props.entry.thumbnail})` }}
+    >
       <h2 class={css.title}>{props.entry.title}</h2>
-      
-      <a class={css.cta} href={`/watch/${slug()}`}>Continue</a>
+
+      <a class={css.cta} href={`/watch/${slug()}`}>
+        Continue
+      </a>
 
       <img src={props.entry.thumbnail} class={css.thumbnail} />
       <img src={props.entry.image} class={css.background} />
@@ -52,7 +54,7 @@ const Page: Component<{ entry: Entry }> = (props) => {
         </Index>
       </span>
 
-      <p class={css.summary}>{props.entry.synopsis}</p>
+      <p class={css.summary}>{props.entry.overview}</p>
     </div>
   );
 };

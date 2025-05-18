@@ -22,7 +22,8 @@ const healUrl = query(async (slug: string) => {
     return;
   }
 
-  throw redirect(`/watch/${actualSlug}`);
+  // Not entirely sure a permanent redirect is what we want in this case
+  throw redirect(`/watch/${actualSlug}`, { status: 308 });
 }, "watch.heal");
 
 interface ItemParams extends Params {

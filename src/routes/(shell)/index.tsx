@@ -1,10 +1,7 @@
 import { Title } from "@solidjs/meta";
 import { createAsync } from "@solidjs/router";
 import { Overview } from "~/features/overview";
-import {
-  getHighlights,
-  listCategories,
-} from "~/features/content";
+import { getHighlights, listCategories } from "~/features/content";
 import { Show } from "solid-js";
 
 export const route = {
@@ -17,7 +14,7 @@ export const route = {
 export default function Home() {
   const highlights = createAsync(() => getHighlights());
   const categories = createAsync(() => listCategories());
-  
+
   return (
     <>
       <Title>Home</Title>

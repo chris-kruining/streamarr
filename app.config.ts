@@ -1,27 +1,9 @@
-import { defineConfig } from '@solidjs/start/config';
-import { browserslistToTargets, Features } from 'lightningcss';
-import browserslist from 'browserslist';
-import solidSvg from 'vite-plugin-solid-svg';
-import devtools from 'solid-devtools/vite';
+import { defineConfig } from "@solidjs/start/config";
+import solidSvg from "vite-plugin-solid-svg";
+import devtools from "solid-devtools/vite";
 
 export default defineConfig({
   vite: {
-    // css: {
-    //   transformer: 'lightningcss',
-    //   lightningcss: {
-    //     targets: browserslistToTargets(browserslist('>= .25%')),
-    //     include: Features.Nesting | Features.LightDark | Features.Colors,
-    //     customAtRules: {
-    //       property: {
-    //         prelude: '<custom-ident>',
-    //         body: 'style-block',
-    //       },
-    //     },
-    //   },
-    // },
-    // build: {
-    //   cssMinify: 'lightningcss',
-    // },
     plugins: [
       devtools({
         autoname: true,
@@ -35,12 +17,9 @@ export default defineConfig({
     },
   },
   server: {
-    preset: 'bun',
+    preset: "bun",
     prerender: {
-      routes: [
-        '/sitemaps.xml',
-        '/watch/furiosa-a-mad-max-saga-1c829d55201c766641c4aec0346551c6'
-      ],
+      routes: ["/sitemaps.xml"],
     },
   },
 });

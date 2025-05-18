@@ -5,14 +5,27 @@ import createClient from "openapi-fetch";
 import { query } from "@solidjs/router";
 import { Entry } from "../types";
 
-type ItemImageType = "Primary" | "Art" | "Backdrop" | "Banner" | "Logo" | "Thumb" | "Disc" | "Box" | "Screenshot" | "Menu" | "Chapter" | "BoxRear" | "Profile";
+type ItemImageType =
+  | "Primary"
+  | "Art"
+  | "Backdrop"
+  | "Banner"
+  | "Logo"
+  | "Thumb"
+  | "Disc"
+  | "Box"
+  | "Screenshot"
+  | "Menu"
+  | "Chapter"
+  | "BoxRear"
+  | "Profile";
 
 const baseUrl = process.env.JELLYFIN_BASE_URL;
 const client = createClient<paths>({
   baseUrl,
   headers: {
-    'Authorization': `MediaBrowser DeviceId="Streamarr", Token="${process.env.JELLYFIN_API_KEY}"`,
-    'Content-Type': 'application/json; profile="CamelCase"',
+    Authorization: `MediaBrowser DeviceId="Streamarr", Token="${process.env.JELLYFIN_API_KEY}"`,
+    "Content-Type": 'application/json; profile="CamelCase"',
   },
 });
 
@@ -21,29 +34,30 @@ export const TEST = query(async () => {
   const itemId = "919dfa97-e4da-d275-8a92-5d056e590a28";
   const seriesId = "5230ddbcd-9400-733d-c07e-5b8cb7a4f49";
 
-  const { data: seriesData } = await client.GET("/UserItems/{itemId}/UserData", {
-    params: {
-      path: { itemId: seriesId },
-      query: { userId }
-    }
-  });
+  const { data: seriesData } = await client.GET(
+    "/UserItems/{itemId}/UserData",
+    {
+      params: {
+        path: { itemId: seriesId },
+        query: { userId },
+      },
+    },
+  );
 
   const { data: epData } = await client.GET("/UserItems/{itemId}/UserData", {
     params: {
       path: { itemId },
-      query: { userId }
-    }
+      query: { userId },
+    },
   });
 
-  console.log(seriesData, epData)
+  console.log(seriesData, epData);
 }, "jellyfin.TEST");
 
 export const getCurrentUser = query(async () => {
   const { data, error, response } = await client.GET("/Users/Public", {
     params: {},
   });
-
-  console.log(data, error, response)
 
   return data;
 }, "jellyfin.getCurrentUser");
@@ -56,138 +70,170 @@ export const listUsers = query(async () => {
   return data ?? [];
 }, "jellyfin.listUsers");
 
-export const listItems = query(async (userId: string): Promise<Entry[] | undefined> => {
-  const { data, error } = await client.GET("/Items", {
-    params: {
-      query: {
-        userId,
-        hasTmdbInfo: true,
-        recursive: true,
-        includeItemTypes: ["Movie", "Series"],
-        fields: [
-          "ProviderIds",
-          "Genres",
-          "DateLastMediaAdded",
-          "DateCreated",
-          "MediaSources",
-        ],
+export const listItems = query(
+  async (userId: string): Promise<Entry[] | undefined> => {
+    const { data, error } = await client.GET("/Items", {
+      params: {
+        query: {
+          userId,
+          hasTmdbInfo: true,
+          recursive: true,
+          includeItemTypes: ["Movie", "Series"],
+          fields: [
+            "ProviderIds",
+            "Genres",
+            "DateLastMediaAdded",
+            "DateCreated",
+            "MediaSources",
+          ],
+        },
       },
-    },
-  });
+    });
 
-  if (data === undefined) {
+    if (data === undefined) {
+      return undefined;
+    }
+
+    return (
+      data.Items?.map((item) => ({
+        // id: item.Id!,
+        id: item.ProviderIds!["Tmdb"]!,
+        title: item.Name!,
+        thumbnail: new URL(`/Items/${item.Id!}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
+      })) ?? []
+    );
+  },
+  "jellyfin.listItems",
+);
+
+export const getRandomItem = query(
+  async (userId: string): Promise<Entry | undefined> =>
+    getRandomItems(userId, 1).then((items) => items?.at(0)),
+  "jellyfin.listRandomItem",
+);
+
+export const getRandomItems = query(
+  async (userId: string, limit: number = 10): Promise<Entry[]> => {
+    const { data, error } = await client.GET("/Items", {
+      params: {
+        query: {
+          userId,
+          hasTmdbInfo: true,
+          recursive: true,
+          limit,
+          sortBy: ["Random"],
+          includeItemTypes: ["Movie", "Series"],
+          imageTypes: ["Primary", "Backdrop", "Thumb"],
+          fields: [
+            "ProviderIds",
+            "Genres",
+            "DateLastMediaAdded",
+            "DateCreated",
+            "MediaSources",
+          ],
+        },
+      },
+    });
+
+    return (
+      data?.Items?.map((item) => ({
+        // id: item.Id!,
+        id: item.ProviderIds!["Tmdb"]!,
+        title: item.Name!,
+        thumbnail: new URL(`/Items/${item.Id!}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
+        image: new URL(`/Items/${item.Id!}/Images/Backdrop`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
+      })) ?? []
+    );
+  },
+  "jellyfin.listRandomItems",
+);
+
+export const getItem = query(
+  async (userId: string, itemId: string): Promise<Entry | undefined> => {
+    const { data, error } = await client.GET("/Items/{itemId}", {
+      params: {
+        path: {
+          itemId,
+        },
+        query: {
+          userId,
+          hasTmdbInfo: true,
+          recursive: true,
+          includeItemTypes: ["Movie", "Series"],
+          fields: [
+            "ProviderIds",
+            "Genres",
+            "DateLastMediaAdded",
+            "DateCreated",
+            "MediaSources",
+          ],
+        },
+      },
+    });
+
+    if (data === undefined) {
+      return undefined;
+    }
+
+    return {
+      // id: data.Id!,
+      id: data.ProviderIds!["Tmdb"]!,
+      title: data.Name!,
+      overview: data.Overview!,
+      thumbnail: new URL(`/Items/${itemId}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
+      image: new URL(`/Items/${itemId}/Images/Backdrop`, baseUrl),
+      // ...data,
+    };
+  },
+  "jellyfin.getItem",
+);
+
+export const getItemImage = query(
+  async (
+    itemId: string,
+    imageType: ItemImageType,
+  ): Promise<any | undefined> => {
+    const { data, error } = await client.GET(
+      "/Items/{itemId}/Images/{imageType}",
+      {
+        parseAs: "blob",
+        params: {
+          path: {
+            itemId,
+            imageType,
+          },
+          query: {},
+        },
+      },
+    );
+
+    return data;
+  },
+  "jellyfin.getItemImage",
+);
+
+export const getItemPlaybackInfo = query(
+  async (userId: string, itemId: string): Promise<any | undefined> => {
+    const { data, error, response } = await client.GET(
+      "/Items/{itemId}/PlaybackInfo",
+      {
+        parseAs: "text",
+
+        params: {
+          path: {
+            itemId,
+          },
+          query: {
+            userId,
+          },
+        },
+      },
+    );
+
     return undefined;
-  }
-
-  return data.Items?.map(item => ({
-    id: item.Id!,
-    title: item.Name!,
-    thumbnail: new URL(`/Items/${item.Id!}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
-  })) ?? [];
-}, "jellyfin.listItems");
-
-export const getRandomItem = query(async (userId: string): Promise<Entry | undefined> => getRandomItems(userId, 1).then(items => items?.at(0)), "jellyfin.listRandomItem");
-
-export const getRandomItems = query(async (userId: string, limit: number = 10): Promise<Entry[]> => {
-  const { data, error } = await client.GET("/Items", {
-    params: {
-      query: {
-        userId,
-        hasTmdbInfo: true,
-        recursive: true,
-        limit,
-        sortBy: ["Random"],
-        includeItemTypes: ["Movie", "Series"],
-        imageTypes: ["Primary", "Backdrop", "Thumb"],
-        fields: [
-          "ProviderIds",
-          "Genres",
-          "DateLastMediaAdded",
-          "DateCreated",
-          "MediaSources",
-        ],
-      },
-    },
-  });
-
-  return data?.Items?.map(item => ({
-    id: item.Id!,
-    title: item.Name!,
-    thumbnail: new URL(`/Items/${item.Id!}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
-    image: new URL(`/Items/${item.Id!}/Images/Backdrop`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
-  })) ?? [];
-}, "jellyfin.listRandomItems");
-
-export const getItem = query(async (userId: string, itemId: string): Promise<Entry | undefined> => {
-  console.log('baseUrl', baseUrl);
-
-  const { data, error } = await client.GET("/Items/{itemId}", {
-    params: {
-      path: {
-        itemId,
-      },
-      query: {
-        userId,
-        hasTmdbInfo: true,
-        recursive: true,
-        includeItemTypes: ["Movie", "Series"],
-        fields: [
-          "ProviderIds",
-          "Genres",
-          "DateLastMediaAdded",
-          "DateCreated",
-          "MediaSources",
-        ],
-      },
-    },
-  });
-
-  if (data === undefined) {
-    return undefined;
-  }
-
-  return {
-    id: data.Id!,
-    title: data.Name!,
-    synopsis: data.Overview!,
-    thumbnail: new URL(`/Items/${itemId}/Images/Primary`, baseUrl), //await getItemImage(data.Id!, 'Primary'),
-    image: new URL(`/Items/${itemId}/Images/Backdrop`, baseUrl),
-    // ...data,
-  };
-}, "jellyfin.getItem");
-
-export const getItemImage = query(async (itemId: string, imageType: ItemImageType): Promise<any | undefined> => {
-  const { data, error } = await client.GET("/Items/{itemId}/Images/{imageType}", {
-    parseAs: 'blob',
-    params: {
-      path: {
-        itemId,
-        imageType
-      },
-      query: {
-      },
-    },
-  });
-
-  return data;
-}, "jellyfin.getItemImage");
-
-export const getItemPlaybackInfo = query(async (userId: string, itemId: string): Promise<any | undefined> => {
-  const { data, error, response } = await client.GET("/Items/{itemId}/PlaybackInfo", {
-    parseAs: 'text',
-
-    params: {
-      path: {
-        itemId,
-      },
-      query: {
-        userId,
-      },
-    },
-  });
-
-  return undefined;
-}, "jellyfin.getItemPlaybackInfo");
+  },
+  "jellyfin.getItemPlaybackInfo",
+);
 
 export const queryItems = query(async () => {
   const { data, error } = await client.GET("/Items", {
@@ -204,35 +250,57 @@ export const queryItems = query(async () => {
   });
 
   console.log(data);
+}, "jellyfin.queryItems");
 
-}, 'jellyfin.queryItems');
-
-export const getContinueWatching = query(async (userId: string): Promise<Entry[]> => {
-  const { data, error } = await client.GET("/UserItems/Resume", {
-    params: {
-      query: {
-        userId,
-        mediaTypes: ["Video"],
-        // fields: ["ProviderIds", "Genres"],
-        // includeItemTypes: ["Series", "Movie"]
+export const getContinueWatching = query(
+  async (userId: string): Promise<Entry[]> => {
+    const { data, error } = await client.GET("/UserItems/Resume", {
+      params: {
+        query: {
+          userId,
+          mediaTypes: ["Video"],
+          // fields: ["ProviderIds", "Genres"],
+          // includeItemTypes: ["Series", "Movie"]
+        },
       },
-    },
-  });
+    });
 
-  if (Array.isArray(data?.Items) !== true) {
-    return [];
-  }
+    if (Array.isArray(data?.Items) !== true) {
+      return [];
+    }
 
-  const uniqueIds = new Set<string>(data.Items.map(item => item.Type === 'Episode' ? item.SeriesId! : item.Id!));
-  const results = await Promise.allSettled(uniqueIds.values().map(id => getItem(userId, id)).toArray());
+    const uniqueIds = new Set<string>(
+      data.Items.map((item) =>
+        item.Type === "Episode" ? item.SeriesId! : item.Id!,
+      ),
+    );
+    const results = await Promise.allSettled(
+      uniqueIds
+        .values()
+        .map((id) => getItem(userId, id))
+        .toArray(),
+    );
 
-  assertNoErrors(results);
+    assertNoErrors(results);
 
-  return results.filter((result): result is PromiseFulfilledResult<Entry> => result.value !== undefined).map(({ value }) => value);
-}, "jellyfin.continueWatching");
+    return results
+      .filter(
+        (result): result is PromiseFulfilledResult<Entry> =>
+          result.value !== undefined,
+      )
+      .map(({ value }) => value);
+  },
+  "jellyfin.continueWatching",
+);
 
-function assertNoErrors<T>(results: PromiseSettledResult<T>[]): asserts results is PromiseFulfilledResult<T>[] {
-  if (results.some(({ status }) => status !== 'fulfilled')) {
-    throw new Error('one or more promices failed', { cause: results.filter((r): r is PromiseRejectedResult => r.status === 'rejected').map(r => r.reason) });
+function assertNoErrors<T>(
+  results: PromiseSettledResult<T>[],
+): asserts results is PromiseFulfilledResult<T>[] {
+  if (results.some(({ status }) => status !== "fulfilled")) {
+    throw new Error("one or more promices failed", {
+      cause: results
+        .filter((r): r is PromiseRejectedResult => r.status === "rejected")
+        .map((r) => r.reason),
+    });
   }
 }

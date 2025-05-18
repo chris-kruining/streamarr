@@ -1,16 +1,23 @@
 @property --thumb-image {
-  syntax: '<image>';
+  syntax: "<image>";
   inherits: true;
 }
 
 .container {
+  isolation: isolate;
   display: block grid;
   grid-auto-flow: column;
   grid-auto-columns: 100%;
 
+  container-type: inline-size;
+
   overflow: hidden visible;
   scroll-snap-type: inline mandatory;
-  scroll-behavior: smooth;
+  overscroll-behavior-inline: contain;
+
+  @media (prefers-reduced-motion: no-preference) {
+    scroll-behavior: smooth;
+  }
 
   scroll-marker-group: after;
 
@@ -19,8 +26,10 @@
 
     grid-auto-flow: column;
     grid-auto-columns: 5em;
-    gap: 1em;
-    place-content: end center;
+    gap: 1rem;
+    justify-content: start;
+
+    padding-inline: 2rem;
 
     inline-size: 100%;
     block-size: 8.333333em;
@@ -30,6 +39,8 @@
 }
 
 .page {
+  --__i: var(--sibling-index);
+  --__c: var(--sibling-count);
   scroll-snap-align: center;
   position: relative;
   display: grid;
@@ -41,43 +52,49 @@
     "thumbnail summary summary";
   align-content: end;
   align-items: center;
-  gap: 1em;
-  padding: 2em;
+  gap: 1rem;
+  padding: 2rem;
   block-size: 80vh;
   overflow: clip;
+  container-type: scroll-state;
+
+  animation:
+    animate-in linear forwards,
+    animate-out linear forwards;
+  animation-timeline: view(inline);
+  animation-range: entry, exit;
 
   color: var(--gray-0);
 
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     display: block;
-    background: linear-gradient(185deg, transparent 20%, var(--surface-2) 90%), linear-gradient(transparent 50%, #0007 75%);
+    background: linear-gradient(182.5deg, transparent 20%, var(--surface-2) 90%),
+      linear-gradient(transparent 50%, #0007 75%);
   }
 
   &::scroll-marker {
     display: block;
-    content: ' ';
+    content: " ";
 
-    inline-size: 15em;
+    inline-size: 5rem;
     aspect-ratio: 3 / 5;
 
     background: var(--thumb-image) center / cover no-repeat;
     background-color: cornflowerblue;
-    border-radius: var(--radius-3);
+    border-radius: var(--radius-2);
 
-    transform: scale(.333333);
-    transition: .3s;
+    transform: scale(1);
+    transform-origin: top left;
+    transition: 0.3s;
   }
 
   &::scroll-marker:target-current {
     /* outline: 1px solid white; */
-    position: absolute;
-      top: -29em;
-      left: 2em;
-      
-      transform: scale(1);
+    transform: translate(calc(-0cqi - (6rem * (var(--__i) - 1))), -29rem)
+      scale(3);
   }
 }
 
@@ -107,6 +124,7 @@
   object-fit: cover;
   object-position: center;
   z-index: 1;
+  opacity: 0 !important;
 }
 
 .background {
@@ -128,4 +146,27 @@
   grid-area: summary;
   text-wrap: balance;
   z-index: 1;
+}
+
+@keyframes animate-in {
+  0% {
+    opacity: 0;
+  }
+  /* 80% {
+    opacity: 0;
+  } */
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes animate-out {
+  0% {
+    opacity: 1;
+  }
+  20% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }

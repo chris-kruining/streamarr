@@ -4,8 +4,8 @@
 @import "open-props/normalize" layer(reset);
 @import "open-props/durations" layer(base);
 
-@import 'open-props/theme.light.switch.min.css' layer(tokens);
-@import 'open-props/theme.dark.switch.min.css' layer(tokens);
+@import "open-props/theme.light.switch.min.css" layer(tokens);
+@import "open-props/theme.dark.switch.min.css" layer(tokens);
 
 @layer base {
   html {
@@ -44,13 +44,13 @@
 
 @layer reset {
   @property --sibling-index {
-    syntax: '<integer>';
+    syntax: "<integer>";
     inherits: false;
     initial-value: 1;
   }
 
   @property --sibling-count {
-    syntax: '<integer>';
+    syntax: "<integer>";
     inherits: false;
     initial-value: 0;
   }
@@ -94,25 +94,156 @@
   :nth-child(10) {
     --sibling-index: 10;
   }
-
   :nth-child(11) {
     --sibling-index: 11;
   }
-
   :nth-child(12) {
     --sibling-index: 12;
   }
-
   :nth-child(13) {
     --sibling-index: 13;
   }
-
   :nth-child(14) {
     --sibling-index: 14;
   }
-
   :nth-child(15) {
     --sibling-index: 15;
+  }
+  :nth-child(16) {
+    --sibling-index: 16;
+  }
+  :nth-child(17) {
+    --sibling-index: 17;
+  }
+  :nth-child(18) {
+    --sibling-index: 18;
+  }
+  :nth-child(19) {
+    --sibling-index: 19;
+  }
+
+  :nth-child(20) {
+    --sibling-index: 20;
+  }
+  :nth-child(21) {
+    --sibling-index: 21;
+  }
+  :nth-child(22) {
+    --sibling-index: 22;
+  }
+  :nth-child(23) {
+    --sibling-index: 23;
+  }
+  :nth-child(24) {
+    --sibling-index: 24;
+  }
+  :nth-child(25) {
+    --sibling-index: 25;
+  }
+  :nth-child(26) {
+    --sibling-index: 26;
+  }
+  :nth-child(27) {
+    --sibling-index: 27;
+  }
+  :nth-child(28) {
+    --sibling-index: 28;
+  }
+  :nth-child(29) {
+    --sibling-index: 29;
+  }
+
+  :nth-child(30) {
+    --sibling-index: 30;
+  }
+  :nth-child(31) {
+    --sibling-index: 31;
+  }
+  :nth-child(32) {
+    --sibling-index: 32;
+  }
+  :nth-child(33) {
+    --sibling-index: 33;
+  }
+  :nth-child(34) {
+    --sibling-index: 34;
+  }
+  :nth-child(35) {
+    --sibling-index: 35;
+  }
+  :nth-child(36) {
+    --sibling-index: 36;
+  }
+  :nth-child(37) {
+    --sibling-index: 37;
+  }
+  :nth-child(38) {
+    --sibling-index: 38;
+  }
+  :nth-child(39) {
+    --sibling-index: 39;
+  }
+
+  :nth-child(40) {
+    --sibling-index: 40;
+  }
+  :nth-child(41) {
+    --sibling-index: 41;
+  }
+  :nth-child(42) {
+    --sibling-index: 42;
+  }
+  :nth-child(43) {
+    --sibling-index: 43;
+  }
+  :nth-child(44) {
+    --sibling-index: 44;
+  }
+  :nth-child(45) {
+    --sibling-index: 45;
+  }
+  :nth-child(46) {
+    --sibling-index: 46;
+  }
+  :nth-child(47) {
+    --sibling-index: 47;
+  }
+  :nth-child(48) {
+    --sibling-index: 48;
+  }
+  :nth-child(49) {
+    --sibling-index: 49;
+  }
+
+  :nth-child(50) {
+    --sibling-index: 50;
+  }
+  :nth-child(51) {
+    --sibling-index: 51;
+  }
+  :nth-child(52) {
+    --sibling-index: 52;
+  }
+  :nth-child(53) {
+    --sibling-index: 53;
+  }
+  :nth-child(54) {
+    --sibling-index: 54;
+  }
+  :nth-child(55) {
+    --sibling-index: 55;
+  }
+  :nth-child(56) {
+    --sibling-index: 56;
+  }
+  :nth-child(57) {
+    --sibling-index: 57;
+  }
+  :nth-child(58) {
+    --sibling-index: 58;
+  }
+  :nth-child(59) {
+    --sibling-index: 59;
   }
 
   :has(> :last-child:nth-child(1)) > * {
@@ -154,24 +285,186 @@
   :has(> :last-child:nth-child(10)) > * {
     --sibling-count: 10;
   }
-
   :has(> :last-child:nth-child(11)) > * {
     --sibling-count: 11;
   }
-
   :has(> :last-child:nth-child(12)) > * {
     --sibling-count: 12;
   }
-
   :has(> :last-child:nth-child(13)) > * {
     --sibling-count: 13;
   }
-
   :has(> :last-child:nth-child(14)) > * {
     --sibling-count: 14;
   }
-
   :has(> :last-child:nth-child(15)) > * {
     --sibling-count: 15;
+  }
+  :has(> :last-child:nth-child(16)) > * {
+    --sibling-count: 16;
+  }
+  :has(> :last-child:nth-child(17)) > * {
+    --sibling-count: 17;
+  }
+  :has(> :last-child:nth-child(18)) > * {
+    --sibling-count: 18;
+  }
+  :has(> :last-child:nth-child(19)) > * {
+    --sibling-count: 19;
+  }
+
+  :has(> :last-child:nth-child(20)) > * {
+    --sibling-count: 20;
+  }
+  :has(> :last-child:nth-child(21)) > * {
+    --sibling-count: 21;
+  }
+  :has(> :last-child:nth-child(22)) > * {
+    --sibling-count: 22;
+  }
+  :has(> :last-child:nth-child(23)) > * {
+    --sibling-count: 23;
+  }
+  :has(> :last-child:nth-child(24)) > * {
+    --sibling-count: 24;
+  }
+  :has(> :last-child:nth-child(25)) > * {
+    --sibling-count: 25;
+  }
+  :has(> :last-child:nth-child(26)) > * {
+    --sibling-count: 26;
+  }
+  :has(> :last-child:nth-child(27)) > * {
+    --sibling-count: 27;
+  }
+  :has(> :last-child:nth-child(28)) > * {
+    --sibling-count: 28;
+  }
+  :has(> :last-child:nth-child(29)) > * {
+    --sibling-count: 29;
+  }
+
+  :has(> :last-child:nth-child(30)) > * {
+    --sibling-count: 30;
+  }
+  :has(> :last-child:nth-child(31)) > * {
+    --sibling-count: 31;
+  }
+  :has(> :last-child:nth-child(32)) > * {
+    --sibling-count: 32;
+  }
+  :has(> :last-child:nth-child(33)) > * {
+    --sibling-count: 33;
+  }
+  :has(> :last-child:nth-child(34)) > * {
+    --sibling-count: 34;
+  }
+  :has(> :last-child:nth-child(35)) > * {
+    --sibling-count: 35;
+  }
+  :has(> :last-child:nth-child(36)) > * {
+    --sibling-count: 36;
+  }
+  :has(> :last-child:nth-child(37)) > * {
+    --sibling-count: 37;
+  }
+  :has(> :last-child:nth-child(38)) > * {
+    --sibling-count: 38;
+  }
+  :has(> :last-child:nth-child(39)) > * {
+    --sibling-count: 39;
+  }
+
+  :has(> :last-child:nth-child(40)) > * {
+    --sibling-count: 40;
+  }
+  :has(> :last-child:nth-child(41)) > * {
+    --sibling-count: 41;
+  }
+  :has(> :last-child:nth-child(42)) > * {
+    --sibling-count: 42;
+  }
+  :has(> :last-child:nth-child(43)) > * {
+    --sibling-count: 43;
+  }
+  :has(> :last-child:nth-child(44)) > * {
+    --sibling-count: 44;
+  }
+  :has(> :last-child:nth-child(45)) > * {
+    --sibling-count: 45;
+  }
+  :has(> :last-child:nth-child(46)) > * {
+    --sibling-count: 46;
+  }
+  :has(> :last-child:nth-child(47)) > * {
+    --sibling-count: 47;
+  }
+  :has(> :last-child:nth-child(48)) > * {
+    --sibling-count: 48;
+  }
+  :has(> :last-child:nth-child(49)) > * {
+    --sibling-count: 49;
+  }
+
+  :has(> :last-child:nth-child(50)) > * {
+    --sibling-count: 50;
+  }
+  :has(> :last-child:nth-child(51)) > * {
+    --sibling-count: 51;
+  }
+  :has(> :last-child:nth-child(52)) > * {
+    --sibling-count: 52;
+  }
+  :has(> :last-child:nth-child(53)) > * {
+    --sibling-count: 53;
+  }
+  :has(> :last-child:nth-child(54)) > * {
+    --sibling-count: 54;
+  }
+  :has(> :last-child:nth-child(55)) > * {
+    --sibling-count: 55;
+  }
+  :has(> :last-child:nth-child(56)) > * {
+    --sibling-count: 56;
+  }
+  :has(> :last-child:nth-child(57)) > * {
+    --sibling-count: 57;
+  }
+  :has(> :last-child:nth-child(58)) > * {
+    --sibling-count: 58;
+  }
+  :has(> :last-child:nth-child(59)) > * {
+    --sibling-count: 59;
+  }
+
+  :has(> :last-child:nth-child(60)) > * {
+    --sibling-count: 60;
+  }
+  :has(> :last-child:nth-child(61)) > * {
+    --sibling-count: 61;
+  }
+  :has(> :last-child:nth-child(62)) > * {
+    --sibling-count: 62;
+  }
+  :has(> :last-child:nth-child(63)) > * {
+    --sibling-count: 63;
+  }
+  :has(> :last-child:nth-child(64)) > * {
+    --sibling-count: 64;
+  }
+  :has(> :last-child:nth-child(65)) > * {
+    --sibling-count: 65;
+  }
+  :has(> :last-child:nth-child(66)) > * {
+    --sibling-count: 66;
+  }
+  :has(> :last-child:nth-child(67)) > * {
+    --sibling-count: 67;
+  }
+  :has(> :last-child:nth-child(68)) > * {
+    --sibling-count: 68;
+  }
+  :has(> :last-child:nth-child(69)) > * {
+    --sibling-count: 69;
   }
 }

@@ -1,4 +1,3 @@
-
 export interface Category {
   label: string;
   entries: Entry[];
@@ -7,7 +6,7 @@ export interface Category {
 export interface Entry {
   id: string;
   title: string;
-  synopsis?: string;
+  overview?: string;
   releaseDate?: string;
   sources?: Entry.Source[];
   thumbnail?: URL | string;
@@ -30,4 +29,3 @@ export namespace Entry {
     }
   }
 }
-

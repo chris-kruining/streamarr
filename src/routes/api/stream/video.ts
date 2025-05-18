@@ -6,22 +6,24 @@ const CHUNK_SIZE = 1 * 1e6; // 1MB
 export const GET = async ({ request, ...event }: APIEvent) => {
   "use server";
 
-  const range = request.headers.get('range');
+  const range = request.headers.get("range");
 
   if (range === null) {
-    return new Response('Requires Range header', { status: 400 })
+    return new Response("Requires Range header", { status: 400 });
   }
 
   try {
-    const video = Bun.file(import.meta.dirname + '/SampleVideo_1280x720_10mb.mp4');
+    const video = Bun.file(
+      import.meta.dirname + "/SampleVideo_1280x720_10mb.mp4",
+    );
 
     if ((await video.exists()) !== true) {
-      return new Response('File not found', { status: 404 });
+      return new Response("File not found", { status: 404 });
     }
 
     const videoSize = video.size;
 
-    const start = Number.parseInt(range.replace(/\D/g, ''));
+    const start = Number.parseInt(range.replace(/\D/g, ""));
     const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
     const contentLength = end - start + 1;
 
@@ -40,8 +42,7 @@ export const GET = async ({ request, ...event }: APIEvent) => {
     //     'Content-type': 'video/mp4',
     //   },
     // });
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e);
 
     throw e;
