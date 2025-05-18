@@ -50,8 +50,10 @@
     container-type: scroll-state;
     padding: 0;
     position: relative;
+    isolation: isolate;
 
-    z-index: calc(var(--sibling-count) - var(--sibling-index));
+    order: calc(var(--sibling-count) - var(--sibling-index));
+    z-index: var(--sibling-index);
 
     &:has(> :hover, > :focus-within) {
       z-index: calc(var(--sibling-count) + 1);
