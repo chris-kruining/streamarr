@@ -10,6 +10,7 @@ export const ListItem: Component<{ entry: Entry }> = (props) => {
     <figure class={css.listItem} data-id={props.entry.id}>
       <img src={props.entry.thumbnail ?? ''} alt={props.entry.title} />
 
+
       <figcaption>
         <strong>{props.entry.title}</strong>
 

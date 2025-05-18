@@ -1,13 +1,46 @@
+@property --thumb-image {
+  syntax: '<image>';
+  inherits: true;
+}
+
 .container {
+  display: block grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+
+  overflow: hidden visible;
+  scroll-snap-type: inline mandatory;
+  scroll-behavior: smooth;
+
+  scroll-marker-group: after;
+
+  &::scroll-marker-group {
+    display: block grid;
+
+    grid-auto-flow: column;
+    grid-auto-columns: 5em;
+    gap: 1em;
+    place-content: end center;
+
+    inline-size: 100%;
+    block-size: 8.333333em;
+
+    z-index: 1;
+  }
+}
+
+.page {
+  scroll-snap-align: center;
   position: relative;
   display: grid;
   grid: repeat(3, auto) / 15em 1fr;
   grid-template-areas:
-    "thumbnail ."
-    "thumbnail title"
-    "thumbnail detail"
-    "thumbnail summary";
+    "thumbnail . ."
+    "thumbnail title cta"
+    "thumbnail detail detail"
+    "thumbnail summary summary";
   align-content: end;
+  align-items: center;
   gap: 1em;
   padding: 2em;
   block-size: 80vh;
@@ -20,7 +53,31 @@
     position: absolute;
     inset: 0;
     display: block;
-    background: linear-gradient(transparent 50%, #0007 75%);
+    background: linear-gradient(185deg, transparent 20%, var(--surface-2) 90%), linear-gradient(transparent 50%, #0007 75%);
+  }
+
+  &::scroll-marker {
+    display: block;
+    content: ' ';
+
+    inline-size: 15em;
+    aspect-ratio: 3 / 5;
+
+    background: var(--thumb-image) center / cover no-repeat;
+    background-color: cornflowerblue;
+    border-radius: var(--radius-3);
+
+    transform: scale(.333333);
+    transition: .3s;
+  }
+
+  &::scroll-marker:target-current {
+    /* outline: 1px solid white; */
+    position: absolute;
+      top: -29em;
+      left: 2em;
+      
+      transform: scale(1);
   }
 }
 
@@ -31,11 +88,22 @@
   filter: contrast(9);
 }
 
+.cta {
+  grid-area: cta;
+  z-index: 1;
+  border-radius: var(--radius-2);
+  background-color: var(--gray-2);
+  color: var(--gray-8);
+  text-decoration-color: var(--gray-8);
+  padding: var(--size-3);
+  font-weight: var(--font-weight-9);
+}
+
 .thumbnail {
   grid-area: thumbnail;
   inline-size: 15em;
   aspect-ratio: 3 / 5;
-  border-radius: 1em;
+  border-radius: var(--radius-3);
   object-fit: cover;
   object-position: center;
   z-index: 1;

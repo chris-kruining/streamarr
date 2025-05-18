@@ -7,11 +7,13 @@ export interface Category {
 export interface Entry {
   id: string;
   title: string;
-  summary?: string;
+  synopsis?: string;
   releaseDate?: string;
   sources?: Entry.Source[];
   thumbnail?: URL | string;
-  image?: string;
+  image?: URL | string;
+
+  [prop: string]: any;
 }
 
 export namespace Entry {

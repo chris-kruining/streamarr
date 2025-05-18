@@ -16,7 +16,7 @@ export const splitAt = (
 };
 
 export const toSlug = (subject: string) =>
-  subject.toLowerCase().replaceAll(" ", "-");
+  subject.toLowerCase().replaceAll(" ", "-").replaceAll(/[^\w-]/gi, "");
 export const toHex = (subject: number) => subject.toString(16).padStart(2, "0");
 
 const encoder = new TextEncoder();

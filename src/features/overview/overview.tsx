@@ -12,16 +12,14 @@ import { Hero } from "~/components/hero";
 import css from "./overview.module.css";
 
 type OverviewProps = {
-  highlight: Entry;
+  highlights: Entry[];
   categories: Category[];
 };
 
 export const Overview: Component<OverviewProps> = (props) => {
-  const [container, setContainer] = createSignal<HTMLElement>();
-
   return (
-    <div ref={setContainer} class={css.container}>
-      <Hero class={css.hero} entry={props.highlight}></Hero>
+    <div class={css.container}>
+      <Hero class={css.hero} entries={props.highlights}></Hero>
 
       <Index each={props.categories}>
         {(category) => (

@@ -1,18 +1,19 @@
+"use server";
+
 import type { Category, Entry } from "./types";
 import { query } from "@solidjs/router";
 import { entries } from "./data";
-import { getContinueWatching, getItem, TEST } from "./apis/jellyfin";
+import { getContinueWatching, getItem, getRandomItems } from "./apis/jellyfin";
 
-const jellyfinUserId = "a9c51af8-4bf5-4578-a99a-b4dd0ebf0763";
+const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
+
+// export const getHighlights = () => getRandomItems(jellyfinUserId);
+export const getHighlights = () => getContinueWatching(jellyfinUserId);
 
 export const listCategories = query(async (): Promise<Category[]> => {
-  "use server";
-
-  // await TEST()
-  // console.log(await getItemPlaybackInfo(jellyfinUserId, 'a69c0c0ab66177a7adb671f126335d16'));
-
   return [
-    { label: "Continue", entries: await getContinueWatching(jellyfinUserId) },
+    // { label: "Continue", entries: await getContinueWatching(jellyfinUserId) },
+    { label: "Random", entries: await getRandomItems(jellyfinUserId) },
     {
       label: "Popular",
       entries: [
@@ -70,11 +71,9 @@ export const listCategories = query(async (): Promise<Category[]> => {
 
 export const getEntry = query(
   async (id: Entry["id"]): Promise<Entry | undefined> => {
-    "use server";
-
     return getItem(jellyfinUserId, id);
   },
   "series.get",
 );
 
-export { listUsers, getContinueWatching } from "./apis/jellyfin";
+export { listUsers, getContinueWatching, listItems } from "./apis/jellyfin";

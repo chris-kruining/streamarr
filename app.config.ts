@@ -37,7 +37,10 @@ export default defineConfig({
   server: {
     preset: 'bun',
     prerender: {
-      routes: ['/sitemaps.xml'],
+      routes: [
+        '/sitemaps.xml',
+        '/watch/furiosa-a-mad-max-saga-1c829d55201c766641c4aec0346551c6'
+      ],
     },
   },
 });

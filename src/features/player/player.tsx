@@ -140,7 +140,7 @@ export const Player: Component<PlayerProps> = (props) => {
       console.log("pause", e);
     },
     suspend(e) {
-      console.log("suspend", e);
+      // console.log("suspend", e);
     },
 
     volumechange(e) {
@@ -152,7 +152,7 @@ export const Player: Component<PlayerProps> = (props) => {
     },
 
     progress(e) {
-      console.log(e);
+      // console.log(e);
     },
 
     // timeupdate(e) {
