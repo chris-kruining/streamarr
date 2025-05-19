@@ -1,4 +1,5 @@
 .container {
+  --_space: var(--size-6);
   display: grid;
   grid: auto auto / auto auto;
   grid-template-areas:
@@ -6,16 +7,21 @@
     "list list";
   justify-content: space-between;
   inline-size: 100%;
+
+  padding-inline: var(--_space);
 }
 
 .heading {
   grid-area: heading;
-  font-size: 2em;
+  font-size: var(--size-7);
+  color: var(--text-1);
+  
+  padding-inline: var(--_space);
 }
 
 .metadata {
   grid-area: metadata;
-  opacity: 0.6;
+  color: var(--text-2);
 }
 
 .list {
@@ -26,10 +32,10 @@
   display: grid;
   grid-auto-flow: column;
 
-  gap: 2em;
-  padding: 12em 4em 5em;
-  scroll-padding: 4em;
-  margin: -10em -4em 0em;
+  gap: var(--_space);
+  padding: calc(8 * var(--_space)) calc(2 * var(--_space)) calc(2.5 * var(--_space));
+  scroll-padding: calc(2 * var(--_space));
+  margin: calc(-7 * var(--_space)) calc(-1 * var(--_space)) 0em;
 
   overflow: visible auto;
   scroll-snap-type: inline mandatory;

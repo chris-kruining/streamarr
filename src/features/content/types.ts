@@ -29,3 +29,9 @@ export namespace Entry {
     }
   }
 }
+
+export interface SearchResult {
+  count: number;
+  pages: number;
+  results: Entry[];
+}

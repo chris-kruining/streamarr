@@ -1,4 +1,5 @@
 import {
+  createAsync,
   json,
   Params,
   query,
@@ -47,10 +48,11 @@ export const route = {
 export default function Item() {
   const { slug } = useParams<ItemParams>();
   const id = slug.slice(slug.lastIndexOf("-") + 1);
+  const entry = createAsync(() => getEntry(id));
 
   return (
     <>
-      <Player id={id} />
+      <Player entry={entry} />
     </>
   );
 }

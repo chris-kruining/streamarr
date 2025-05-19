@@ -1,25 +1,42 @@
-"use server";
-
 import createClient from "openapi-fetch";
 import { query } from "@solidjs/router";
-import { Entry } from "../types";
-import { paths } from "./tmdb.not.generated";
+import { Entry, SearchResult } from "../types";
+import { paths as pathsV3 } from "./tmdb.generated";
+import { paths as pathsV4 } from "./tmdb.not.generated";
 
-const baseUrl = process.env.TMDB_BASE_URL;
-const client = createClient<paths>({
-  baseUrl,
-  headers: {
-    Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
-    "Content-Type": "application/json;",
-  },
-});
+const getClients = () => {
+  "use server";
+
+  const baseUrl = process.env.TMDB_BASE_URL;
+  const clientV3 = createClient<pathsV3>({
+    baseUrl: `${baseUrl}/3`,
+    headers: {
+      Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
+      "Content-Type": "application/json;",
+    },
+  });
+
+  const clientV4 = createClient<pathsV4>({
+    baseUrl: `${baseUrl}/4`,
+    headers: {
+      Authorization: `Bearer ${process.env.TMDB_TOKEN}`,
+      "Content-Type": "application/json;",
+    },
+  });
+
+  return [clientV3, clientV4] as const;
+};
 
 export const getEntry = query(
   async (id: string): Promise<Entry | undefined> => {
-    const { data } = await client.GET("/3/movie/{movie_id}", {
+  "use server";
+
+    const [ clientV3 ] = getClients();
+
+    const { data } = await clientV3.GET("/movie/{movie_id}", {
       params: {
         path: {
-          movie_id: id,
+          movie_id: Number.parseInt(id),
         },
       },
     });
@@ -29,8 +46,8 @@ export const getEntry = query(
     }
 
     return {
-      id: String(data.id),
-      title: data.title,
+      id: String(data.id ?? -1),
+      title: data.title!,
       overview: data.overview,
       thumbnail: `http://image.tmdb.org/t/p/w342${data.poster_path}`,
       image: `http://image.tmdb.org/t/p/original${data.backdrop_path}`,
@@ -40,10 +57,14 @@ export const getEntry = query(
 );
 
 export const getRecommendations = query(async (): Promise<Entry[]> => {
+  "use server";
+
+  const [ ,clientV4 ] = getClients();
+
   const account_object_id = "6668b76e419b28ec1a1c5aab";
 
-  const { data } = await client.GET(
-    "/4/account/{account_object_id}/movie/recommendations",
+  const { data } = await clientV4.GET(
+    "/account/{account_object_id}/movie/recommendations",
     {
       params: {
         path: { account_object_id },
@@ -57,8 +78,8 @@ export const getRecommendations = query(async (): Promise<Entry[]> => {
 
   return data?.results.map(
     ({ id, title, overview, poster_path, backdrop_path }) => ({
-      id: String(id),
-      title,
+      id: String(id ?? -1),
+      title: title!,
       overview,
       thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
       image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
@@ -67,25 +88,71 @@ export const getRecommendations = query(async (): Promise<Entry[]> => {
 }, "tmdb.getRecommendations");
 
 export const getDiscovery = query(async (): Promise<Entry[]> => {
+  "use server";
+
+    const [ clientV3 ] = getClients();
+
   const [{ data: movies }, { data: series }] = await Promise.all([
-    client.GET("/3/discover/movie"),
-    client.GET("/3/discover/movie"),
+    clientV3.GET("/discover/movie"),
+    clientV3.GET("/discover/tv"),
   ]);
 
   if (movies === undefined || series === undefined) {
     return [];
   }
 
-  // console.log({ movies: movies.results.length, series: series.results.length });
-
-  return movies?.results
-    .slice(0, 9)
-    .concat(series?.results.slice(0, 9))
+  const movieEntries = movies?.results?.slice(0, 10)
     .map(({ id, title, overview, poster_path, backdrop_path }) => ({
-      id: String(id),
-      title,
+      id: String(id ?? -1),
+      title: title!,
       overview,
       thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
       image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
-    }));
+    })) ?? []
+
+  const seriesEntries = series?.results?.slice(0, 10)
+    .map(({ id, name, overview, poster_path, backdrop_path }) => ({
+      id: String(id ?? -1),
+      title: name!,
+      overview,
+      thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
+      image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
+    })) ?? []
+
+  return movieEntries.concat(seriesEntries);
 }, "tmdb.getDiscovery");
+
+export const searchMulti = query(async (query: string, page: number = 1): Promise<SearchResult> => {
+  "use server";
+
+  if (query.length === 0) {
+    return { count: 0, pages: 0, results: [] };
+  }
+    const [ clientV3 ] = getClients();
+
+
+  const { data } = await clientV3.GET("/search/multi", {
+    params: {
+      query: {
+        query,
+        page,
+        include_adult: false,
+        language: 'en-US'
+      }
+    }
+  });
+
+  if (data === undefined) {
+    return { count: 0, pages: 0, results: [] };
+  }
+
+  console.log(`loaded page ${page}, found ${data.results?.length} results`);
+
+  return { count: data.total_results!, pages: data.total_pages!, results: data.results?.map(({ id, name, title, media_type, overview, backdrop_path, poster_path }) => ({
+    id: String(id),
+    title: `${name ?? title ?? ''} (${media_type})`,
+    overview,
+    thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
+    image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
+  })) ?? [] };
+}, "tmdb.search.multi");

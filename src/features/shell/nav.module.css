@@ -26,15 +26,12 @@
       content: "";
       position: absolute;
       inset-inline-start: 100%;
-      inset-block: 0;
-      inline-size: 20vw;
-      /* background:
-        radial-gradient(ellipse at left center 100% 100%, #f00, transparent),
-        linear-gradient(to right, #0003, transparent); */
-      background-image: linear-gradient(to right, #0003, transparent);
+      inset-block: -1em;
+      inline-size: 40vw;
+      background-image: linear-gradient(to right, rgb(from var(--surface-1) r g b / .9) 50%, transparent);
       mask: radial-gradient(
-        ellipse 20vw 100% at left center,
-        black,
+        ellipse 40vw 100% at left center,
+        black 25%,
         transparent
       );
       backdrop-filter: blur(5px);
@@ -53,24 +50,24 @@
       transition:
         transform 2s var(--ease-spring-5),
         opacity 0.3s var(--ease-3);
-      color: var(--stone-4);
+      color: var(--text-2);
       font-size: 2rem;
       line-height: 1.5;
 
       & > span {
         opacity: 0;
         transition: opacity 0.3s var(--ease-3);
-        text-shadow: 0 0 1em #000;
+        text-shadow: 0 0 .5em var(--surface-1);
       }
 
       & > svg {
-        fill: var(--stone-4);
+        fill: var(--text-2);
         inline-size: 2.5rem;
         block-size: 2.5rem;
       }
 
       &.active {
-        color: var(--yellow-4);
+        color: var(--yellow-5);
         list-style: disc;
 
         &::before {
@@ -80,27 +77,27 @@
         }
 
         & > svg {
-          fill: var(--yellow-4);
+          fill: var(--yellow-5);
         }
       }
     }
 
-    &:has(a:is(:hover, :focus))::before {
-      opacity: 1;
+    &:has(a:is(:hover, :focus)) {
+      &::before {
+          opacity: 1;
+        }
+
+        & > a {
+           transform: scale(max(1, calc(1.5 - (0.2 * abs(var(--target) - var(--sibling-index))))));
+        
+           & > span {
+             opacity: 1;
+           }
+         }
     }
 
     &:has(a:is(:hover, :focus)) > a:not(:is(:hover, :focus)) {
       opacity: 0.25;
-    }
-
-    &:has(a:is(:hover, :focus)) > a {
-      transform: scale(
-        max(1, calc(1.5 - (0.2 * abs(var(--target) - var(--sibling-index)))))
-      );
-
-      & > span {
-        opacity: 1;
-      }
     }
 
     &:has(a:is(:hover, :focus):nth-child(1)) {

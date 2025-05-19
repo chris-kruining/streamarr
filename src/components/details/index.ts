@@ -1,0 +1,3 @@
+
+
+export { Details } from './details';

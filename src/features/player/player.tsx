@@ -3,10 +3,10 @@ import {
   createEventSignal,
 } from "@solid-primitives/event-listener";
 import { createAsync, json, query } from "@solidjs/router";
-import { Component, createEffect, createMemo, createSignal } from "solid-js";
+import { Component, createEffect, createMemo, createSignal, on } from "solid-js";
 import css from "./player.module.css";
 import { Volume } from "./controls/volume";
-import { getEntry } from "../content";
+import { Entry, getEntry } from "../content";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -36,7 +36,7 @@ const metadata = query(async (id: string) => {
 }, "player.metadata");
 
 interface PlayerProps {
-  id: string;
+  entry: Entry;
 }
 
 export const Player: Component<PlayerProps> = (props) => {
@@ -44,9 +44,7 @@ export const Player: Component<PlayerProps> = (props) => {
     undefined as unknown as HTMLVideoElement,
   );
 
-  const entry = createAsync(() => getEntry(props.id));
-
-  const data = createAsync(() => metadata(props.id), {
+  const data = createAsync(() => metadata(props.entry.id), {
     deferStream: true,
     initialValue: {} as any,
   });
@@ -65,25 +63,12 @@ export const Player: Component<PlayerProps> = (props) => {
       : "";
   });
 
-  createEffect(() => {
-    const metadata = data();
-    const el = video();
-
-    if (metadata === undefined || el === undefined) {
-      return;
-    }
-
-    console.log(metadata);
-  });
-
-  createEffect(() => {
-    thumbnails();
-
-    console.log(video()!.textTracks.getTrackById("thumbnails")?.cues);
+  createEffect(on(thumbnails, (thumbnails) => {
+    // console.log(thumbnails, video()!.textTracks.getTrackById("thumbnails")?.cues);
 
     // const captions = el.addTextTrack("captions", "English", "en");
     // captions.
-  });
+  }));
 
   const onDurationChange = createEventSignal(video, "durationchange");
   const onTimeUpdate = createEventSignal(video, "timeupdate");
@@ -102,53 +87,53 @@ export const Player: Component<PlayerProps> = (props) => {
 
   createEventListenerMap(() => video()!, {
     durationchange(e) {
-      console.log("durationchange", e);
+      // console.log("durationchange", e);
     },
     loadeddata(e) {
-      console.log("loadeddata", e);
+      // console.log("loadeddata", e);
     },
     loadedmetadata(e) {
-      console.log("loadedmetadata", e);
+      // console.log("loadedmetadata", e);
     },
     ratechange(e) {
-      console.log("ratechange", e);
+      // console.log("ratechange", e);
     },
     seeked(e) {
-      console.log("seeked", e);
+      // console.log("seeked", e);
     },
     seeking(e) {
-      console.log("seeking", e);
+      // console.log("seeking", e);
     },
     stalled(e) {
-      console.log(
-        "stalled (meaning downloading data failed)",
-        e,
-        video()!.error,
-      );
+      // console.log(
+      //   "stalled (meaning downloading data failed)",
+      //   e,
+      //   video()!.error,
+      // );
     },
 
     play(e) {
-      console.log("play", e);
+      // console.log("play", e);
     },
     canplay(e) {
-      console.log("canplay", e);
+      // console.log("canplay", e);
     },
     playing(e) {
-      console.log("playing", e);
+      // console.log("playing", e);
     },
     pause(e) {
-      console.log("pause", e);
+      // console.log("pause", e);
     },
     suspend(e) {
       // console.log("suspend", e);
     },
 
     volumechange(e) {
-      console.log("volumechange", e);
+      // console.log("volumechange", e);
     },
 
     waiting(e) {
-      console.log("waiting", e);
+      // console.log("waiting", e);
     },
 
     progress(e) {
@@ -172,7 +157,7 @@ export const Player: Component<PlayerProps> = (props) => {
 
   return (
     <figure class={css.player}>
-      <h1>{entry()?.title}</h1>
+      <h1>{props.entry?.title}</h1>
 
       <video
         ref={setVideo}

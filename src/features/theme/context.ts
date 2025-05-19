@@ -67,10 +67,10 @@ const [ThemeContextProvider, useTheme] = createContextProvider<
       },
 
       setColorScheme(colorScheme) {
-        // updateState({ colorScheme, hue: state.latest!.hue });
+        updateState({ colorScheme, hue: state.latest!.hue });
       },
       setHue(hue) {
-        // updateState({ hue, colorScheme: state.latest!.colorScheme });
+        updateState({ hue, colorScheme: state.latest!.colorScheme });
       },
     };
   },
