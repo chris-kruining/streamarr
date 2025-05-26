@@ -3,10 +3,20 @@ import {
   createEventSignal,
 } from "@solid-primitives/event-listener";
 import { createAsync, json, query } from "@solidjs/router";
-import { Component, createEffect, createMemo, createSignal, on } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+} from "solid-js";
 import css from "./player.module.css";
 import { Volume } from "./controls/volume";
 import { Entry, getEntry } from "../content";
+import { PlayState } from "./controls/playState";
+import { createContextProvider } from "@solid-primitives/context";
+import { isServer } from "solid-js/web";
+import { VideoProvider } from "./context";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -41,7 +51,7 @@ interface PlayerProps {
 
 export const Player: Component<PlayerProps> = (props) => {
   const [video, setVideo] = createSignal<HTMLVideoElement>(
-    undefined as unknown as HTMLVideoElement,
+    undefined as unknown as HTMLVideoElement
   );
 
   const data = createAsync(() => metadata(props.entry.id), {
@@ -63,12 +73,13 @@ export const Player: Component<PlayerProps> = (props) => {
       : "";
   });
 
-  createEffect(on(thumbnails, (thumbnails) => {
-    // console.log(thumbnails, video()!.textTracks.getTrackById("thumbnails")?.cues);
-
-    // const captions = el.addTextTrack("captions", "English", "en");
-    // captions.
-  }));
+  createEffect(
+    on(thumbnails, (thumbnails) => {
+      // console.log(thumbnails, video()!.textTracks.getTrackById("thumbnails")?.cues);
+      // const captions = el.addTextTrack("captions", "English", "en");
+      // captions.
+    })
+  );
 
   const onDurationChange = createEventSignal(video, "durationchange");
   const onTimeUpdate = createEventSignal(video, "timeupdate");
@@ -99,10 +110,14 @@ export const Player: Component<PlayerProps> = (props) => {
       // console.log("ratechange", e);
     },
     seeked(e) {
-      // console.log("seeked", e);
+      console.log("seeked", "completed the seek interaction", e);
     },
     seeking(e) {
-      // console.log("seeking", e);
+      console.log(
+        "seeking",
+        "the time on the video has been set, now the content will be loaded, the seeked event will fire when this is done",
+        e
+      );
     },
     stalled(e) {
       // console.log(
@@ -133,11 +148,11 @@ export const Player: Component<PlayerProps> = (props) => {
     },
 
     waiting(e) {
-      // console.log("waiting", e);
+      console.log("waiting", e);
     },
 
     progress(e) {
-      // console.log(e);
+      console.log(e);
     },
 
     // timeupdate(e) {
@@ -155,47 +170,66 @@ export const Player: Component<PlayerProps> = (props) => {
     el[el.paused ? "play" : "pause"]();
   };
 
-  return (
-    <figure class={css.player}>
-      <h1>{props.entry?.title}</h1>
+  const setTime = (time: number) => {
+    const el = video();
 
-      <video
-        ref={setVideo}
-        muted
-        autoplay
-        controls
-        src={`/api/content/stream?id=${props.id}`}
-        lang="en"
-      >
-        <track
-          default
-          kind="captions"
-          label="English"
-          srclang="en"
-          src={captionUrl()}
-        />
-        <track default kind="chapters" src={thumbnails()} id="thumbnails" />
-        {/* <track kind="captions" />
+    if (!el) {
+      return;
+    }
+
+    el.currentTime = time;
+  };
+
+  return (
+    <>
+      <figure class={css.player}>
+        <h1>{props.entry?.title}</h1>
+
+        <video
+          ref={setVideo}
+          muted
+          autoplay
+          src={`/api/content/stream?id=${props.id}`}
+          // src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
+          poster={props.entry?.image}
+          lang="en"
+        >
+          <track
+            default
+            kind="captions"
+            label="English"
+            srclang="en"
+            src={captionUrl()}
+          />
+          <track default kind="chapters" src={thumbnails()} id="thumbnails" />
+          {/* <track kind="captions" />
         <track kind="chapters" />
         <track kind="descriptions" />
         <track kind="metadata" />
         <track kind="subtitles" /> */}
-      </video>
+        </video>
 
-      <figcaption>
-        <Volume value={video()?.volume ?? 0} muted={video()?.muted ?? false} onInput={({ volume, muted }) => {
-          video().volume = volume;
-          video().muted = muted;
-        }} />
-      </figcaption>
+        <figcaption>
+          <VideoProvider video={video()}>
+            <PlayState />
+            <Volume
+              value={video()?.volume ?? 0}
+              muted={video()?.muted ?? false}
+              onInput={({ volume, muted }) => {
+                video().volume = volume;
+                video().muted = muted;
+              }}
+            />
+          </VideoProvider>
+        </figcaption>
 
-      <button onclick={toggle}>play/pause</button>
+        <button onclick={toggle}>play/pause</button>
 
-      <span>
-        {formatTime(currentTime())} / {formatTime(duration())}
-      </span>
-      <progress max={duration().toFixed(0)} value={currentTime().toFixed(0)} />
-    </figure>
+        <span>
+          {formatTime(currentTime())} / {formatTime(duration())}
+        </span>
+      </figure>
+    </>
   );
 };
 

@@ -7,6 +7,8 @@ import {
   RouteDefinition,
   useParams,
 } from "@solidjs/router";
+import { Show } from "solid-js";
+import { Details } from "~/components/details";
 import { createSlug, getEntry } from "~/features/content";
 import { Player } from "~/features/player";
 
@@ -52,7 +54,9 @@ export default function Item() {
 
   return (
     <>
-      <Player entry={entry} />
+      <Show when={entry()} fallback="Some kind of pretty 404 page I guess">{
+        entry => <Player entry={entry()} />
+      }</Show>
     </>
   );
 }
