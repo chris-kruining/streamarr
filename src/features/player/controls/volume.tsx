@@ -1,8 +1,7 @@
-import { Component, createEffect, createSignal, Show } from "solid-js";
+import { Component, Show } from "solid-js";
 import css from "./volume.module.css";
-import { createStore, unwrap } from "solid-js/store";
-import { trackDeep } from "@solid-primitives/deep";
 import { useVideo } from "../context";
+import { FaSolidVolumeOff, FaSolidVolumeXmark } from "solid-icons/fa";
 
 interface VolumeProps {
   value: number;
@@ -13,31 +12,23 @@ interface VolumeProps {
 export const Volume: Component<VolumeProps> = (props) => {
   const video = useVideo();
 
-  const [state, setState] = createStore({
-    volume: props.value,
-    muted: props.muted ?? false,
-  });
-
-  createEffect(() => {
-    props.onInput?.(unwrap(trackDeep(state)));
-  });
-
   return (
     <div class={css.container}>
-      <button onClick={() => setState("muted", (m) => !m)}>
-        <Show when={state.muted} fallback="mute">
-          unmute
+      <button onClick={() => video.volume.setMuted((m) => !m)}>
+        <Show when={video.volume.muted()} fallback={<FaSolidVolumeOff />}>
+          <FaSolidVolumeXmark />
         </Show>
       </button>
       <input
         type="range"
-        value={state.volume}
+        value={video.volume.value()}
         min="0"
         max="1"
         step="0.01"
-        onInput={(e) =>
-          setState({ muted: false, volume: e.target.valueAsNumber })
-        }
+        onInput={(e) => {
+          video.volume.setValue(e.target.valueAsNumber);
+          video.volume.setMuted(false);
+        }}
       />
     </div>
   );

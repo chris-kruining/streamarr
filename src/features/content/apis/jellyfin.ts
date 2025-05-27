@@ -178,10 +178,41 @@ export const getItem = query(
       overview: data.Overview!,
       thumbnail: new URL(`/Items/${itemId}/Images/Primary`, getBaseUrl()), //await getItemImage(data.Id!, 'Primary'),
       image: new URL(`/Items/${itemId}/Images/Backdrop`, getBaseUrl()),
+      providers: {
+        jellyfin: data.Id
+      }
       // ...data,
     };
   },
   "jellyfin.getItem",
+);
+
+
+export const getItemStream = query(
+  async (userId: string, itemId: string): Promise<string | undefined> => {
+    "use server";
+
+    const item = await getItem(userId, itemId);
+
+    console.log(item);
+
+    if (item === undefined) {
+      return undefined;
+    }
+
+    const { data, error } = await getClient().GET("/Videos/{itemId}/stream", {
+      params: {
+        path: {
+          itemId: item.providers.jellyfin,
+        },
+        query: {
+        },
+      },
+    });
+
+    return data;
+  },
+  "jellyfin.getItemStream",
 );
 
 export const getItemImage = query(
@@ -253,6 +284,23 @@ export const queryItems = query(async () => {
 
   console.log(data);
 }, "jellyfin.queryItems");
+
+export const getItemIds = query(async () => {
+    "use server";
+
+  const { data, error } = await getClient().GET("/Items", {
+    params: {
+      query: {
+        mediaTypes: ["Video"],
+        fields: ["ProviderIds"],
+        includeItemTypes: ["Series", "Movie"],
+        recursive: true,
+      },
+    },
+  });
+
+  console.log(data);
+}, "jellyfin.getItemIds");
 
 export const getContinueWatching = query(
   async (userId: string): Promise<Entry[]> => {

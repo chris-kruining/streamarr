@@ -1,5 +1,47 @@
 .player {
+  position: relative;
+  container-type: inline-size;
+  isolation: isolate;
+
+  display: block grid;
+  grid: 100% / 100%;
+  overflow: clip;
+
+  block-size: max-content;
+
+  background-color: black;
+
   & > video::cue {
     font-size: 1.5rem;
+  }
+
+  & > video {
+    grid-area: 1 / 1;
+    inline-size: 100%;
+    block-size: 100%;
+    object-position: center;
+    object-fit: contain;
+  }
+
+  & > figcaption {
+    grid-area: 1 / 1;
+    display: block flex;
+    flex-flow: row wrap;
+    position: absolute;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+    align-content: end;
+
+    gap: var(--size-2);
+    padding: var(--size-2);
+
+    & > * {
+      flex: 0 0 auto;
+    }
+
+    & > :nth-child(1) {
+      inline-size: 100%;
+    }
   }
 }

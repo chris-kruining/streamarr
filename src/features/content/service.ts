@@ -2,7 +2,7 @@
 
 import type { Category, Entry } from "./types";
 import { query } from "@solidjs/router";
-import { getContinueWatching, getRandomItems } from "./apis/jellyfin";
+import { getContinueWatching, getItemStream, getRandomItems } from "./apis/jellyfin";
 import {
   getDiscovery,
   getRecommendations,
@@ -14,6 +14,7 @@ const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
 
 // export const getHighlights = () => getRandomItems(jellyfinUserId);
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
+export const getStream = (id: string) => getItemStream(jellyfinUserId, id);
 
 export const listCategories = query(async (): Promise<Category[]> => {
   return [

@@ -1,0 +1,12 @@
+.page {
+    contain: layout style paint;
+    display: block grid;
+    grid: 100cqb / 100%;
+
+    inline-size: 100%;
+    block-size: 100%;
+
+    & > figure {
+        max-block-size: 100cqb;
+    }
+}

@@ -11,6 +11,7 @@
   overflow: clip;
   container-type: inline-size;
   background-color: var(--surface-1);
+  contain: layout style paint;
 
   &::after {
     content: '';
@@ -38,10 +39,13 @@
   overflow: clip auto;
   padding-inline-start: 5em;
   transition: filter var(--duration-moderate-1) var(--ease-3);
+  contain: layout style paint;
+  container-type: size;
 
   & > div {
     background-color: var(--surface-2);
-    isolation: isolate;
+    container-type: inline-size;
+    contain: layout style paint;
     inline-size: 100%;
     block-size: fit-content;
     min-block-size: 100%;

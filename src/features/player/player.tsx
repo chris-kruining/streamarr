@@ -17,6 +17,7 @@ import { PlayState } from "./controls/playState";
 import { createContextProvider } from "@solid-primitives/context";
 import { isServer } from "solid-js/web";
 import { VideoProvider } from "./context";
+import { SeekBar } from "./controls/seekBar";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -81,21 +82,6 @@ export const Player: Component<PlayerProps> = (props) => {
     })
   );
 
-  const onDurationChange = createEventSignal(video, "durationchange");
-  const onTimeUpdate = createEventSignal(video, "timeupdate");
-
-  const duration = createMemo(() => {
-    onDurationChange();
-
-    return video()?.duration ?? 0;
-  });
-
-  const currentTime = createMemo(() => {
-    onTimeUpdate();
-
-    return video()?.currentTime ?? 0;
-  });
-
   createEventListenerMap(() => video()!, {
     durationchange(e) {
       // console.log("durationchange", e);
@@ -110,14 +96,14 @@ export const Player: Component<PlayerProps> = (props) => {
       // console.log("ratechange", e);
     },
     seeked(e) {
-      console.log("seeked", "completed the seek interaction", e);
+      // console.log("seeked", "completed the seek interaction", e);
     },
     seeking(e) {
-      console.log(
-        "seeking",
-        "the time on the video has been set, now the content will be loaded, the seeked event will fire when this is done",
-        e
-      );
+      // console.log(
+      //   "seeking",
+      //   "the time on the video has been set, now the content will be loaded, the seeked event will fire when this is done",
+      //   e
+      // );
     },
     stalled(e) {
       // console.log(
@@ -126,72 +112,29 @@ export const Player: Component<PlayerProps> = (props) => {
       //   video()!.error,
       // );
     },
-
-    play(e) {
-      // console.log("play", e);
-    },
-    canplay(e) {
-      // console.log("canplay", e);
-    },
-    playing(e) {
-      // console.log("playing", e);
-    },
-    pause(e) {
-      // console.log("pause", e);
-    },
-    suspend(e) {
-      // console.log("suspend", e);
-    },
-
-    volumechange(e) {
-      // console.log("volumechange", e);
-    },
+    // suspend(e) {
+    //   console.log("suspend", e);
+    // },
+    // canplay(e) {
+    //   console.log("canplay", e);
+    // },
 
     waiting(e) {
-      console.log("waiting", e);
+      // console.log("waiting", e);
     },
-
-    progress(e) {
-      console.log(e);
-    },
-
-    // timeupdate(e) {
-    //   console.log("timeupdate", e);
-    // },
   });
-
-  const toggle = () => {
-    const el = video();
-
-    if (!el) {
-      return;
-    }
-
-    el[el.paused ? "play" : "pause"]();
-  };
-
-  const setTime = (time: number) => {
-    const el = video();
-
-    if (!el) {
-      return;
-    }
-
-    el.currentTime = time;
-  };
 
   return (
     <>
       <figure class={css.player}>
-        <h1>{props.entry?.title}</h1>
+        {/* <h1>{props.entry.title}</h1> */}
 
         <video
           ref={setVideo}
-          muted
-          autoplay
-          src={`/api/content/stream?id=${props.id}`}
+          playsinline
+          src={`/api/content/${props.entry.id}/stream`}
           // src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
-          poster={props.entry?.image}
+          poster={props.entry.image}
           lang="en"
         >
           <track
@@ -211,6 +154,7 @@ export const Player: Component<PlayerProps> = (props) => {
 
         <figcaption>
           <VideoProvider video={video()}>
+            <SeekBar />
             <PlayState />
             <Volume
               value={video()?.volume ?? 0}
@@ -222,23 +166,7 @@ export const Player: Component<PlayerProps> = (props) => {
             />
           </VideoProvider>
         </figcaption>
-
-        <button onclick={toggle}>play/pause</button>
-
-        <span>
-          {formatTime(currentTime())} / {formatTime(duration())}
-        </span>
       </figure>
     </>
   );
-};
-
-const formatTime = (subject: number) => {
-  const hours = Math.floor(subject / 3600);
-  const minutes = Math.floor((subject % 3600) / 60);
-  const seconds = Math.floor(subject % 60);
-
-  const sections = hours !== 0 ? [hours, minutes, seconds] : [minutes, seconds];
-
-  return sections.map((section) => String(section).padStart(2, "0")).join(":");
 };

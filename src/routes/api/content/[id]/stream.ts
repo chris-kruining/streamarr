@@ -1,9 +1,16 @@
 import { APIEvent } from "@solidjs/start/server";
+import { getStream } from "~/features/content";
 
 const CHUNK_SIZE = 1 * 1e6; // 1MB
 
-export const GET = async ({ request, ...event }: APIEvent) => {
+export const GET = async ({ request, params }: APIEvent) => {
   "use server";
+
+  console.log('api endpoind called')
+
+  const res = await getStream(params.id);
+
+  return res;
 
   const range = request.headers.get("range");
 
@@ -21,22 +28,20 @@ export const GET = async ({ request, ...event }: APIEvent) => {
     }
 
     const videoSize = file.size;
-
     const start = Number.parseInt(range.replace(/\D/g, ""));
-    const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
-    const contentLength = end - start + 1;
+    const end = Math.min(start + CHUNK_SIZE - 1, videoSize - 1);
 
-    return new Response(file.stream());
+    console.log(`streaming slice(${start}, ${end})`);
 
-    // return new Response(video.slice(start, end).stream(), {
-    //   status: 206,
-    //   headers: {
-    //     'Accept-Ranges': 'bytes',
-    //     'Content-Range': `bytes ${start}-${end}/${videoSize}`,
-    //     'Content-Length': `${contentLength}`,
-    //     'Content-type': 'video/mp4',
-    //   },
-    // });
+    return new Response(file.slice(start, end), {
+      status: 206,
+      headers: {
+        'Accept-Ranges': 'bytes',
+        'Content-Range': `bytes ${start}-${end}/${videoSize}`,
+        'Content-Length': `${end - start + 1}`,
+        'Content-Type': 'video/mp4',
+      },
+    });
   } catch (e) {
     console.error(e);
 

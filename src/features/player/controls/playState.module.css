@@ -1,8 +1,4 @@
-.container {
-  display: block grid;
-  grid: 100% / auto 1fr;
-
-  & > button {
+.play {
     font-size: var(--size-7);
     text-shadow: 0 0 .5rem #000;
     aspect-ratio: 1;
@@ -14,5 +10,4 @@
     &:hover {
         background-color: rgba(from var(--gray-2) r g b / .25);
     }
-  }
 }

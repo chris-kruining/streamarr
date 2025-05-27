@@ -1,0 +1,68 @@
+.container {
+    position: relative;
+    display: block grid;
+    grid: auto var(--size-2) / auto auto;
+    place-content: space-between;
+
+    gap: var(--size-2);
+}
+
+.time {
+    grid-area: 1 / 1;
+}
+
+.duration {
+    grid-area: 1 / 2;
+}
+
+.bar {
+    --_v: calc(1% * attr(data-value type(<number>), 0));
+    grid-area: 2 / span 2;
+    position: absolute;
+    inline-size: 100%;
+    block-size: 100%;
+    z-index: 1;
+    
+    appearance: none;
+
+    background: linear-gradient(var(--blue-3)) top left / var(--_v) 100% no-repeat transparent;
+    border-radius: var(--radius-round);
+
+    &::-webkit-slider-thumb {
+        appearance: none;
+        display: block;
+        inline-size: var(--size-3);
+        block-size: var(--size-3);
+        background-color: var(--blue-7);
+        border-radius: var(--radius-round);
+        box-shadow: var(--shadow-2);
+        /* No clue why this offset is what works... */
+        margin-top: -.8rem;
+    }
+}
+
+.buffered {
+    grid-area: 2 / span 2;
+    position: absolute;
+    inline-size: 100%;
+    block-size: 100%;
+    
+    appearance: none;
+
+    background: transparent;
+
+    &::-webkit-progress-bar {
+        background-color: rgba(from var(--gray-4) r g b / .5);
+        border-radius: var(--radius-round);
+    }
+
+    &::-webkit-progress-value {
+        background-color: rgba(from var(--gray-2) r g b / .75);
+        border-radius: var(--radius-round);
+    }
+
+    &::-moz-progress-bar {
+        background-color: rgba(from var(--surface-4) r g b / .5);
+        border-radius: var(--radius-round);
+    }
+}

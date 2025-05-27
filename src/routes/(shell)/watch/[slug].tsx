@@ -8,9 +8,9 @@ import {
   useParams,
 } from "@solidjs/router";
 import { Show } from "solid-js";
-import { Details } from "~/components/details";
 import { createSlug, getEntry } from "~/features/content";
 import { Player } from "~/features/player";
+import css from "./slug.module.css";
 
 const healUrl = query(async (slug: string) => {
   const entry = await getEntry(slug.slice(slug.lastIndexOf("-") + 1));
@@ -53,10 +53,10 @@ export default function Item() {
   const entry = createAsync(() => getEntry(id));
 
   return (
-    <>
-      <Show when={entry()} fallback="Some kind of pretty 404 page I guess">{
-        entry => <Player entry={entry()} />
-      }</Show>
-    </>
+    <div class={css.page}>
+      <Show when={entry()} fallback="Some kind of pretty 404 page I guess">
+        {(entry) => <Player entry={entry()} />}
+      </Show>
+    </div>
   );
 }
