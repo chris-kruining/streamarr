@@ -9,6 +9,7 @@ import {
   createMemo,
   createSignal,
   on,
+  Show,
 } from "solid-js";
 import css from "./player.module.css";
 import { Volume } from "./controls/volume";
@@ -16,8 +17,11 @@ import { Entry, getEntry } from "../content";
 import { PlayState } from "./controls/playState";
 import { createContextProvider } from "@solid-primitives/context";
 import { isServer } from "solid-js/web";
-import { VideoProvider } from "./context";
+import { useVideo, VideoProvider } from "./context";
 import { SeekBar } from "./controls/seekBar";
+import { Fullscreen } from "./controls/fullscreen";
+import { Settings } from "./controls/settings";
+import { FaSolidCompress, FaSolidExpand, FaSolidSpinner } from "solid-icons/fa";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -51,6 +55,9 @@ interface PlayerProps {
 }
 
 export const Player: Component<PlayerProps> = (props) => {
+  const [player, setPlayer] = createSignal<HTMLElement>(
+    undefined as unknown as HTMLElement
+  );
   const [video, setVideo] = createSignal<HTMLVideoElement>(
     undefined as unknown as HTMLVideoElement
   );
@@ -74,64 +81,15 @@ export const Player: Component<PlayerProps> = (props) => {
       : "";
   });
 
-  createEffect(
-    on(thumbnails, (thumbnails) => {
-      // console.log(thumbnails, video()!.textTracks.getTrackById("thumbnails")?.cues);
-      // const captions = el.addTextTrack("captions", "English", "en");
-      // captions.
-    })
-  );
-
-  createEventListenerMap(() => video()!, {
-    durationchange(e) {
-      // console.log("durationchange", e);
-    },
-    loadeddata(e) {
-      // console.log("loadeddata", e);
-    },
-    loadedmetadata(e) {
-      // console.log("loadedmetadata", e);
-    },
-    ratechange(e) {
-      // console.log("ratechange", e);
-    },
-    seeked(e) {
-      // console.log("seeked", "completed the seek interaction", e);
-    },
-    seeking(e) {
-      // console.log(
-      //   "seeking",
-      //   "the time on the video has been set, now the content will be loaded, the seeked event will fire when this is done",
-      //   e
-      // );
-    },
-    stalled(e) {
-      // console.log(
-      //   "stalled (meaning downloading data failed)",
-      //   e,
-      //   video()!.error,
-      // );
-    },
-    // suspend(e) {
-    //   console.log("suspend", e);
-    // },
-    // canplay(e) {
-    //   console.log("canplay", e);
-    // },
-
-    waiting(e) {
-      // console.log("waiting", e);
-    },
-  });
+  createEffect(on(thumbnails, (thumbnails) => {}));
 
   return (
     <>
-      <figure class={css.player}>
+      <figure ref={setPlayer} class={css.player}>
         {/* <h1>{props.entry.title}</h1> */}
 
         <video
           ref={setVideo}
-          playsinline
           src={`/api/content/${props.entry.id}/stream`}
           // src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
           poster={props.entry.image}
@@ -153,20 +111,41 @@ export const Player: Component<PlayerProps> = (props) => {
         </video>
 
         <figcaption>
-          <VideoProvider video={video()}>
-            <SeekBar />
-            <PlayState />
-            <Volume
-              value={video()?.volume ?? 0}
-              muted={video()?.muted ?? false}
-              onInput={({ volume, muted }) => {
-                video().volume = volume;
-                video().muted = muted;
-              }}
-            />
+          <VideoProvider root={player()} video={video()}>
+            <header>
+              <h1>{props.entry.title}</h1>
+            </header>
+
+            <section>
+              <Loader />
+            </section>
+
+            <footer>
+              <SeekBar />
+              <section>
+                <Volume />
+              </section>
+              <section>
+                <PlayState />
+              </section>
+              <section>
+                <Fullscreen />
+                <Settings />
+              </section>
+            </footer>
           </VideoProvider>
         </figcaption>
       </figure>
     </>
+  );
+};
+
+const Loader: Component = () => {
+  const video = useVideo();
+
+  return (
+    <Show when={video.loading()}>
+      <FaSolidSpinner />
+    </Show>
   );
 };

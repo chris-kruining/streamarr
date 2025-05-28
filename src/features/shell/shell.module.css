@@ -39,7 +39,6 @@
   overflow: clip auto;
   padding-inline-start: 5em;
   transition: filter var(--duration-moderate-1) var(--ease-3);
-  contain: layout style paint;
   container-type: size;
 
   & > div {

@@ -1,3 +1,4 @@
+import { Title } from "@solidjs/meta";
 import {
   createAsync,
   json,
@@ -51,9 +52,10 @@ export default function Item() {
 
   return (
     <>
-      <Show when={entry()} fallback="Some kind of pretty 404 page I guess">{
-        entry => <Details entry={entry()} />
-      }</Show>
+      <Title>{entry()?.title}</Title>
+      <Show when={entry()} fallback="Some kind of pretty 404 page I guess">
+        {(entry) => <Details entry={entry()} />}
+      </Show>
     </>
   );
 }

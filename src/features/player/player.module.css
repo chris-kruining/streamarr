@@ -10,6 +10,7 @@
   block-size: max-content;
 
   background-color: black;
+  color: var(--gray-3);
 
   & > video::cue {
     font-size: 1.5rem;
@@ -25,8 +26,8 @@
 
   & > figcaption {
     grid-area: 1 / 1;
-    display: block flex;
-    flex-flow: row wrap;
+    display: block grid;
+    grid: auto 1fr auto / 100%;
     position: absolute;
     inline-size: 100%;
     block-size: 100%;
@@ -36,12 +37,63 @@
     gap: var(--size-2);
     padding: var(--size-2);
 
-    & > * {
-      flex: 0 0 auto;
+    & > header {
+      display: block grid;
+      place-items: center;
+
+      & > h1 {
+        text-align: center;
+        font-size: 8rem;
+        text-shadow: 0 0 .5rem #000;
+      }
     }
 
-    & > :nth-child(1) {
-      inline-size: 100%;
+    & > section {
+      display: block grid;
+      place-items: center;
+      
+      & > svg {
+        font-size: 10rem;
+        animation: spin 1s infinite steps(8) normal;
+        filter: drop-shadow(0 0 .5rem #000);
+      }
     }
+
+    & > footer {
+      display: block grid;
+      grid: auto auto / auto auto auto;
+      place-content: space-between;
+      gap: var(--size-2);
+
+      & > :nth-child(1) {
+        grid-column: 1 / -1;
+      }
+
+      & > section {
+        & > button {  
+          font-size: var(--size-7);
+          text-shadow: 0 0 .5rem #000;
+          aspect-ratio: 1;
+          background-color: transparent;
+          border-radius: var(--radius-2);
+          
+          transition: background-color .2s var(--ease-in-out-1);
+
+          &:hover {
+              background-color: rgba(from var(--gray-2) r g b / .25);
+          }
+        }
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    rotate: 0deg;
+  }
+
+  100% {
+    rotate: 360deg;
   }
 }

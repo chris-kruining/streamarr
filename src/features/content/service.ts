@@ -2,7 +2,7 @@
 
 import type { Category, Entry } from "./types";
 import { query } from "@solidjs/router";
-import { getContinueWatching, getItemStream, getRandomItems } from "./apis/jellyfin";
+import { listItemIds, getContinueWatching, getItemStream, getRandomItems } from "./apis/jellyfin";
 import {
   getDiscovery,
   getRecommendations,
@@ -12,9 +12,15 @@ import {
 
 const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
 
+const lookupTable = query(async () => listItemIds(), 'content.lookupTable');
+
 // export const getHighlights = () => getRandomItems(jellyfinUserId);
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
-export const getStream = (id: string) => getItemStream(jellyfinUserId, id);
+export const getStream = query(async (id: string, range: string) => {
+  const table = await lookupTable();
+
+  return getItemStream(table[id].jellyfin, range);
+}, 'content.stream');
 
 export const listCategories = query(async (): Promise<Category[]> => {
   return [
@@ -31,7 +37,6 @@ export const listCategories = query(async (): Promise<Category[]> => {
 export const getEntry = query(
   async (id: Entry["id"]): Promise<Entry | undefined> => {
     return getTmdbEntry(id);
-    // return getItem(jellyfinUserId, id);
   },
   "content.get",
 );

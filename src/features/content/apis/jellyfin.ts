@@ -57,6 +57,41 @@ export const listUsers = query(async () => {
   return data ?? [];
 }, "jellyfin.listUsers");
 
+export const listItemIds = query(
+  async (): Promise<Record<string, { jellyfin: string }>> => {
+    "use server";
+
+    const { data, error } = await getClient().GET("/Items", {
+      params: {
+        query: {
+          hasImdbId: true,
+          recursive: true,
+          includeItemTypes: ["Movie", "Series"],
+          fields: [
+            "ProviderIds",
+            "Genres",
+            "DateLastMediaAdded",
+            "DateCreated",
+            "MediaSources",
+          ],
+        },
+      },
+    });
+
+    if (data === undefined) {
+      return {};
+    }
+
+    return Object.fromEntries(
+      data.Items?.map((item) => ([
+        item.ProviderIds!["Tmdb"]!,
+        { jellyfin: item.Id! },
+      ])) ?? []
+    );
+  },
+  "jellyfin.listItemIds",
+);
+
 export const listItems = query(
   async (userId: string): Promise<Entry[] | undefined> => {
     "use server";
@@ -189,28 +224,28 @@ export const getItem = query(
 
 
 export const getItemStream = query(
-  async (userId: string, itemId: string): Promise<string | undefined> => {
+  async (itemId: string, range: string): Promise<Response> => {
     "use server";
 
-    const item = await getItem(userId, itemId);
-
-    console.log(item);
-
-    if (item === undefined) {
-      return undefined;
-    }
-
-    const { data, error } = await getClient().GET("/Videos/{itemId}/stream", {
+    // I don't really know what is the big difference between mp4 and mkv.
+    // But mkv is able to use ranges an can report the video's length, whereas mp4 doesn't
+    const { response } = await getClient().GET("/Videos/{itemId}/stream", {
       params: {
         path: {
-          itemId: item.providers.jellyfin,
+          itemId,
         },
         query: {
+          static: true,
+          container: 'mkv',
         },
       },
+      parseAs: 'stream',
+      headers: {
+        Range: range
+      }
     });
 
-    return data;
+    return response;
   },
   "jellyfin.getItemStream",
 );
@@ -267,7 +302,7 @@ export const getItemPlaybackInfo = query(
 );
 
 export const queryItems = query(async () => {
-    "use server";
+  "use server";
 
   const { data, error } = await getClient().GET("/Items", {
     params: {
@@ -284,23 +319,6 @@ export const queryItems = query(async () => {
 
   console.log(data);
 }, "jellyfin.queryItems");
-
-export const getItemIds = query(async () => {
-    "use server";
-
-  const { data, error } = await getClient().GET("/Items", {
-    params: {
-      query: {
-        mediaTypes: ["Video"],
-        fields: ["ProviderIds"],
-        includeItemTypes: ["Series", "Movie"],
-        recursive: true,
-      },
-    },
-  });
-
-  console.log(data);
-}, "jellyfin.getItemIds");
 
 export const getContinueWatching = query(
   async (userId: string): Promise<Entry[]> => {

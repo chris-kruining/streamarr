@@ -1,13 +1,9 @@
 import { Component, Show } from "solid-js";
-import css from "./volume.module.css";
 import { useVideo } from "../context";
 import { FaSolidVolumeOff, FaSolidVolumeXmark } from "solid-icons/fa";
+import css from "./volume.module.css";
 
-interface VolumeProps {
-  value: number;
-  muted?: boolean;
-  onInput?: (next: { volume: number; muted: boolean }) => any;
-}
+interface VolumeProps {}
 
 export const Volume: Component<VolumeProps> = (props) => {
   const video = useVideo();

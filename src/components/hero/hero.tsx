@@ -21,10 +21,6 @@ export function Hero(props: HeroProps) {
 const Page: Component<{ entry: Entry }> = (props) => {
   const slug = createMemo(() => createSlug(props.entry));
 
-  createEffect(() => {
-    // console.log(props.entry);
-  });
-
   return (
     <div
       class={`${css.page}`}

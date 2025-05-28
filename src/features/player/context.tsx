@@ -6,6 +6,7 @@ import {
 import { Accessor, createEffect, onMount, Setter } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createEventListenerMap } from "@solid-primitives/event-listener";
+import { createFullscreen } from "@solid-primitives/fullscreen";
 
 type State = "playing" | "paused";
 
@@ -15,9 +16,14 @@ type Volume = {
 };
 
 export interface VideoAPI {
+  readonly fullscreen: Accessor<boolean>;
+  readonly setFullscreen: Setter<boolean>;
+
+  readonly loading: Accessor<boolean>;
   readonly duration: Accessor<number>;
   readonly buffered: Accessor<number>;
   readonly currentTime: Accessor<number>;
+
   setTime(time: number): void;
 
   readonly state: {
@@ -37,10 +43,13 @@ export interface VideoAPI {
 }
 
 interface VideoProviderProps extends ContextProviderProps {
+  root: HTMLElement | undefined;
   video: HTMLVideoElement | undefined;
 }
 
 interface VideoStore {
+  fullscreen: boolean;
+  loading: boolean;
   duration: number;
   buffered: number;
   currentTime: number;
@@ -55,6 +64,8 @@ export const [VideoProvider, useVideo] = createContextProvider<
   (props) => {
     const video = props.video;
     const [store, setStore] = createStore<VideoStore>({
+      fullscreen: false,
+      loading: true,
       duration: 0,
       buffered: 0,
       currentTime: 0,
@@ -65,7 +76,17 @@ export const [VideoProvider, useVideo] = createContextProvider<
       },
     });
 
+    const fullscreen = createFullscreen(
+      () => props.root,
+      () => store.fullscreen
+    );
+
     const api: VideoAPI = {
+      fullscreen,
+      setFullscreen: setStore.bind(null, "fullscreen"),
+
+      loading: () => store.loading,
+
       duration: () => store.duration,
       buffered: () => store.buffered,
       currentTime: () => store.currentTime,
@@ -147,11 +168,22 @@ export const [VideoProvider, useVideo] = createContextProvider<
           timeRanges.length > 0 ? timeRanges.end(timeRanges.length - 1) : 0
         );
       },
+      canplay() {
+        setStore("loading", false);
+      },
+      waiting() {
+        setStore("loading", true);
+      },
     });
 
     return api;
   },
   {
+    fullscreen: () => false,
+    setFullscreen() {},
+
+    loading: () => false,
+
     duration: () => 0,
     buffered: () => 0,
     currentTime: () => 0,

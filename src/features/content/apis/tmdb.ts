@@ -41,8 +41,6 @@ export const getEntry = query(
       },
     });
 
-    console.log(data);
-
     if (data === undefined) {
       return undefined;
     }
