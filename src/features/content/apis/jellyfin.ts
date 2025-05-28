@@ -24,7 +24,6 @@ const getBaseUrl = () => {
   return process.env.JELLYFIN_BASE_URL;
 };
 
-
 const getClient = () => {
   "use server";
 
@@ -34,11 +33,11 @@ const getClient = () => {
       Authorization: `MediaBrowser DeviceId="Streamarr", Token="${process.env.JELLYFIN_API_KEY}"`,
       "Content-Type": 'application/json; profile="CamelCase"',
     },
-  })
+  });
 };
 
 export const getCurrentUser = query(async () => {
-    "use server";
+  "use server";
 
   const { data, error, response } = await getClient().GET("/Users/Public", {
     params: {},
@@ -48,7 +47,7 @@ export const getCurrentUser = query(async () => {
 }, "jellyfin.getCurrentUser");
 
 export const listUsers = query(async () => {
-    "use server";
+  "use server";
 
   const { data, error } = await getClient().GET("/Users", {
     params: {},
@@ -134,8 +133,8 @@ export const getRandomItem = query(
   async (userId: string): Promise<Entry | undefined> => {
     "use server";
 
-      return getRandomItems(userId, 1).then((items) => items?.at(0));
-    },
+    return getRandomItems(userId, 1).then((items) => items?.at(0));
+  },
   "jellyfin.listRandomItem",
 );
 

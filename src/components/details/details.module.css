@@ -1,6 +1,6 @@
 .container {
   isolation: isolate;
-    display: block grid;
+  display: block grid;
 
   container-type: inline-size;
 }
@@ -14,10 +14,13 @@
     position: absolute;
     inset: 0;
     display: block;
-    background: linear-gradient(182.5deg, transparent 20%, var(--surface-2) 90%),
-      linear-gradient(transparent 50%, #0007 75%);
+    background: linear-gradient(
+      calc(atan(var(--ratio))),
+      var(--surface-2) 20em,
+      transparent 90%
+    );
   }
-  
+
   & > .background {
     position: absolute;
     inset: 0;
@@ -28,4 +31,3 @@
     z-index: 0;
   }
 }
-
