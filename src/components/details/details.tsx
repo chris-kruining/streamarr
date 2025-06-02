@@ -11,13 +11,10 @@ export const Details: Component<DetailsProps> = (props) => {
 
   onMount(() => {
     const observer = new ResizeObserver(([entry]) => {
-      const _20em = 20 * 16;
       const { inlineSize, blockSize } = entry.contentBoxSize[0];
-      console.log(blockSize / inlineSize);
-
       (entry.target as HTMLElement).style.setProperty(
         "--ratio",
-        String(_20em / inlineSize),
+        String((blockSize * 0.2) / inlineSize)
       );
     });
 

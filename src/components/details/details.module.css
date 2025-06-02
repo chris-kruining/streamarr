@@ -15,7 +15,7 @@
     inset: 0;
     display: block;
     background: linear-gradient(
-      calc(atan(var(--ratio))),
+      atan(var(--ratio, .2)),
       var(--surface-2) 20em,
       transparent 90%
     );

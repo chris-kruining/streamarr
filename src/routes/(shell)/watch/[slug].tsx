@@ -8,13 +8,13 @@ import {
   useParams,
 } from "@solidjs/router";
 import { Show } from "solid-js";
-import { createSlug, getEntry } from "~/features/content";
+import { createSlug, getEntryFromSlug } from "~/features/content";
 import { Player } from "~/features/player";
-import css from "./slug.module.css";
 import { Title } from "@solidjs/meta";
+import css from "./slug.module.css";
 
 const healUrl = query(async (slug: string) => {
-  const entry = await getEntry(slug.slice(slug.lastIndexOf("-") + 1));
+  const entry = await getEntryFromSlug(slug);
 
   if (entry === undefined) {
     return json(null, { status: 404 });
@@ -44,14 +44,13 @@ export const route = {
 
     await healUrl(slug);
 
-    return getEntry(slug.slice(slug.lastIndexOf("-") + 1));
+    return getEntryFromSlug(slug);
   },
 } satisfies RouteDefinition;
 
 export default function Item() {
   const { slug } = useParams<ItemParams>();
-  const id = slug.slice(slug.lastIndexOf("-") + 1);
-  const entry = createAsync(() => getEntry(id));
+  const entry = createAsync(() => getEntryFromSlug(slug));
 
   return (
     <div class={css.page}>

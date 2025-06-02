@@ -14,12 +14,11 @@ const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
 
 const lookupTable = query(async () => listItemIds(), 'content.lookupTable');
 
-// export const getHighlights = () => getRandomItems(jellyfinUserId);
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
-export const getStream = query(async (id: string, range: string) => {
+export const getStream = query(async (type: Entry['type'], id: string, range: string) => {
   const table = await lookupTable();
 
-  return getItemStream(table[id].jellyfin, range);
+  return getItemStream(table[`${type}-${id}`].jellyfin, range);
 }, 'content.stream');
 
 export const listCategories = query(async (): Promise<Category[]> => {
@@ -34,9 +33,18 @@ export const listCategories = query(async (): Promise<Category[]> => {
   ];
 }, "content.categories.list");
 
+export const getEntryFromSlug = query(
+  async (slug: string): Promise<Entry | undefined> => {
+    const { type, id } = slug.match(/^.+-(?<type>\w+)-(?<id>\w+)$/)?.groups ?? {};
+
+    return getTmdbEntry(type as any, id);
+  },
+  "content.getFromSlug",
+);
+
 export const getEntry = query(
-  async (id: Entry["id"]): Promise<Entry | undefined> => {
-    return getTmdbEntry(id);
+  async (type: Entry['type'], id: Entry["id"]): Promise<Entry | undefined> => {
+    return getTmdbEntry(type, id);
   },
   "content.get",
 );

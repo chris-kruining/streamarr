@@ -8,9 +8,6 @@ type HeroProps = {
 };
 
 export function Hero(props: HeroProps) {
-  const entry = createMemo(() => props.entries.at(0)!);
-  const slug = createMemo(() => createSlug(entry()));
-
   return (
     <div class={`${css.container} ${props.class ?? ""}`}>
       <For each={props.entries}>{(entry) => <Page entry={entry} />}</For>

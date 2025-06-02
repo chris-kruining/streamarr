@@ -121,7 +121,9 @@ export const Player: Component<PlayerProps> = (props) => {
             </section>
 
             <footer>
-              <SeekBar />
+              <section>
+                <SeekBar />
+              </section>
               <section>
                 <Volume />
               </section>

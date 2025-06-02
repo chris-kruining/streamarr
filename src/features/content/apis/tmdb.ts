@@ -28,16 +28,24 @@ const getClients = () => {
 };
 
 export const getEntry = query(
-  async (id: string): Promise<Entry | undefined> => {
-  "use server";
+  async (type: Entry['type'], id: string): Promise<Entry | undefined> => {
+    "use server";
 
     const [ clientV3 ] = getClients();
 
-    const { data } = await clientV3.GET("/movie/{movie_id}", {
+    const endpoint = ({
+      movie: "/movie/{movie_id}",
+      tv: '/tv/{series_id}',
+    } as const)[type];
+
+    const params = ({
+      movie: { movie_id: Number.parseInt(id) },
+      tv: { series_id: Number.parseInt(id) },
+    } as const)[type];
+
+    const { data } = await clientV3.GET(endpoint, {
       params: {
-        path: {
-          movie_id: Number.parseInt(id),
-        },
+        path: params,
       },
     });
 
@@ -46,6 +54,7 @@ export const getEntry = query(
     }
 
     return {
+      type,
       id: String(data.id ?? -1),
       title: data.title!,
       overview: data.overview,
@@ -78,6 +87,7 @@ export const getRecommendations = query(async (): Promise<Entry[]> => {
 
   return data?.results.map(
     ({ id, title, overview, poster_path, backdrop_path }) => ({
+      type: 'movie',
       id: String(id ?? -1),
       title: title!,
       overview,
@@ -102,7 +112,8 @@ export const getDiscovery = query(async (): Promise<Entry[]> => {
   }
 
   const movieEntries = movies?.results?.slice(0, 10)
-    .map(({ id, title, overview, poster_path, backdrop_path }) => ({
+    .map(({ id, title, overview, poster_path, backdrop_path }): Entry => ({
+      type: 'movie',
       id: String(id ?? -1),
       title: title!,
       overview,
@@ -111,7 +122,8 @@ export const getDiscovery = query(async (): Promise<Entry[]> => {
     })) ?? []
 
   const seriesEntries = series?.results?.slice(0, 10)
-    .map(({ id, name, overview, poster_path, backdrop_path }) => ({
+    .map(({ id, name, overview, poster_path, backdrop_path }): Entry => ({
+      type: 'tv',
       id: String(id ?? -1),
       title: name!,
       overview,
@@ -137,7 +149,7 @@ export const searchMulti = query(async (query: string, page: number = 1): Promis
         query,
         page,
         include_adult: false,
-        language: 'en-US'
+        language: 'en-US',
       }
     }
   });
@@ -147,8 +159,13 @@ export const searchMulti = query(async (query: string, page: number = 1): Promis
   }
 
   console.log(`loaded page ${page}, found ${data.results?.length} results`);
+  console.log(data.results[0]);
 
-  return { count: data.total_results!, pages: data.total_pages!, results: data.results?.map(({ id, name, title, media_type, overview, backdrop_path, poster_path }) => ({
+  return { count: data.total_results!, pages: data.total_pages!, results: data.results?.filter(({ media_type }) => media_type === 'movie' || media_type === 'tv').map(({ id, name, title, media_type, overview, backdrop_path, poster_path }): Entry => ({
+    type: ({
+      movie: 'movie',
+      tv: 'tv',
+    }[media_type ?? '']) as any,
     id: String(id),
     title: `${name ?? title ?? ''} (${media_type})`,
     overview,

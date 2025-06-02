@@ -169,6 +169,9 @@ export const [VideoProvider, useVideo] = createContextProvider<
         );
       },
       canplay() {
+        // setStore("loading", false);
+      },
+      canplaythrough() {
         setStore("loading", false);
       },
       waiting() {

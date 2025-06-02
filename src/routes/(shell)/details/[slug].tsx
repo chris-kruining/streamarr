@@ -10,7 +10,12 @@ import {
 } from "@solidjs/router";
 import { Show } from "solid-js";
 import { Details } from "~/components/details";
-import { createSlug, Entry, getEntry } from "~/features/content";
+import {
+  createSlug,
+  Entry,
+  getEntry,
+  getEntryFromSlug,
+} from "~/features/content";
 
 const healUrl = async (slug: string, entry: Entry) => {
   const actualSlug = createSlug(entry);
@@ -47,8 +52,7 @@ export const route = {
 
 export default function Item() {
   const { slug } = useParams<ItemParams>();
-  const id = slug.slice(slug.lastIndexOf("-") + 1);
-  const entry = createAsync(() => getEntry(id));
+  const entry = createAsync(() => getEntryFromSlug(slug));
 
   return (
     <>
