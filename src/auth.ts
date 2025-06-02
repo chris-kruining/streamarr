@@ -7,7 +7,10 @@ export const auth = betterAuth({
   appName: "Streamarr",
   basePath: "/api/auth",
   logger: {
-    level: "info",
+    level: "debug",
+    log(level, message, ...args) {
+      console.log(level, message, {args});
+    },
   },
   user: {
     additionalFields: {

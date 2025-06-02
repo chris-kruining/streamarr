@@ -1,9 +1,8 @@
-import { Component, createEffect, Show } from "solid-js";
-import { signIn, signOut } from "~/auth";
-import { hash } from "~/utilities";
+import { Component, Show } from "solid-js";
+import { signIn, signOut, client } from "~/auth";
 import { Avatar, Profile, User } from "../user";
-import css from "./top.module.css";
 import { ColorSchemePicker } from "../theme";
+import css from "./top.module.css";
 
 interface TopProps {
   user: User | undefined;
