@@ -3,7 +3,7 @@ import { getStream } from "~/features/content";
 
 // const CHUNK_SIZE = 1 * 1e6; // 1MB
 
-export const GET = async ({ request, params }: APIEvent) => {
+export const GET = async ({ request, params: { type, id } }: APIEvent) => {
   "use server";
 
   const range = request.headers.get("range");
@@ -12,7 +12,7 @@ export const GET = async ({ request, params }: APIEvent) => {
     return new Response("Requires Range header", { status: 400 });
   }
 
-  return getStream(params.id, range);
+  return getStream(type, id, range);
 
   // try {
   //   const file = Bun.file(

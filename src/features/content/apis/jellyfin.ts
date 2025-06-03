@@ -82,10 +82,17 @@ export const listItemIds = query(
     }
 
     return Object.fromEntries(
-      data.Items?.map((item) => ([
-        `${item.MediaType as any}-${item.ProviderIds!["Tmdb"]!}`,
-        { jellyfin: item.Id! },
-      ])) ?? []
+      data.Items?.map((item) => {
+        const type = {
+          Movie: 'movie',
+          Series: 'tv',
+        }[item.Type as string] ?? 'unknown';
+
+        return [
+          `${type}-${item.ProviderIds!["Tmdb"]!}`,
+          { jellyfin: item.Id! },
+        ];
+      }) ?? []
     );
   },
   "jellyfin.listItemIds",

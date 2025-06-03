@@ -16,7 +16,11 @@ const lookupTable = query(async () => listItemIds(), 'content.lookupTable');
 
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
 export const getStream = query(async (type: Entry['type'], id: string, range: string) => {
+  console.log(type, id);
+  
   const table = await lookupTable();
+
+  console.log(table, table[`${type}-${id}`].jellyfin);
 
   return getItemStream(table[`${type}-${id}`].jellyfin, range);
 }, 'content.stream');

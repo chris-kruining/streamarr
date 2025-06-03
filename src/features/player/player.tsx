@@ -90,7 +90,7 @@ export const Player: Component<PlayerProps> = (props) => {
 
         <video
           ref={setVideo}
-          src={`/api/content/${props.entry.id}/stream`}
+          src={`/api/content/${props.entry.type}/${props.entry.id}/stream`}
           // src="https://archive.org/download/BigBuckBunny_124/Content/big_buck_bunny_720p_surround.mp4"
           poster={props.entry.image}
           lang="en"
