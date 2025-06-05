@@ -84,12 +84,12 @@ export const listItemIds = query(
     return Object.fromEntries(
       data.Items?.map((item) => {
         const type = {
-          Movie: 'movie',
-          Series: 'tv',
-        }[item.Type as string] ?? 'unknown';
+          Movie: 'm',
+          Series: 's',
+        }[item.Type as string] ?? '';
 
         return [
-          `${type}-${item.ProviderIds!["Tmdb"]!}`,
+          `${type}${item.ProviderIds!["Tmdb"]!}`,
           { jellyfin: item.Id! },
         ];
       }) ?? []
@@ -125,7 +125,7 @@ export const listItems = query(
     }
 
     return (
-      data.Items?.map((item) => mapToEntry(item)) ?? []
+      data.Items?.map((item) => toEntry(item)) ?? []
     );
   },
   "jellyfin.listItems",
@@ -166,7 +166,7 @@ export const getRandomItems = query(
     });
 
     return (
-      data?.Items?.map((item) => mapToEntry(item)) ?? []
+      data?.Items?.map((item) => toEntry(item)) ?? []
     );
   },
   "jellyfin.listRandomItems",
@@ -201,7 +201,7 @@ export const getItem = query(
       return undefined;
     }
 
-    return mapToEntry(data);
+    return toEntry(data);
   },
   "jellyfin.getItem",
 );
@@ -357,21 +357,20 @@ function assertNoErrors<T>(
   }
 }
 
-const mapToEntry = (item: components['schemas']['BaseItemDto']): Entry => {
+const toEntry = (item: components['schemas']['BaseItemDto']): Entry => {
   const type = {
-    Movie: 'movie',
-    Series: 'tv',
+    Movie: 'm',
+    Series: 's',
   }[item.Type as string] as any;
 
   return {
-      type,
-      id: item.ProviderIds!["Tmdb"]!,
-      title: item.Name!,
-      overview: item.Overview!,
-      thumbnail: new URL(`/Items/${item.Id}/Images/Primary`, getBaseUrl()), //await getItemImage(data.Id!, 'Primary'),
-      image: new URL(`/Items/${item.Id}/Images/Backdrop`, getBaseUrl()),
-      providers: {
-        jellyfin: item.Id
-      }
-    };
+    id: `${type}${item.ProviderIds!["Tmdb"]!}`,
+    title: item.Name!,
+    overview: item.Overview!,
+    thumbnail: new URL(`/Items/${item.Id}/Images/Primary`, getBaseUrl()), //await getItemImage(data.Id!, 'Primary'),
+    image: new URL(`/Items/${item.Id}/Images/Backdrop`, getBaseUrl()),
+    providers: {
+      jellyfin: item.Id
+    }
+  };
 };

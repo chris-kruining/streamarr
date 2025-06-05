@@ -1,8 +1,18 @@
 import createClient from "openapi-fetch";
 import { query } from "@solidjs/router";
 import { Entry, SearchResult } from "../types";
-import { paths as pathsV3 } from "./tmdb.generated";
+import { paths as pathsV3, operations } from "./tmdb.generated";
 import { paths as pathsV4 } from "./tmdb.not.generated";
+
+interface TMDBItem {
+  id: number;
+  media_type: string;
+  name?: string;
+  title?: string;
+  overview?: string;
+  backdrop_path?: string;
+  poster_path?: string;
+}
 
 const getClients = () => {
   "use server";
@@ -28,20 +38,27 @@ const getClients = () => {
 };
 
 export const getEntry = query(
-  async (type: Entry['type'], id: string): Promise<Entry | undefined> => {
+  async (id: string): Promise<Entry | undefined> => {
     "use server";
 
     const [ clientV3 ] = getClients();
 
+    const mediaType = ({
+      m: 'movie',
+      s: 'tv',
+    } as const)[id[0]]!;
+
     const endpoint = ({
       movie: "/movie/{movie_id}",
       tv: '/tv/{series_id}',
-    } as const)[type];
+    } as const)[mediaType];
 
     const params = ({
-      movie: { movie_id: Number.parseInt(id) },
-      tv: { series_id: Number.parseInt(id) },
-    } as const)[type];
+      movie: { movie_id: Number.parseInt(id.slice(1)) },
+      tv: { series_id: Number.parseInt(id.slice(1)) },
+    } as const)[mediaType];
+
+    console.log(`going to fetch from '${endpoint}' with id '${id}'`)
 
     const { data } = await clientV3.GET(endpoint, {
       params: {
@@ -53,14 +70,7 @@ export const getEntry = query(
       return undefined;
     }
 
-    return {
-      type,
-      id: String(data.id ?? -1),
-      title: data.title!,
-      overview: data.overview,
-      thumbnail: `http://image.tmdb.org/t/p/w342${data.poster_path}`,
-      image: `http://image.tmdb.org/t/p/original${data.backdrop_path}`,
-    };
+    return toEntry(data as any, mediaType);
   },
   "tmdb.getEntry",
 );
@@ -85,22 +95,13 @@ export const getRecommendations = query(async (): Promise<Entry[]> => {
     return [];
   }
 
-  return data?.results.map(
-    ({ id, title, overview, poster_path, backdrop_path }) => ({
-      type: 'movie',
-      id: String(id ?? -1),
-      title: title!,
-      overview,
-      thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
-      image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
-    }),
-  );
+  return data?.results.map((item) => toEntry(item));
 }, "tmdb.getRecommendations");
 
 export const getDiscovery = query(async (): Promise<Entry[]> => {
   "use server";
 
-    const [ clientV3 ] = getClients();
+  const [ clientV3 ] = getClients();
 
   const [{ data: movies }, { data: series }] = await Promise.all([
     clientV3.GET("/discover/movie"),
@@ -111,25 +112,8 @@ export const getDiscovery = query(async (): Promise<Entry[]> => {
     return [];
   }
 
-  const movieEntries = movies?.results?.slice(0, 10)
-    .map(({ id, title, overview, poster_path, backdrop_path }): Entry => ({
-      type: 'movie',
-      id: String(id ?? -1),
-      title: title!,
-      overview,
-      thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
-      image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
-    })) ?? []
-
-  const seriesEntries = series?.results?.slice(0, 10)
-    .map(({ id, name, overview, poster_path, backdrop_path }): Entry => ({
-      type: 'tv',
-      id: String(id ?? -1),
-      title: name!,
-      overview,
-      thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
-      image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
-    })) ?? []
+  const movieEntries = movies?.results?.slice(0, 10).map((item): Entry => toEntry(item)) ?? []
+  const seriesEntries = series?.results?.slice(0, 10).map((item): Entry => toEntry(item)) ?? []
 
   return movieEntries.concat(seriesEntries);
 }, "tmdb.getDiscovery");
@@ -158,18 +142,23 @@ export const searchMulti = query(async (query: string, page: number = 1): Promis
     return { count: 0, pages: 0, results: [] };
   }
 
-  console.log(`loaded page ${page}, found ${data.results?.length} results`);
-  console.log(data.results[0]);
+  return { count: data.total_results!, pages: data.total_pages!, results: data.results?.filter(({ media_type }) => media_type === 'movie' || media_type === 'tv').map((item): Entry => toEntry(item)) ?? [] };
+}, "tmdb.search.multi");
 
-  return { count: data.total_results!, pages: data.total_pages!, results: data.results?.filter(({ media_type }) => media_type === 'movie' || media_type === 'tv').map(({ id, name, title, media_type, overview, backdrop_path, poster_path }): Entry => ({
-    type: ({
-      movie: 'movie',
-      tv: 'tv',
-    }[media_type ?? '']) as any,
-    id: String(id),
-    title: `${name ?? title ?? ''} (${media_type})`,
+function toEntry(item: TMDBItem): Entry;
+function toEntry(item: Omit<TMDBItem, 'media_type'>, mediaType: string): Entry;
+
+function toEntry({ id, name, title, overview, media_type = '', backdrop_path, poster_path }: TMDBItem | Omit<TMDBItem, 'media_type'>, mediaType?: string): Entry {
+  const type = ({
+      movie: 'm',
+      tv: 's',
+    }[(mediaType ?? media_type) as string]);
+
+  return ({
+    id: `${type}${String(id ?? -1)}`,
+    title: `${name ?? title ?? ''}`,
     overview,
     thumbnail: `http://image.tmdb.org/t/p/w342${poster_path}`,
     image: `http://image.tmdb.org/t/p/original${backdrop_path}`,
-  })) ?? [] };
-}, "tmdb.search.multi");
+  });
+};

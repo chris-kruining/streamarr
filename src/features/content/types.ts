@@ -4,7 +4,6 @@ export interface Category {
 }
 
 export interface Entry {
-  type: 'movie'|'tv';
   id: string;
   title: string;
   overview?: string;
