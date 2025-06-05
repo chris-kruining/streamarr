@@ -44,3 +44,19 @@ export const hash = (
 
   return hash;
 };
+
+export const merge = (...objects: Record<string, any>[]): Record<string, any> => {
+  if (objects.length === 0) {
+    return {};
+  }
+
+  const target = objects[0];
+
+  for (const key of new Set(objects.map(o => Object.keys(o)).flat())) {
+    const values = objects.filter(o => Object.hasOwn(o, key)).map(o => o[key]);
+
+    target[key] = values.every(v => v && typeof v === 'object' && !Array.isArray(v)) ? merge(...values) : values.at(-1);
+  }
+
+  return target;
+};

@@ -1,8 +1,17 @@
+version: '3'
 services:
-  jellyfin:
-    image: stoplight/prism
-    ports:
-      - '9003:4010'
+  sonarr:
+    image: hotio/sonarr
+    container_name: sonarr
     volumes:
-      - './src/features/content/apis:/var/apis'
-    command: 'mock -h 0.0.0.0 /var/apis/jellyfin.json'
+      - ./media:/media
+    ports:
+      - 8989:8989
+
+  radarr:
+    image: hotio/radarr
+    container_name: radarr
+    volumes:
+      - ./media:/media
+    ports:
+      - 7878:7878

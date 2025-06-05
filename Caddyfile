@@ -1,0 +1,27 @@
+
+http://localhost
+
+route /sonarr/api/v3/* {
+    uri strip_prefix /sonarr
+    reverse_proxy sonarr_v3:4010
+}
+
+route /sonarr/api/v5/* {
+    uri strip_prefix /sonarr
+    reverse_proxy sonarr_v5:4010
+}
+
+route /radarr/* {
+    uri strip_prefix /radarr
+    reverse_proxy radarr:4010
+}
+
+# route /tmdb/* {
+#     uri strip_prefix /tmdb
+#     reverse_proxy tmdb:4010
+# }
+
+route /jellifin/* {
+    uri strip_prefix /jellifin
+    reverse_proxy jellifin:4010
+}

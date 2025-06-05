@@ -1,7 +1,7 @@
 import createClient from "openapi-fetch";
 import { query } from "@solidjs/router";
 import { Entry, SearchResult } from "../types";
-import { paths as pathsV3, operations } from "./tmdb.generated";
+import { paths as pathsV3 } from "./tmdb.v3.generated";
 import { paths as pathsV4 } from "./tmdb.not.generated";
 
 interface TMDBItem {
@@ -57,8 +57,6 @@ export const getEntry = query(
       movie: { movie_id: Number.parseInt(id.slice(1)) },
       tv: { series_id: Number.parseInt(id.slice(1)) },
     } as const)[mediaType];
-
-    console.log(`going to fetch from '${endpoint}' with id '${id}'`)
 
     const { data } = await clientV3.GET(endpoint, {
       params: {

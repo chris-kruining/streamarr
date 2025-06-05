@@ -8,7 +8,7 @@ import {
   RouteDefinition,
   useParams,
 } from "@solidjs/router";
-import { Show } from "solid-js";
+import { createEffect, Show } from "solid-js";
 import { Details } from "~/components/details";
 import {
   createSlug,

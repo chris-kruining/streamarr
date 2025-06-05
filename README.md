@@ -5,6 +5,12 @@
 
 ## APIS
 
+### Host mocked api's
+
+```bash
+docker compose up
+```
+
 ### Generate openapi client
 
 - path to source yml or json
@@ -12,5 +18,5 @@
 
 example  
 ```bash
-bunx openapi-typescript .\src\features\content\apis\api.yml -o .\src\features\content\apis\api.generated.ts
+bunx openapi-typescript .\src\features\content\apis\api.json -o .\src\features\content\apis\api.generated.ts
 ```

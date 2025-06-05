@@ -1,0 +1,54 @@
+version: '3'
+services:
+  proxy:
+    image: caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - '8080:80'
+    depends_on:
+      - sonarr_v3
+      - sonarr_v5
+      - radarr
+      - jellyfin
+
+  sonarr_v3:
+    image: stoplight/prism
+    volumes:
+      - './src/features/content/apis:/var/apis'
+    command: >-
+      mock
+      -h 0.0.0.0
+      -p 4010
+      /var/apis/sonarr.v3.json
+
+  sonarr_v5:
+    image: stoplight/prism
+    volumes:
+      - './src/features/content/apis:/var/apis'
+    command: >-
+      mock
+      -h 0.0.0.0
+      -p 4010
+      /var/apis/sonarr.v5.json
+
+  radarr:
+    image: stoplight/prism
+    volumes:
+      - './src/features/content/apis:/var/apis'
+    command: >-
+      mock
+      -h 0.0.0.0
+      -p 4010
+      /var/apis/radarr.json
+
+  jellyfin:
+    image: stoplight/prism
+    volumes:
+      - './src/features/content/apis:/var/apis'
+    command: >-
+      mock
+      -h 0.0.0.0
+      -p 4010
+      /var/apis/jellyfin.json
+      /var/apis/jellyfin.json

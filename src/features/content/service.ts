@@ -9,16 +9,41 @@ import {
   getEntry as getTmdbEntry,
   searchMulti,
 } from "./apis/tmdb";
+import { listIds as listSerieIds } from "./apis/sonarr";
+import { listIds as listMovieIds } from "./apis/radarr";
+import { merge } from "~/utilities";
 
 const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
 
-const lookupTable = query(async () => listItemIds(), 'content.lookupTable');
+const lookupTable = query(async () => {
+  'use server';
+  const [items, sonarr, radarr] = await Promise.all([
+    listItemIds(), listSerieIds(), listMovieIds() ]);
+
+  return merge(items, sonarr, radarr);
+}, 'content.lookupTable');
 
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
 export const getStream = query(async (id: string, range: string) => {
-  const table = await lookupTable();
+    const table = await lookupTable();
+    const ids = table[id];
 
-  return getItemStream(table[id].jellyfin, range);
+    if (ids.jellyfin) {
+      return getItemStream(ids.jellyfin, range);
+    }
+
+    // - If the lookup table has no entry
+    //   than this means that we do not have the requested entry at all, 
+    //   neither in trackers nor in the media server
+    // 
+    // - If the lookup table contains a jellyfin id,
+    //   than we have the content and can stream straight away
+    // 
+    // - If we have the radarr or sonarr id,
+    //   than we are tracking the entry,
+    //   but it is not available for use yet
+    console.log(ids);
+    
 }, 'content.stream');
 
 export const listCategories = query(async (): Promise<Category[]> => {
@@ -35,7 +60,7 @@ export const listCategories = query(async (): Promise<Category[]> => {
 
 export const getEntryFromSlug = query(
   async (slug: string): Promise<Entry | undefined> => {
-    const { id } = slug.match(/^.+-(?<id>\w+)$/)?.groups ?? {};
+    const id = slug.match(/\w+$/)![0];
 
     return getTmdbEntry(id);
   },

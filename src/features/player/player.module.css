@@ -37,6 +37,7 @@
     background: linear-gradient(to bottom, black, transparent) top left / 100% 20% no-repeat;
 
     & > header {
+      z-index: 1;
       display: block grid;
       place-items: center;
 
@@ -48,6 +49,7 @@
     }
 
     & > section {
+      z-index: 2;
       display: block grid;
       place-items: center;
       
@@ -59,6 +61,7 @@
     }
 
     & > footer {
+      z-index: 0;
       position: relative;
       display: block grid;
       grid: auto auto / auto auto auto;
