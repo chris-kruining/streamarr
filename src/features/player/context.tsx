@@ -3,7 +3,7 @@ import {
   ContextProviderProps,
   createContextProvider,
 } from "@solid-primitives/context";
-import { Accessor, createEffect, onMount, Setter } from "solid-js";
+import { Accessor, createEffect, on, onMount, Setter } from "solid-js";
 import { createStore } from "solid-js/store";
 import { createEventListenerMap } from "@solid-primitives/event-listener";
 import { createFullscreen } from "@solid-primitives/fullscreen";
@@ -124,13 +124,20 @@ export const [VideoProvider, useVideo] = createContextProvider<
       },
     };
 
+    console.log(props.root, props.video);
+
     if (isServer || video === undefined) {
       return api;
     }
 
-    createEffect(() => {
-      video[store.state === "playing" ? "play" : "pause"]();
-    });
+    createEffect(
+      on(
+        () => store.state,
+        (state) => {
+          video[state === "playing" ? "play" : "pause"]();
+        }
+      )
+    );
 
     createEffect(() => {
       video.muted = store.volume.muted;
@@ -174,9 +181,11 @@ export const [VideoProvider, useVideo] = createContextProvider<
         );
       },
       canplay() {
+        console.log("can play!");
         // setStore("loading", false);
       },
       canplaythrough() {
+        console.log("can play through!");
         setStore("loading", false);
       },
       waiting() {

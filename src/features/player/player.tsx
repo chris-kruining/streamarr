@@ -33,15 +33,15 @@ const metadata = query(async (id: string) => {
   // 3. create sprite from images
   // 4. remove thumbs
 
-  const path = `${import.meta.dirname}/SampleVideo_1280x720_10mb`;
+  // const path = `${import.meta.dirname}/SampleVideo_1280x720_10mb`;
 
-  return json({
-    captions: await Bun.file(`${path}.captions.vtt`).bytes(),
-    thumbnails: {
-      track: await Bun.file(`${path}.thumbnails.vtt`).text(),
-      image: await Bun.file(`${import.meta.dirname}/overview.jpg`).bytes(),
-    },
-  });
+  // return json({
+  //   captions: await Bun.file(`${path}.captions.vtt`).bytes(),
+  //   thumbnails: {
+  //     track: await Bun.file(`${path}.thumbnails.vtt`).text(),
+  //     image: await Bun.file(`${import.meta.dirname}/overview.jpg`).bytes(),
+  //   },
+  // });
 }, "player.metadata");
 
 interface PlayerProps {
@@ -56,32 +56,30 @@ export const Player: Component<PlayerProps> = (props) => {
     undefined as unknown as HTMLVideoElement
   );
 
-  const data = createAsync(() => metadata(props.entry.id), {
-    deferStream: true,
-    initialValue: {} as any,
-  });
-  const captionUrl = createMemo(() => {
-    const { captions } = data();
+  // const data = createAsync(() => metadata(props.entry.id), {
+  //   deferStream: true,
+  //   initialValue: {} as any,
+  // });
+  // const captionUrl = createMemo(() => {
+  //   const { captions } = data();
 
-    return captions !== undefined
-      ? URL.createObjectURL(new Blob([captions], { type: "text/vtt" }))
-      : "";
-  });
-  const thumbnails = createMemo(() => {
-    const { thumbnails } = data();
+  //   return captions !== undefined
+  //     ? URL.createObjectURL(new Blob([captions], { type: "text/vtt" }))
+  //     : "";
+  // });
+  // const thumbnails = createMemo(() => {
+  //   const { thumbnails } = data();
 
-    return thumbnails !== undefined
-      ? URL.createObjectURL(new Blob([thumbnails.track], { type: "text/vtt" }))
-      : "";
-  });
+  //   return thumbnails !== undefined
+  //     ? URL.createObjectURL(new Blob([thumbnails.track], { type: "text/vtt" }))
+  //     : "";
+  // });
 
-  createEffect(on(thumbnails, (thumbnails) => {}));
+  // createEffect(on(thumbnails, (thumbnails) => {}));
 
   return (
     <>
       <figure ref={setPlayer} class={css.player}>
-        {/* <h1>{props.entry.title}</h1> */}
-
         <video
           ref={setVideo}
           src={`/api/content/${props.entry.id}/stream${
@@ -91,7 +89,7 @@ export const Player: Component<PlayerProps> = (props) => {
           lang="en"
           autoplay
         >
-          <track
+          {/* <track
             default
             kind="captions"
             label="English"
@@ -99,11 +97,11 @@ export const Player: Component<PlayerProps> = (props) => {
             src={captionUrl()}
           />
           <track default kind="chapters" src={thumbnails()} id="thumbnails" />
-          {/* <track kind="captions" />
-        <track kind="chapters" />
-        <track kind="descriptions" />
-        <track kind="metadata" />
-        <track kind="subtitles" /> */}
+          <track kind="captions" />
+          <track kind="chapters" />
+          <track kind="descriptions" />
+          <track kind="metadata" />
+          <track kind="subtitles" /> */}
         </video>
 
         <figcaption>

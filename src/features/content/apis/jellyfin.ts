@@ -213,15 +213,13 @@ export const getItemStream = query(
 
     const userData = await getItemUserData(userId, itemId);
 
-    console.log(userData);
-
     const { response } = await getClient().GET("/Videos/{itemId}/stream", {
       params: {
         path: {
           itemId,
         },
         query: {
-          // startTimeTicks: userData?.playbackPositionTicks,
+          startTimeTicks: userData?.playbackPositionTicks,
         },
       },
       parseAs: 'stream',

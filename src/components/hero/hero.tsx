@@ -25,7 +25,7 @@ const Page: Component<{ entry: Entry }> = (props) => {
     >
       <h2 class={css.title}>{props.entry.title}</h2>
 
-      <a class={css.cta} href={`/watch/${slug()}`}>
+      <a class={css.cta} href={`/play/${slug()}`}>
         Continue
       </a>
 

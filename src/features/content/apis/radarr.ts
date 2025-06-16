@@ -26,10 +26,52 @@ export const getClient = () => {
   });
 };
 
-export const get = query(async () => {
+export const TEST = query(async (id: number) => {
   "use server";
 
-  const { data, error } = await getClient().GET('/api/v3/movie');
+  const { data, error } = await getClient().GET('/api/v3/queue/details', {
+    params: {
+      query: {
+        movieId: id,
+        // includeMovie: true,
+      },
+    },
+  });
+
+  const item = data?.[0];
+
+  if (!item?.status) {
+    return;
+  }
+
+  switch(item.status) {
+    case 'paused': {
+      console.log('not sure what to do now. there\'s a reason it is paused after all. just report it to the client perhaps?');
+      return;
+    }
+
+    case 'downloading': {
+      console.log(`download is esitmated to complete at ${item.estimatedCompletionTime}`);
+
+      return;
+    }
+
+    default: {
+      return;
+    }
+  }
+}, 'radarr.TEST');
+
+export const get = query(async (id: number) => {
+  "use server";
+
+  const { data, error } = await getClient().GET('/api/v3/movie/{id}', {
+    params: {
+      path: {
+        id,
+      },
+    },
+  });
 
   return data;
 }, 'radarr.get');

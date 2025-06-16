@@ -10,7 +10,7 @@ import {
   searchMulti,
 } from "./apis/tmdb";
 import { listIds as listSerieIds, addSeries } from "./apis/sonarr";
-import { listIds as listMovieIds, addMovie } from "./apis/radarr";
+import { listIds as listMovieIds, addMovie, TEST } from "./apis/radarr";
 import { merge } from "~/utilities";
 
 const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
@@ -34,8 +34,14 @@ export const getStream = query(async (id: string, range: string) => {
       return getItemStream(jellyfinUserId, ids.jellyfin, range);
     }
 
-    if (ids?.[manager]) {
-      console.log('id is known, but jellyfin does not (yet) have the file');
+    if (ids?.radarr) {
+      console.log(`radarr has the entry '${ids.radarr}', but jellyfin does not (yet) have the file`);
+      console.log(await TEST(ids.radarr))
+      return;
+    }
+
+    if (ids?.sonarr) {
+      console.log('sonarr has the entry, but jellyfin does not (yet) have the file');
       return;
     }
 

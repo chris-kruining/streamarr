@@ -8,13 +8,12 @@ export const ListItem: Component<{ entry: Entry }> = (props) => {
 
   return (
     <figure class={css.listItem} data-id={props.entry.id}>
-      <img src={props.entry.thumbnail ?? ''} alt={props.entry.title} />
-
+      <img src={props.entry.thumbnail ?? ""} alt={props.entry.title} />
 
       <figcaption>
         <strong>{props.entry.title}</strong>
 
-        <a href={`/watch/${slug()}`}>Watch now</a>
+        <a href={`/play/${slug()}`}>Watch now</a>
       </figcaption>
     </figure>
   );
