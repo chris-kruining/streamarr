@@ -10,9 +10,22 @@ import { User } from "~/features/user";
 const load = query(async (): Promise<User | undefined> => {
   "use server";
 
-  const session = await auth.api.getSession({
-    headers: getRequestEvent()!.request.headers,
-  });
+  const cookies = Object.fromEntries(
+    getRequestEvent()!
+      .request.headers.get("cookie")!
+      .split(";")
+      .map((c) => c.trim())
+      .map((cookie) => {
+        const index = cookie.indexOf("=");
+
+        return [
+          cookie.slice(0, index),
+          decodeURIComponent(cookie.slice(index + 1)),
+        ];
+      })
+  );
+
+  const session = await auth.api.getSession(getRequestEvent()!.request);
 
   if (session === null) {
     return undefined;
@@ -39,13 +52,17 @@ export default function ShellPage(props: ParentProps) {
   const user = createAsync(() => load());
   const themeContext = useTheme();
 
+  createEffect(() => {
+    console.log(user());
+  });
+
   createEffect(
     on(
       () => themeContext.theme.colorScheme,
       (colorScheme) => {
         document.documentElement.dataset.theme = colorScheme;
-      },
-    ),
+      }
+    )
   );
 
   return (

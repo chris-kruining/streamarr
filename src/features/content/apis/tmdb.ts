@@ -110,8 +110,8 @@ export const getDiscovery = query(async (): Promise<Entry[]> => {
     return [];
   }
 
-  const movieEntries = movies?.results?.slice(0, 10).map((item): Entry => toEntry(item)) ?? []
-  const seriesEntries = series?.results?.slice(0, 10).map((item): Entry => toEntry(item)) ?? []
+  const movieEntries = movies?.results?.slice(0, 10).map((item): Entry => toEntry(item, 'movie')) ?? []
+  const seriesEntries = series?.results?.slice(0, 10).map((item): Entry => toEntry(item, 'tv')) ?? []
 
   return movieEntries.concat(seriesEntries);
 }, "tmdb.getDiscovery");

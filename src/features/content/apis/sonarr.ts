@@ -9,6 +9,12 @@ const getBaseUrl = () => {
   return process.env.SONARR_BASE_URL;
 };
 
+const getQualityProfileId = () => {
+  "use server";
+
+  return process.env.SONARR_QUALITY_PROFILE_ID;
+};
+
 const getClient = () => {
   "use server";
 
@@ -55,3 +61,15 @@ export const listIds = query(async () => {
 
   return Object.fromEntries(data?.map(({ id, tmdbId }) => ([ `s${tmdbId}`, { sonarr: id } ] as const)) ?? []);
 }, 'sonarr.listIds');
+
+export const addSeries = query(async (id: string) => {
+  "use server";
+
+  // const { data, error } = await getClient().POST('/api/v3/series', {
+  //   body: {
+        
+  //   },
+  // });
+
+  return;
+}, 'sonarr.add');

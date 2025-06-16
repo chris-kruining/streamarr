@@ -45,6 +45,7 @@ export interface VideoAPI {
 interface VideoProviderProps extends ContextProviderProps {
   root: HTMLElement | undefined;
   video: HTMLVideoElement | undefined;
+  offset?: number;
 }
 
 interface VideoStore {
@@ -68,7 +69,7 @@ export const [VideoProvider, useVideo] = createContextProvider<
       loading: true,
       duration: 0,
       buffered: 0,
-      currentTime: 0,
+      currentTime: props.offset ?? 0,
       state: "paused",
       volume: {
         value: 0.1,
@@ -137,6 +138,10 @@ export const [VideoProvider, useVideo] = createContextProvider<
 
     createEffect(() => {
       video.volume = store.volume.value;
+    });
+
+    createEffect(() => {
+      console.log(store.currentTime, props.offset);
     });
 
     onMount(() => {

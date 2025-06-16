@@ -1,7 +1,3 @@
-import {
-  createEventListenerMap,
-  createEventSignal,
-} from "@solid-primitives/event-listener";
 import { createAsync, json, query } from "@solidjs/router";
 import {
   Component,
@@ -11,17 +7,15 @@ import {
   on,
   Show,
 } from "solid-js";
-import css from "./player.module.css";
 import { Volume } from "./controls/volume";
-import { Entry, getEntry } from "../content";
+import { Entry } from "../content";
 import { PlayState } from "./controls/playState";
-import { createContextProvider } from "@solid-primitives/context";
-import { isServer } from "solid-js/web";
 import { useVideo, VideoProvider } from "./context";
 import { SeekBar } from "./controls/seekBar";
 import { Fullscreen } from "./controls/fullscreen";
 import { Settings } from "./controls/settings";
-import { FaSolidCompress, FaSolidExpand, FaSolidSpinner } from "solid-icons/fa";
+import { FaSolidSpinner } from "solid-icons/fa";
+import css from "./player.module.css";
 
 const metadata = query(async (id: string) => {
   "use server";
@@ -90,9 +84,12 @@ export const Player: Component<PlayerProps> = (props) => {
 
         <video
           ref={setVideo}
-          src={`/api/content/${props.entry.id}/stream`}
+          src={`/api/content/${props.entry.id}/stream${
+            props.entry["offset"] ? `#t=${props.entry["offset"]}` : ""
+          }`}
           poster={props.entry.image}
           lang="en"
+          autoplay
         >
           <track
             default
@@ -110,7 +107,11 @@ export const Player: Component<PlayerProps> = (props) => {
         </video>
 
         <figcaption>
-          <VideoProvider root={player()} video={video()}>
+          <VideoProvider
+            root={player()}
+            video={video()}
+            offset={props.entry["offset"]}
+          >
             <header>
               <h1>{props.entry.title}</h1>
             </header>

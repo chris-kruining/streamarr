@@ -2,10 +2,12 @@ import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins";
 import { createAuthClient } from "better-auth/solid";
 import { genericOAuthClient } from "better-auth/client/plugins";
+import { Database } from "bun:sqlite";
 
 export const auth = betterAuth({
   appName: "Streamarr",
   basePath: "/api/auth",
+  database: new Database('auth.sqlite', { create: true }),
   logger: {
     level: "debug",
     log(level, message, ...args) {

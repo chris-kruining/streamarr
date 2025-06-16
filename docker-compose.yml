@@ -15,3 +15,11 @@ services:
       - ./media:/media
     ports:
       - 7878:7878
+
+  jellyfin:
+    image: hotio/jellyfin
+    container_name: jellyfin
+    volumes:
+      - ./media:/media
+    ports:
+      - 8096:8096

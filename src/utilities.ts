@@ -60,3 +60,10 @@ export const merge = (...objects: Record<string, any>[]): Record<string, any> =>
 
   return target;
 };
+
+type CamelCase<S extends string> = S extends `${infer First}${infer Rest}` ? `${Lowercase<First>}${Rest}` : Lowercase<S>;
+export type CamelCased<T extends Record<string, any>> = {
+  [ K in keyof T as CamelCase<string&K>]: T[K];
+} & {};
+
+export const mapKeysToCamelCase = <T extends Record<string, any>>(subject: T): CamelCased<T> => Object.fromEntries(Object.entries(subject).map(([k, v]) => [`${k[0].toLowerCase()}${k.slice(1)}`, v])) as CamelCased<T>;

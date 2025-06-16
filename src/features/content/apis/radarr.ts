@@ -8,7 +8,13 @@ const getBaseUrl = () => {
   return process.env.RADARR_BASE_URL;
 };
 
-const getClient = () => {
+const getQualityProfileId = () => {
+  "use server";
+
+  return Number.parseInt(process.env.RADARR_QUALITY_PROFILE_ID ?? '1');
+};
+
+export const getClient = () => {
   "use server";
 
   return createClient<paths>({
@@ -31,14 +37,38 @@ export const get = query(async () => {
 export const addMovie = query(async (id: string) => {
   "use server";
 
+  const { data: rootFolders, error: fError } = await getClient().GET('/api/v3/rootfolder');
+
+  if (fError) {
+    console.log(fError);
+    return;
+  }
+
+  console.log(rootFolders);
+
   const { data, error } = await getClient().POST('/api/v3/movie', {
-    body: {
-        
+    body: { 
+      tmdbId: Number.parseInt(id), 
+      qualityProfileId: getQualityProfileId(), 
+      path: '', 
+      rootFolderPath: rootFolders?.[0].path, 
+      monitored: true,
+      addOptions: {
+        searchForMovie: true,
+      },
     },
   });
 
-  return data;
-}, 'radarr.get');
+  if (error) {
+    console.log(error);
+
+    return;
+  }
+
+  console.log(data);
+
+  return;
+}, 'radarr.add');
 
 export const listIds = query(async () => {
   "use server";

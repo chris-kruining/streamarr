@@ -7,7 +7,7 @@ import {
   RouteDefinition,
   useParams,
 } from "@solidjs/router";
-import { Show } from "solid-js";
+import { createEffect, createMemo, Show } from "solid-js";
 import { createSlug, getEntryFromSlug } from "~/features/content";
 import { Player } from "~/features/player";
 import { Title } from "@solidjs/meta";
@@ -51,10 +51,17 @@ export const route = {
 export default function Item() {
   const { slug } = useParams<ItemParams>();
   const entry = createAsync(() => getEntryFromSlug(slug));
+  const title = createMemo(() => entry()?.title);
+
+  console.log(entry());
+
+  createEffect(() => {
+    console.log(entry());
+  });
 
   return (
     <div class={css.page}>
-      <Title>{entry()?.title}</Title>
+      <Title>{title()}</Title>
       <Show when={entry()} fallback="Some kind of pretty 404 page I guess">
         {(entry) => <Player entry={entry()} />}
       </Show>

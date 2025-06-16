@@ -3,6 +3,10 @@
 
 # Notes
 
+## Setting up the project
+
+run the command `bun --bun run db:generate` in order to create and populate the better-auht database
+
 ## APIS
 
 ### Host mocked api's

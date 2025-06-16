@@ -11,7 +11,9 @@
     "start": "vinxi start",
     "version": "vinxi version",
     "test": "vitest --coverage",
-    "test:ci": "vitest run"
+    "test:ci": "vitest run",
+    "db:generate": "cli generate",
+    "db:migrate": "cli migrate"
   },
   "dependencies": {
     "@solid-primitives/context": "^0.3.1",
@@ -23,25 +25,26 @@
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.3",
     "@solidjs/start": "^1.1.4",
-    "better-auth": "^1.2.8",
+    "better-auth": "^1.2.9",
     "bindings": "^1.5.0",
     "open-props": "^1.7.15",
     "openapi-fetch": "^0.13.8",
     "sitemap": "^8.0.0",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.7",
-    "vinxi": "^0.5.6"
+    "vinxi": "^0.5.7"
   },
   "devDependencies": {
+    "@better-auth/cli": "^1.2.9",
     "@testing-library/jest-dom": "^6.6.3",
-    "browserslist": "^4.24.5",
-    "bun-types": "^1.2.14",
+    "browserslist": "^4.25.0",
+    "bun-types": "^1.2.16",
     "lightningcss": "^1.30.1",
     "openapi-typescript": "^7.8.0",
     "solid-devtools": "^0.33.0",
     "vite-plugin-solid-svg": "^0.8.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.1.4"
+    "vitest": "^3.2.3"
   },
   "patchedDependencies": {
     "@tanstack/directive-functions-plugin@1.119.2": "patches/@tanstack%2Fdirective-functions-plugin@1.119.2.patch"
