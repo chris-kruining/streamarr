@@ -30,7 +30,15 @@ const Page: Component<{ entry: Entry }> = (props) => {
       </a>
 
       <img src={props.entry.thumbnail} class={css.thumbnail} />
-      <img src={props.entry.image} class={css.background} />
+      {/* <img src={props.entry.image} class={css.background} /> */}
+
+      <video
+        class={css.background}
+        src={props.entry.trailer}
+        poster={props.entry.image}
+        muted
+        autoplay
+      />
 
       <span class={css.detail}>
         {props.entry.releaseDate}

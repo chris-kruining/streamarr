@@ -396,6 +396,7 @@ const toEntry = (item: components['schemas']['BaseItemDto']): Entry => {
     image: new URL(`/Items/${item.Id}/Images/Backdrop`, getBaseUrl()),
     providers: {
       jellyfin: item.Id
-    }
+    },
+    trailer: item.RemoteTrailers?.at(-1)?.Url ?? undefined,
   };
 };
