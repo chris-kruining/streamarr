@@ -5,7 +5,10 @@ import {
 } from "@solid-primitives/context";
 import { Accessor, createEffect, on, onMount, Setter } from "solid-js";
 import { createStore } from "solid-js/store";
-import { createEventListenerMap } from "@solid-primitives/event-listener";
+import {
+  createEventListener,
+  createEventListenerMap,
+} from "@solid-primitives/event-listener";
 import { createFullscreen } from "@solid-primitives/fullscreen";
 
 type State = "playing" | "paused";
@@ -93,6 +96,7 @@ export const [VideoProvider, useVideo] = createContextProvider<
       currentTime: () => store.currentTime,
 
       setTime(time) {
+        console.log("time is set via api!", time);
         video!.currentTime = time;
       },
 
@@ -124,8 +128,6 @@ export const [VideoProvider, useVideo] = createContextProvider<
       },
     };
 
-    console.log(props.root, props.video);
-
     if (isServer || video === undefined) {
       return api;
     }
@@ -147,15 +149,6 @@ export const [VideoProvider, useVideo] = createContextProvider<
       video.volume = store.volume.value;
     });
 
-    createEffect(() => {
-      console.log(store.currentTime, props.offset);
-    });
-
-    onMount(() => {
-      setStore("duration", video.duration);
-      setStore("currentTime", video.currentTime);
-    });
-
     createEventListenerMap(video, {
       play(e) {
         setStore("state", "playing");
@@ -167,6 +160,8 @@ export const [VideoProvider, useVideo] = createContextProvider<
         setStore("duration", video.duration);
       },
       timeupdate(e) {
+        console.log("time update", video.currentTime, e);
+
         setStore("currentTime", video.currentTime);
       },
       volumeChange() {
@@ -175,14 +170,15 @@ export const [VideoProvider, useVideo] = createContextProvider<
       progress(e) {
         const timeRanges = video.buffered;
 
-        setStore(
-          "buffered",
-          timeRanges.length > 0 ? timeRanges.end(timeRanges.length - 1) : 0
-        );
-      },
-      canplay() {
-        console.log("can play!");
-        // setStore("loading", false);
+        if (timeRanges.length === 0) {
+          return;
+        }
+
+        const range = timeRanges.end(timeRanges.length - 1);
+
+        console.log(range);
+
+        setStore("buffered", range);
       },
       canplaythrough() {
         console.log("can play through!");
@@ -190,6 +186,10 @@ export const [VideoProvider, useVideo] = createContextProvider<
       },
       waiting() {
         setStore("loading", true);
+      },
+      loadedmetadata() {
+        console.log("metadata loaded");
+        video.currentTime = props.offset ?? 0;
       },
     });
 

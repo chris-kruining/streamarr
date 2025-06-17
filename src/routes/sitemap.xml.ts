@@ -1,7 +1,7 @@
 import { SitemapStream, streamToPromise } from 'sitemap'
-import { App } from 'vinxi';
+import { App,  } from 'vinxi';
 
-const BASE_URL = 'https://ca-euw-prd-calque-app.purplecoast-f5b7f657.westeurope.azurecontainerapps.io';
+const BASE_URL = 'http://localhost:3000';
 
 export async function GET() {
 
@@ -22,7 +22,13 @@ export async function GET() {
 }
 
 const getRoutes = async () => {
-    const router = ((globalThis as any).app as App).getRouter('client').internals.routes;
+    const app = (globalThis as any).app as App;
+
+    const kaas = app.getRouter('client');
+
+    console.log(kaas.internals);
+
+    const router = app.getRouter('client').internals?.routes;
 
     if (router === undefined) {
         return [];

@@ -1,7 +1,6 @@
 import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins";
-import { createAuthClient } from "better-auth/solid";
-import { genericOAuthClient } from "better-auth/client/plugins";
+import { profile } from "bun:jsc";
 import { Database } from "bun:sqlite";
 
 export const auth = betterAuth({
@@ -20,15 +19,7 @@ export const auth = betterAuth({
         type: "string",
         nullable: true,
       },
-      preferred_username: {
-        type: "string",
-        nullable: true,
-      },
       username: {
-        type: "string",
-        nullable: true,
-      },
-      profile: {
         type: "string",
         nullable: true,
       },
@@ -54,12 +45,10 @@ export const auth = betterAuth({
           ],
           accessType: "offline",
           pkce: true,
+          mapProfileToUser: ({ id, name, email, image, preferred_username, emailVerified }) => 
+            ({ id, name, email, emailVerified, image, username: preferred_username }),
         },
       ],
     }),
   ],
-});
-
-export const { signIn, signOut, useSession, ...client } = createAuthClient({
-  plugins: [genericOAuthClient()],
 });

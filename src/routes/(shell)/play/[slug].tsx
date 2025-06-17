@@ -7,7 +7,7 @@ import {
   RouteDefinition,
   useParams,
 } from "@solidjs/router";
-import { Show } from "solid-js";
+import { createEffect, Show } from "solid-js";
 import { createSlug, getEntryFromSlug } from "~/features/content";
 import { Player } from "~/features/player";
 import { Title } from "@solidjs/meta";
@@ -54,10 +54,10 @@ export default function Item() {
 
   return (
     <div class={css.page}>
-      <Title>{entry()?.title}</Title>
       <Show when={entry()} fallback="Some kind of pretty 404 page I guess">
         {(entry) => (
           <>
+            <Title>{entry().title}</Title>
             <Player entry={entry()} />
           </>
         )}

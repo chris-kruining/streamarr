@@ -1,5 +1,3 @@
-"use server";
-
 import type { Category, Entry } from "./types";
 import { query, revalidate } from "@solidjs/router";
 import { listItemIds, getContinueWatching, getItemStream, getRandomItems, getItemUserData } from "./apis/jellyfin";
@@ -26,44 +24,47 @@ const lookupTable = query(async () => {
 
 export const getHighlights = () => getContinueWatching(jellyfinUserId);
 export const getStream = query(async (id: string, range: string) => {
-    const table = await lookupTable();
-    const ids = table[id];
-    const manager = id[0] === 'm' ? 'radarr' : 'sonarr'
+  'use server';
 
-    if (ids?.jellyfin) {
-      return getItemStream(jellyfinUserId, ids.jellyfin, range);
-    }
+  const table = await lookupTable();
+  const ids = table[id];
+  const manager = id[0] === 'm' ? 'radarr' : 'sonarr'
 
-    if (ids?.radarr) {
-      console.log(`radarr has the entry '${ids.radarr}', but jellyfin does not (yet) have the file`);
-      console.log(await TEST(ids.radarr))
-      return;
-    }
+  if (ids?.jellyfin) {
+    return getItemStream(jellyfinUserId, ids.jellyfin, range);
+  }
 
-    if (ids?.sonarr) {
-      console.log('sonarr has the entry, but jellyfin does not (yet) have the file');
-      return;
-    }
+  if (ids?.radarr) {
+    console.log(`radarr has the entry '${ids.radarr}', but jellyfin does not (yet) have the file`);
+    console.log(await TEST(ids.radarr))
+    return;
+  }
 
-    // - If the lookup table has no entry
-    //   than this means that we do not have the requested entry at all, 
-    //   neither in trackers nor in the media server
-    // 
-    // - If the lookup table contains a jellyfin id,
-    //   than we have the content and can stream straight away
-    // 
-    // - If we have the radarr or sonarr id,
-    //   than we are tracking the entry,
-    //   but it is not available for use yet
-    console.log(`request the item '${id}' at ${manager}`);
+  if (ids?.sonarr) {
+    console.log('sonarr has the entry, but jellyfin does not (yet) have the file');
+    return;
+  }
 
-    const res = await ((manager === 'radarr' ? addMovie : addSeries)(id.slice(1)));
+  // - If the lookup table has no entry
+  //   than this means that we do not have the requested entry at all, 
+  //   neither in trackers nor in the media server
+  // 
+  // - If the lookup table contains a jellyfin id,
+  //   than we have the content and can stream straight away
+  // 
+  // - If we have the radarr or sonarr id,
+  //   than we are tracking the entry,
+  //   but it is not available for use yet
+  console.log(`request the item '${id}' at ${manager}`);
 
-    revalidate(lookupTable.keyFor())
-    
+  const res = await ((manager === 'radarr' ? addMovie : addSeries)(id.slice(1)));
+
+  revalidate(lookupTable.keyFor());
 }, 'content.stream');
 
 export const listCategories = query(async (): Promise<Category[]> => {
+  'use server';
+
   return [
     // { label: "Continue", entries: await getContinueWatching(jellyfinUserId) },
     {
@@ -76,21 +77,27 @@ export const listCategories = query(async (): Promise<Category[]> => {
 }, "content.categories.list");
 
 export const getEntryFromSlug = query(
-  async (slug: string): Promise<Entry | undefined> => getEntry(slug.match(/\w+$/)![0]),
+  async (slug: string): Promise<Entry | undefined> => {
+    'use server';
+
+    return getEntry(slug.match(/\w+$/)![0]);
+  },
   "content.getFromSlug",
 );
 
 export const getEntry = query(
   async (id: Entry["id"]): Promise<Entry | undefined> => {
+    'use server';
+
     const [entry, userData] = await Promise.all([
       getTmdbEntry(id),
       getEntryUserData(id)
     ] as const);
 
-    if (entry && userData) {
+    if (entry !== undefined && userData !== undefined) {
       entry['offset'] = ticksToSeconds(userData.playbackPositionTicks ?? 0);
     }
-
+    
     return entry;
   },
   "content.get",
@@ -98,6 +105,8 @@ export const getEntry = query(
 
 export const getEntryUserData = query(
   async (id: string): ReturnType<typeof getItemUserData> => {
+    'use server';
+
     const table = await lookupTable();
     const { jellyfin } = table[id] ?? {};
 

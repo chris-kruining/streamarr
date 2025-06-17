@@ -219,7 +219,7 @@ export const getItemStream = query(
           itemId,
         },
         query: {
-          startTimeTicks: userData?.playbackPositionTicks,
+          // startTimeTicks: userData?.playbackPositionTicks,
         },
       },
       parseAs: 'stream',
@@ -392,11 +392,11 @@ const toEntry = (item: components['schemas']['BaseItemDto']): Entry => {
     id: `${type}${item.ProviderIds!["Tmdb"]!}`,
     title: item.Name!,
     overview: item.Overview!,
-    thumbnail: new URL(`/Items/${item.Id}/Images/Primary`, getBaseUrl()), //await getItemImage(data.Id!, 'Primary'),
+    thumbnail: new URL(`/Items/${item.Id}/Images/Primary`, getBaseUrl()),
     image: new URL(`/Items/${item.Id}/Images/Backdrop`, getBaseUrl()),
     providers: {
       jellyfin: item.Id
-    },
+    },  
     trailer: item.RemoteTrailers?.at(-1)?.Url ?? undefined,
   };
 };

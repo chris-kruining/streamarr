@@ -1,5 +1,5 @@
 import { Component, Show } from "solid-js";
-import { signIn, signOut, client } from "~/auth";
+import { signIn, signOut, client } from "~/auth.client";
 import { Avatar, Profile, User } from "../user";
 import { ColorSchemePicker } from "../theme";
 import css from "./top.module.css";

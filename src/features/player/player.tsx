@@ -75,7 +75,14 @@ export const Player: Component<PlayerProps> = (props) => {
   //     : "";
   // });
 
-  // createEffect(on(thumbnails, (thumbnails) => {}));
+  // createEffect(
+  //   on(
+  //     () => props.entry,
+  //     (entry) => {
+  //       console.log(entry);
+  //     }
+  //   )
+  // );
 
   return (
     <>
@@ -86,8 +93,6 @@ export const Player: Component<PlayerProps> = (props) => {
             props.entry["offset"] ? `#t=${props.entry["offset"]}` : ""
           }`}
           poster={props.entry.image}
-          lang="en"
-          autoplay
         >
           {/* <track
             default

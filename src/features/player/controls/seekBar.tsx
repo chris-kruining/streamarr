@@ -1,4 +1,4 @@
-import { Component } from "solid-js";
+import { Component, createEffect, on } from "solid-js";
 import { useVideo } from "../context";
 import css from "./seekBar.module.css";
 
@@ -6,6 +6,15 @@ interface SeekBarProps {}
 
 export const SeekBar: Component<SeekBarProps> = () => {
   const video = useVideo();
+
+  createEffect(
+    on(
+      () => [video.duration(), video.buffered(), video.currentTime()] as const,
+      ([duration, buffered, currentTime]) => {
+        console.log({ duration, buffered, currentTime });
+      }
+    )
+  );
 
   return (
     <div class={css.container}>
