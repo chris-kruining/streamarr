@@ -20,7 +20,7 @@ export default defineConfig({
   server: {
     preset: "bun",
     prerender: {
-      routes: ["/sitemap.xml"],
+      routes: ["/", "/sitemaps.xml"],
     },
   },
 });
