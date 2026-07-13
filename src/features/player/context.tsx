@@ -157,11 +157,10 @@ export const [VideoProvider, useVideo] = createContextProvider<
         setStore("state", "paused");
       },
       durationchange(e) {
+        console.log(e, video.duration);
         setStore("duration", video.duration);
       },
       timeupdate(e) {
-        console.log("time update", video.currentTime, e);
-
         setStore("currentTime", video.currentTime);
       },
       volumeChange() {
@@ -176,8 +175,6 @@ export const [VideoProvider, useVideo] = createContextProvider<
 
         const range = timeRanges.end(timeRanges.length - 1);
 
-        console.log(range);
-
         setStore("buffered", range);
       },
       canplaythrough() {
@@ -189,7 +186,6 @@ export const [VideoProvider, useVideo] = createContextProvider<
       },
       loadedmetadata() {
         console.log("metadata loaded");
-        video.currentTime = props.offset ?? 0;
       },
     });
 

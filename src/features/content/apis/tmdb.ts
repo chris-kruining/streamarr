@@ -37,9 +37,19 @@ const getClients = () => {
   return [clientV3, clientV4] as const;
 };
 
+const isConfigured = () => {
+  "use server";
+
+  return Boolean(process.env.TMDB_BASE_URL);
+};
+
 export const getEntry = query(
   async (id: string): Promise<Entry | undefined> => {
     "use server";
+
+    if (!isConfigured()) {
+      return undefined;
+    }
 
     const [ clientV3 ] = getClients();
 
@@ -76,6 +86,10 @@ export const getEntry = query(
 export const getRecommendations = query(async (): Promise<Entry[]> => {
   "use server";
 
+  if (!isConfigured()) {
+    return [];
+  }
+
   const [ ,clientV4 ] = getClients();
 
   const account_object_id = "6668b76e419b28ec1a1c5aab";
@@ -99,6 +113,10 @@ export const getRecommendations = query(async (): Promise<Entry[]> => {
 export const getDiscovery = query(async (): Promise<Entry[]> => {
   "use server";
 
+  if (!isConfigured()) {
+    return [];
+  }
+
   const [ clientV3 ] = getClients();
 
   const [{ data: movies }, { data: series }] = await Promise.all([
@@ -118,8 +136,10 @@ export const getDiscovery = query(async (): Promise<Entry[]> => {
 
 export const searchMulti = query(async (query: string, page: number = 1): Promise<SearchResult> => {
   "use server";
-
   if (query.length === 0) {
+    return { count: 0, pages: 0, results: [] };
+  }
+  if (!isConfigured()) {
     return { count: 0, pages: 0, results: [] };
   }
     const [ clientV3 ] = getClients();

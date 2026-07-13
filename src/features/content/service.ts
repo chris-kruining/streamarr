@@ -110,6 +110,10 @@ export const getEntryUserData = query(
     const table = await lookupTable();
     const { jellyfin } = table[id] ?? {};
 
+    if (!jellyfin) {
+      return;
+    }
+
     const userData = await getItemUserData(jellyfinUserId, jellyfin);
 
     return userData;

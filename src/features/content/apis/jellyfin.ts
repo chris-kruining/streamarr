@@ -25,6 +25,12 @@ const getBaseUrl = () => {
   return process.env.JELLYFIN_BASE_URL;
 };
 
+const isConfigured = () => {
+  "use server";
+
+  return Boolean(getBaseUrl() && process.env.JELLYFIN_API_KEY);
+};
+
 const getClient = () => {
   "use server";
 
@@ -40,6 +46,10 @@ const getClient = () => {
 export const getCurrentUser = query(async () => {
   "use server";
 
+  if (!isConfigured()) {
+    return [];
+  }
+
   const { data } = await getClient().GET("/Users/Public", {
     params: {},
   });
@@ -49,6 +59,10 @@ export const getCurrentUser = query(async () => {
 
 export const listUsers = query(async () => {
   "use server";
+
+  if (!isConfigured()) {
+    return [];
+  }
 
   const { data, error } = await getClient().GET("/Users", {
     params: {},
@@ -60,6 +74,10 @@ export const listUsers = query(async () => {
 export const listItemIds = query(
   async (): Promise<Record<string, { jellyfin: string }>> => {
     "use server";
+
+    if (!isConfigured()) {
+      return {};
+    }
 
     const { data, error } = await getClient().GET("/Items", {
       params: {
@@ -103,6 +121,10 @@ export const listItems = query(
   async (userId: string): Promise<Entry[] | undefined> => {
     "use server";
 
+    if (!isConfigured()) {
+      return undefined;
+    }
+
     const { data, error } = await getClient().GET("/Items", {
       params: {
         query: {
@@ -145,6 +167,10 @@ export const getRandomItems = query(
   async (userId: string, limit: number = 20): Promise<Entry[]> => {
     "use server";
 
+    if (!isConfigured()) {
+      return [];
+    }
+
     const { data, error } = await getClient().GET("/Items", {
       params: {
         query: {
@@ -176,6 +202,10 @@ export const getRandomItems = query(
 export const getItem = query(
   async (userId: string, itemId: string): Promise<Entry | undefined> => {
     "use server";
+
+    if (!isConfigured()) {
+      return undefined;
+    }
 
     const { data, error } = await getClient().GET("/Items/{itemId}", {
       params: {
@@ -211,6 +241,10 @@ export const getItemStream = query(
   async (userId: string, itemId: string, range: string): Promise<Response> => {
     "use server";
 
+    if (!isConfigured()) {
+      return new Response("Jellyfin is not configured", { status: 503 });
+    }
+
     const userData = await getItemUserData(userId, itemId);
 
     const { response } = await getClient().GET("/Videos/{itemId}/stream", {
@@ -239,6 +273,10 @@ export const getItemUserData = query(
   async (userId: string, itemId: string): Promise<ItemUserData|undefined> => {
     "use server";
 
+    if (!isConfigured() || !itemId) {
+      return;
+    }
+
     const { data } = await getClient().GET('/UserItems/{itemId}/UserData', {
       params: {
         path: {
@@ -266,6 +304,10 @@ export const getItemImage = query(
   ): Promise<any | undefined> => {
     "use server";
 
+    if (!isConfigured()) {
+      return;
+    }
+
     const { data, error } = await getClient().GET(
       "/Items/{itemId}/Images/{imageType}",
       {
@@ -288,6 +330,10 @@ export const getItemImage = query(
 export const getItemPlaybackInfo = query(
   async (userId: string, itemId: string): Promise<any | undefined> => {
     "use server";
+
+    if (!isConfigured()) {
+      return;
+    }
 
     const { data, error, response } = await getClient().GET(
       "/Items/{itemId}/PlaybackInfo",
@@ -313,6 +359,10 @@ export const getItemPlaybackInfo = query(
 export const queryItems = query(async () => {
   "use server";
 
+  if (!isConfigured()) {
+    return;
+  }
+
   const { data, error } = await getClient().GET("/Items", {
     params: {
       query: {
@@ -330,6 +380,10 @@ export const queryItems = query(async () => {
 export const getContinueWatching = query(
   async (userId: string): Promise<Entry[]> => {
     "use server";
+
+    if (!isConfigured()) {
+      return [];
+    }
 
     const { data, error } = await getClient().GET("/UserItems/Resume", {
       params: {

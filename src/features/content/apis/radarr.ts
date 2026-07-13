@@ -26,8 +26,18 @@ export const getClient = () => {
   });
 };
 
+const isConfigured = () => {
+  "use server";
+
+  return Boolean(getBaseUrl() && process.env.RADARR_API_KEY);
+};
+
 export const TEST = query(async (id: number) => {
   "use server";
+
+  if (!isConfigured()) {
+    return;
+  }
 
   const { data, error } = await getClient().GET('/api/v3/queue/details', {
     params: {
@@ -65,6 +75,10 @@ export const TEST = query(async (id: number) => {
 export const get = query(async (id: number) => {
   "use server";
 
+  if (!isConfigured()) {
+    return;
+  }
+
   const { data, error } = await getClient().GET('/api/v3/movie/{id}', {
     params: {
       path: {
@@ -78,6 +92,10 @@ export const get = query(async (id: number) => {
 
 export const addMovie = query(async (id: string) => {
   "use server";
+
+  if (!isConfigured()) {
+    return;
+  }
 
   const { data: rootFolders, error: fError } = await getClient().GET('/api/v3/rootfolder');
 
@@ -114,6 +132,10 @@ export const addMovie = query(async (id: string) => {
 
 export const listIds = query(async () => {
   "use server";
+
+  if (!isConfigured()) {
+    return {};
+  }
 
   const { data, error } = await getClient().GET('/api/v3/movie');
 

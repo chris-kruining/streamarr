@@ -10,7 +10,9 @@ import { User } from "~/features/user";
 const load = query(async (): Promise<User | undefined> => {
   "use server";
 
-  const session = await auth.api.getSession(getRequestEvent()!.request);
+  const session = await auth.api.getSession({
+    headers: getRequestEvent()!.request.headers,
+  });
 
   if (session === null) {
     return undefined;

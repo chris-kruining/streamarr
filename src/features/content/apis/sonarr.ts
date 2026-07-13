@@ -27,8 +27,18 @@ const getClient = () => {
   });
 };
 
+const isConfigured = () => {
+  "use server";
+
+  return Boolean(getBaseUrl() && process.env.SONARR_API_KEY);
+};
+
 export const TEST = query(async () => {
   "use server";
+
+  if (!isConfigured()) {
+    return [];
+  }
 
   const { data } = await getClient().GET('/api/v3/series', {
     params: {
@@ -42,6 +52,10 @@ export const TEST = query(async () => {
 
 export const getByTmdbId = query(async (id: string) => {
   "use server";
+
+  if (!isConfigured()) {
+    return;
+  }
 
   const { data } = await getClient().GET('/api/v3/series/lookup', {
     params: {
@@ -57,6 +71,10 @@ export const getByTmdbId = query(async (id: string) => {
 export const listIds = query(async () => {
   "use server";
 
+  if (!isConfigured()) {
+    return {};
+  }
+
   const { data, error } = await getClient().GET('/api/v3/series');
 
   return Object.fromEntries(data?.map(({ id, tmdbId }) => ([ `s${tmdbId}`, { sonarr: id } ] as const)) ?? []);
@@ -64,6 +82,10 @@ export const listIds = query(async () => {
 
 export const addSeries = query(async (id: string) => {
   "use server";
+
+  if (!isConfigured()) {
+    return;
+  }
 
   // const { data, error } = await getClient().POST('/api/v3/series', {
   //   body: {

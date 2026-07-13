@@ -21,7 +21,9 @@ const getSession = async () => {
   "use server";
 
   return useSession<State>({
-    password: process.env.SESSION_SECRET!,
+    password:
+      process.env.SESSION_SECRET ??
+      "streamarr-local-development-session-secret-change-me",
   });
 };
 
