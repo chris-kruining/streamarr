@@ -1,4 +1,5 @@
-import { auth } from "~/auth.server";
-import { toSolidStartHandler } from "better-auth/solid-start";
+import { APIEvent } from "@solidjs/start/server";
+import { proxyAuthRequest } from "~/auth.server";
 
-export const { GET, POST } = toSolidStartHandler(auth);
+export const GET = ({ request }: APIEvent) => proxyAuthRequest(request);
+export const POST = ({ request }: APIEvent) => proxyAuthRequest(request);

@@ -2,7 +2,7 @@ import { Meta } from "@solidjs/meta";
 import { query, createAsync } from "@solidjs/router";
 import { createEffect, on, ParentProps } from "solid-js";
 import { getRequestEvent } from "solid-js/web";
-import { auth } from "~/auth.server";
+import { getAuthSession } from "~/auth.server";
 import { Shell } from "~/features/shell";
 import { useTheme } from "~/features/theme";
 import { User } from "~/features/user";
@@ -10,15 +10,14 @@ import { User } from "~/features/user";
 const load = query(async (): Promise<User | undefined> => {
   "use server";
 
-  const session = await auth.api.getSession({
-    headers: getRequestEvent()!.request.headers,
-  });
+  const session = await getAuthSession(getRequestEvent()!.request);
 
   if (session === null) {
     return undefined;
   }
 
-  const { username, name, email, image = null } = session.user;
+  const { name, email, image = null } = session.user;
+  const username = session.user.username ?? name ?? email;
 
   return { username, name, email, image };
 }, "session");
