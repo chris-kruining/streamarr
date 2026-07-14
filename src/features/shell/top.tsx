@@ -13,7 +13,7 @@ export const Top: Component<TopProps> = (props) => {
     e.preventDefault();
 
     await signIn.oauth2({
-      providerId: "authelia",
+      providerId: "zitadel",
       callbackURL: "/",
     });
   };

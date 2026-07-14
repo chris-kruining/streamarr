@@ -1,3 +1,6 @@
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
 export interface AuthSession {
   user: {
     username?: string | null;
@@ -81,18 +84,67 @@ function getConvexSiteUrl() {
 
 function getOptionalConvexSiteUrl() {
   const configuredUrl =
-    process.env.CONVEX_SITE_URL ??
-    process.env.NEXT_PUBLIC_CONVEX_SITE_URL ??
-    process.env.VITE_CONVEX_SITE_URL;
+    getServerEnv("CONVEX_SITE_URL") ??
+    getServerEnv("NEXT_PUBLIC_CONVEX_SITE_URL") ??
+    getServerEnv("VITE_CONVEX_SITE_URL");
 
   if (configuredUrl !== undefined) {
     return configuredUrl;
   }
 
   const convexUrl =
-    process.env.CONVEX_URL ??
-    process.env.NEXT_PUBLIC_CONVEX_URL ??
-    process.env.VITE_CONVEX_URL;
+    getServerEnv("CONVEX_URL") ??
+    getServerEnv("NEXT_PUBLIC_CONVEX_URL") ??
+    getServerEnv("VITE_CONVEX_URL");
 
   return convexUrl?.replace(/\.convex\.cloud$/, ".convex.site");
+}
+
+function getServerEnv(name: string) {
+  return process.env[name] ?? readLocalEnvFiles()[name];
+}
+
+let localEnv: Record<string, string> | undefined;
+
+function readLocalEnvFiles() {
+  if (localEnv !== undefined) {
+    return localEnv;
+  }
+
+  localEnv = {};
+
+  for (const file of [".env", ".env.local"]) {
+    const path = join(process.cwd(), file);
+
+    if (!existsSync(path)) {
+      continue;
+    }
+
+    for (const line of readFileSync(path, "utf8").split(/\r?\n/)) {
+      const match = line.match(/^\s*(?:export\s+)?([^#=\s]+)\s*=\s*(.*)\s*$/);
+
+      if (match === null) {
+        continue;
+      }
+
+      localEnv[match[1]] = parseEnvValue(match[2]);
+    }
+  }
+
+  return localEnv;
+}
+
+function parseEnvValue(value: string) {
+  const trimmed = value.trim();
+  const quote = trimmed[0];
+
+  if (
+    (quote === '"' || quote === "'") &&
+    trimmed.endsWith(quote) &&
+    trimmed.length >= 2
+  ) {
+    return trimmed.slice(1, -1);
+  }
+
+  return trimmed;
 }

@@ -19,6 +19,11 @@ type ItemImageType =
   | "BoxRear"
   | "Profile";
 
+type OidcProviderConfig = Pick<
+  components["schemas"]["OidConfig"],
+  "CanonicalLinks"
+>;
+
 const getBaseUrl = () => {
   "use server";
 
@@ -41,6 +46,39 @@ const getClient = () => {
       "Content-Type": 'application/json; profile="CamelCase"',
     },
   });
+};
+
+const getJson = async <T>(path: string): Promise<T | undefined> => {
+  "use server";
+
+  const baseUrl = getBaseUrl();
+
+  if (!baseUrl || !process.env.JELLYFIN_API_KEY) {
+    return undefined;
+  }
+
+  const response = await fetch(new URL(path, baseUrl), {
+    headers: {
+      Authorization: `MediaBrowser DeviceId="Streamarr", Token="${process.env.JELLYFIN_API_KEY}"`,
+      "Content-Type": 'application/json; profile="CamelCase"',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Jellyfin API ${path}: ${response.status}`);
+  }
+
+  return response.json() as Promise<T>;
+};
+
+export const getLinkedUserId = async (
+  canonicalName: string,
+): Promise<string | undefined> => {
+  "use server";
+
+  const providers = await getJson<Record<string, OidcProviderConfig>>("/SSO/OID/Get");
+
+  return providers?.zitadel?.CanonicalLinks?.[canonicalName];
 };
 
 export const getCurrentUser = query(async () => {
@@ -448,9 +486,6 @@ const toEntry = (item: components['schemas']['BaseItemDto']): Entry => {
     overview: item.Overview!,
     thumbnail: new URL(`/Items/${item.Id}/Images/Primary`, getBaseUrl()),
     image: new URL(`/Items/${item.Id}/Images/Backdrop`, getBaseUrl()),
-    providers: {
-      jellyfin: item.Id
-    },  
     trailer: item.RemoteTrailers?.at(-1)?.Url ?? undefined,
   };
 };

@@ -13,15 +13,21 @@ export const Avatar: Component<AvatarProps> = (props) => {
     const user = props.user;
 
     if (user === undefined) {
-      return "";
+      return undefined;
     }
 
     if (user.image === null) {
-      return `https://www.gravatar.com/avatar/${hashedEmail()}`;
+      const emailHash = hashedEmail();
+
+      if (emailHash === undefined) {
+        return undefined;
+      }
+
+      return `https://www.gravatar.com/avatar/${emailHash}`;
     }
 
     return user.image;
   });
 
-  return <img src={src()} class={css.avatar} />;
+  return <Show when={src()}>{(src) => <img src={src()} class={css.avatar} />}</Show>;
 };

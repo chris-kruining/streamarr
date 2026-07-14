@@ -13,11 +13,12 @@ Recommended local secrets:
 
 ```bash
 BETTER_AUTH_SECRET=change-me
-SITE_URL=http://localhost:3000
-AUTHELIA_CLIENT_SECRET=change-me
+BETTER_AUTH_URL=http://localhost:3000
+ZITADEL_CLIENT_ID=381699845703926019
+ZITADEL_CLIENT_SECRET=change-me
 ```
 
-Better Auth now runs on Convex. Set `BETTER_AUTH_SECRET`, `SITE_URL`, `AUTHELIA_CLIENT_ID`, `AUTHELIA_CLIENT_SECRET`, and optionally `AUTHELIA_DISCOVERY_URL` in the Convex deployment with `bunx convex env set ...`. The app derives the auth proxy URL from Convex's generated `NEXT_PUBLIC_CONVEX_URL`, or you can override it with `CONVEX_SITE_URL`.
+Better Auth now runs on Convex. Set `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`, `ZITADEL_CLIENT_ID`, `ZITADEL_CLIENT_SECRET`, and optionally `ZITADEL_DISCOVERY_URL` in the Convex deployment with `bunx convex env set ...`. The app derives the auth proxy URL from Convex's generated `NEXT_PUBLIC_CONVEX_URL`, or you can override it with `CONVEX_SITE_URL`.
 
 ## APIS
 

@@ -1,6 +1,8 @@
 import type { Category, Entry } from "./types";
 import { query, revalidate } from "@solidjs/router";
-import { listItemIds, getContinueWatching, getItemStream, getRandomItems, getItemUserData } from "./apis/jellyfin";
+import { getAuthSession } from "~/auth.server";
+import { getRequestEvent } from "solid-js/web";
+import { listItemIds, getContinueWatching, getItemStream, getRandomItems, getItemUserData, getLinkedUserId } from "./apis/jellyfin";
 import {
   getDiscovery,
   getRecommendations,
@@ -11,8 +13,20 @@ import { listIds as listSerieIds, addSeries } from "./apis/sonarr";
 import { listIds as listMovieIds, addMovie, TEST } from "./apis/radarr";
 import { merge } from "~/utilities";
 
-const jellyfinUserId = "a9c51af84bf54578a99ab4dd0ebf0763";
-// const jellyfinUserId = "9aa9bde73fe8429ca387134579a803d0";
+const getJellyfinUserId = async () => {
+  "use server";
+
+  const event = getRequestEvent();
+
+  if (!event) {
+    return undefined;
+  }
+
+  const session = await getAuthSession(event.request);
+  const username = session?.user.username?.trim();
+
+  return username ? getLinkedUserId(username) : undefined;
+};
 
 const lookupTable = query(async () => {
   'use server';
@@ -22,15 +36,27 @@ const lookupTable = query(async () => {
   return merge(items, sonarr, radarr);
 }, 'content.lookupTable');
 
-export const getHighlights = () => getContinueWatching(jellyfinUserId);
+export const getHighlights = query(async () => {
+  'use server';
+
+  const jellyfinUserId = await getJellyfinUserId();
+
+  return jellyfinUserId ? getContinueWatching(jellyfinUserId) : [];
+}, "content.highlights");
+
 export const getStream = query(async (id: string, range: string) => {
   'use server';
 
   const table = await lookupTable();
   const ids = table[id];
   const manager = id[0] === 'm' ? 'radarr' : 'sonarr'
+  const jellyfinUserId = await getJellyfinUserId();
 
   if (ids?.jellyfin) {
+    if (!jellyfinUserId) {
+      return new Response("Sign in required", { status: 401 });
+    }
+
     return getItemStream(jellyfinUserId, ids.jellyfin, range);
   }
 
@@ -65,6 +91,8 @@ export const getStream = query(async (id: string, range: string) => {
 export const listCategories = query(async (): Promise<Category[]> => {
   'use server';
 
+  const jellyfinUserId = await getJellyfinUserId();
+
   return [
     // { label: "Continue", entries: await getContinueWatching(jellyfinUserId) },
     {
@@ -72,7 +100,7 @@ export const listCategories = query(async (): Promise<Category[]> => {
       entries: await getRecommendations(),
     },
     { label: "Discover", entries: await getDiscovery() },
-    { label: "Random", entries: await getRandomItems(jellyfinUserId) },
+    { label: "Random", entries: jellyfinUserId ? await getRandomItems(jellyfinUserId) : [] },
   ];
 }, "content.categories.list");
 
@@ -109,8 +137,9 @@ export const getEntryUserData = query(
 
     const table = await lookupTable();
     const { jellyfin } = table[id] ?? {};
+    const jellyfinUserId = await getJellyfinUserId();
 
-    if (!jellyfin) {
+    if (!jellyfin || !jellyfinUserId) {
       return;
     }
 
@@ -126,7 +155,7 @@ export const search = query(async (query: string, page: number = 1) => {
   return searchMulti(query, page);
 }, 'content.search');
 
-export { listUsers, getContinueWatching, listItems } from "./apis/jellyfin";
+export { getContinueWatching, listItems } from "./apis/jellyfin";
 
 // 1s = 10_000_000 ticks
 const ticksToSeconds = (ticks: number) => ticks / 10_000_000;

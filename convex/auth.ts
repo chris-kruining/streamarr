@@ -14,7 +14,10 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) =>
   ({
     appName: "Streamarr",
     basePath: "/api/auth",
-    baseURL: process.env.SITE_URL ?? "http://localhost:3000",
+    baseURL:
+      process.env.SITE_URL ??
+      process.env.BETTER_AUTH_URL ??
+      "http://localhost:3000",
     secret:
       process.env.BETTER_AUTH_SECRET ??
       process.env.AUTH_SECRET ??
@@ -36,20 +39,14 @@ export const createAuthOptions = (ctx: GenericCtx<DataModel>) =>
       genericOAuth({
         config: [
           {
-            providerId: "authelia",
-            clientId: process.env.AUTHELIA_CLIENT_ID ?? "streamarr",
-            clientSecret: process.env.AUTHELIA_CLIENT_SECRET ?? "",
+            providerId: "zitadel",
+            clientId:
+              process.env.ZITADEL_CLIENT_ID ?? "381699845703926019",
+            clientSecret: process.env.ZITADEL_CLIENT_SECRET ?? "",
             discoveryUrl:
-              process.env.AUTHELIA_DISCOVERY_URL ??
+              process.env.ZITADEL_DISCOVERY_URL ??
               "https://auth.kruining.eu/.well-known/openid-configuration",
-            scopes: [
-              "offline_access",
-              "openid",
-              "email",
-              "picture",
-              "profile",
-              "groups",
-            ],
+            scopes: ["openid", "profile", "email", "offline_access"],
             accessType: "offline",
             pkce: true,
             mapProfileToUser: ({
