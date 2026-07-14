@@ -1,16 +1,13 @@
-import { json } from "@solidjs/router";
 import { APIEvent } from "@solidjs/start/server";
+import { json } from "@solidjs/router";
+import { getPlayerMetadata } from "~/features/content";
 
-export const GET = async (event: APIEvent) => {
-  console.log(event.params);
+export const GET = async ({ params: { id } }: APIEvent) => {
+  "use server";
 
-  const path = `${import.meta.dirname}/SampleVideo_1280x720_10mb`;
+  const metadata = await getPlayerMetadata(id);
 
-  return json({
-    captions: await Bun.file(`${path}.captions.vtt`).bytes(),
-    thumbnails: {
-      track: await Bun.file(`${path}.thumbnails.vtt`).text(),
-      image: await Bun.file(`${import.meta.dirname}/overview.jpg`).bytes(),
-    },
-  });
+  return metadata
+    ? json(metadata)
+    : new Response("Playback metadata unavailable", { status: 404 });
 };

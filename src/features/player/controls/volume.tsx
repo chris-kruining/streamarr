@@ -10,13 +10,19 @@ export const Volume: Component<VolumeProps> = (props) => {
 
   return (
     <div class={css.container}>
-      <button onClick={() => video.volume.setMuted((m) => !m)}>
+      <button
+        type="button"
+        aria-label={video.volume.muted() ? "Unmute" : "Mute"}
+        aria-pressed={video.volume.muted()}
+        onClick={() => video.volume.setMuted((m) => !m)}
+      >
         <Show when={video.volume.muted()} fallback={<FaSolidVolumeOff />}>
           <FaSolidVolumeXmark />
         </Show>
       </button>
       <input
         type="range"
+        aria-label="Volume"
         value={video.volume.value()}
         min="0"
         max="1"

@@ -13,6 +13,9 @@ export default defineConfig({
     babel: {
       compact: true,
     },
+    solid: {
+      validate: false,
+    },
   },
   server: {
     preset: "bun",

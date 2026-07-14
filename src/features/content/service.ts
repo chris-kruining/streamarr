@@ -2,7 +2,18 @@ import type { Category, Entry } from "./types";
 import { query, revalidate } from "@solidjs/router";
 import { getAuthSession } from "~/auth.server";
 import { getRequestEvent } from "solid-js/web";
-import { listItemIds, getContinueWatching, getItemStream, getRandomItems, getItemUserData, getLinkedUserId } from "./apis/jellyfin";
+import {
+  fromPlayerItemId,
+  getContinueWatching,
+  getItemStream,
+  getPlayerMetadata as getJellyfinPlayerMetadata,
+  getRandomItems,
+  getItemUserData,
+  getLinkedUserId,
+  getSubtitleAsset,
+  getTrickplayTile,
+  listItemIds,
+} from "./apis/jellyfin";
 import {
   getDiscovery,
   getRecommendations,
@@ -48,7 +59,8 @@ export const getStream = query(async (id: string, range: string) => {
   'use server';
 
   const table = await lookupTable();
-  const ids = table[id];
+  const directJellyfinItemId = fromPlayerItemId(id);
+  const ids = directJellyfinItemId ? { jellyfin: directJellyfinItemId } : table[id];
   const manager = id[0] === 'm' ? 'radarr' : 'sonarr'
   const jellyfinUserId = await getJellyfinUserId();
 
@@ -87,6 +99,62 @@ export const getStream = query(async (id: string, range: string) => {
 
   revalidate(lookupTable.keyFor());
 }, 'content.stream');
+
+export const getPlayerMetadata = query(async (id: string) => {
+  "use server";
+
+  const table = await lookupTable();
+  const directJellyfinItemId = fromPlayerItemId(id);
+  const jellyfinUserId = await getJellyfinUserId();
+  const jellyfin = directJellyfinItemId ?? table[id]?.jellyfin;
+
+  if (!jellyfinUserId || !jellyfin) {
+    return;
+  }
+
+  return getJellyfinPlayerMetadata(jellyfinUserId, id, jellyfin);
+}, "content.playerMetadata");
+
+export const getSubtitle = query(
+  async (id: string, mediaSourceId: string, index: number) => {
+    "use server";
+
+    const directJellyfinItemId = fromPlayerItemId(id);
+    const jellyfinUserId = await getJellyfinUserId();
+
+    if (!jellyfinUserId) {
+      return new Response("Sign in required", { status: 401 });
+    }
+
+    if (!directJellyfinItemId) {
+      return new Response("Subtitle item id must be a concrete playback item", {
+        status: 400,
+      });
+    }
+
+    return getSubtitleAsset(directJellyfinItemId, mediaSourceId, index);
+  },
+  "content.subtitle",
+);
+
+export const getTrickplay = query(async (id: string, width: number, index: number) => {
+  "use server";
+
+  const directJellyfinItemId = fromPlayerItemId(id);
+  const jellyfinUserId = await getJellyfinUserId();
+
+  if (!jellyfinUserId) {
+    return new Response("Sign in required", { status: 401 });
+  }
+
+  if (!directJellyfinItemId) {
+    return new Response("Trickplay item id must be a concrete playback item", {
+      status: 400,
+    });
+  }
+
+  return getTrickplayTile(directJellyfinItemId, width, index);
+}, "content.trickplay");
 
 export const listCategories = query(async (): Promise<Category[]> => {
   'use server';
